@@ -3,11 +3,18 @@ body {
     background-position-x: center;
 }
 
-.body-overlay {
-    position: absolute;
-    min-height: 100%;
-    min-width: 100%;
-    left: 0;
-    top: 0;
-    background: rgba(0, 0, 0, 0.6);
+.main-block {
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid lightskyblue;
+}
+
+.shadow-backup {
+    -webkit-box-shadow: 0 0 10px black;
+    box-shadow: 0 0 10px black;
+}
+
+.row {
+    --bs-gutter-x: 0;
 }
