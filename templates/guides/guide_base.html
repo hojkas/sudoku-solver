@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="main-block">
+                SUM
+                ELSE
+                <p>sometig</p>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="main-block">
+                {% block guide_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

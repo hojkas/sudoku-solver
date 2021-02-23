@@ -3,6 +3,11 @@ body {
     background-position-x: center;
 }
 
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
 .main-block {
     background-color: white;
     margin: 10px;
@@ -10,9 +15,24 @@ body {
     border: 2px solid lightskyblue;
 }
 
-.shadow-backup {
-    -webkit-box-shadow: 0 0 10px black;
-    box-shadow: 0 0 10px black;
+.navbar-block {
+    background-color: white;
+    border-bottom: 2px solid lightskyblue;
+    margin-bottom: 1rem;
+}
+
+.main {
+    padding-bottom: 3.5rem;
+}
+
+.footer-block {
+    background-color: white;
+    border-top: 2px solid lightskyblue;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+    white-space: nowrap;
 }
 
 .row {
