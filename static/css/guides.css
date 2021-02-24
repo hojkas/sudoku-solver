@@ -4,3 +4,12 @@
     text-align: center;
     border-bottom: 2px solid black;
 }
+
+.strategy-list-heading {
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+.strategy-list-item {
+
+}

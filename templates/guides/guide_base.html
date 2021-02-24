@@ -4,9 +4,22 @@
     <div class="row">
         <div class="col-md-3">
             <div class="main-block">
-                SUM
-                ELSE
-                <p>sometig</p>
+                <p class="strategy-list-heading">
+                    Easy Strategies
+                </p>
+                <ul>
+                    {% for link, strategy in easy_strategies.items %}
+                        <li class="strategy-list-item">
+                            <a href="/guides/{{ link }}">{{ strategy }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="strategy-list-heading">
+                    Medium Strategies
+                </p>
+                <p class="strategy-list-heading">
+                    Advanced Strategies
+                </p>
             </div>
         </div>
         <div class="col-md-9">
