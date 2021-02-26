@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,18 +34,24 @@
     <div id="page-container">
         <header class="navbar-block">
            <div class="container">
-                <nav class="navbar navbar-expand-md">
-                    <a class="navbar-brand" href="/">Sudoku Helper</a>
+                <nav class="navbar navbar-expand-md shorten-like-cols">
+                    <a class="navbar-site-name" href="/">
+                        Sudoku Helper
+                    </a>
                     <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="main-navigation">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="/solver">Solver</a>
+                                <a class="nav-link" href="/solver">
+                                    {% trans 'Řešení sudoku' %}
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/guides">Guides</a>
+                                <a class="nav-link" href="/guides">
+                                    {% trans 'Návody' %}
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -63,9 +70,11 @@
 
         </main>
 
-        <footer class="footer-block">
+        <footer class="footer-block text-muted">
             <div class="container d-flex" style="flex-direction: column">
-                This website is being developed as a school project.
+                <div class="shorten-like-cols">
+                    {% trans 'Tato webová stránka je vyvíjena jako školní projekt.' %}
+                </div>
             </div>
         </footer>
     </div>

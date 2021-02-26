@@ -1,24 +1,58 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-3">
             <div class="main-block">
-                <p class="strategy-list-heading">
-                    Easy Strategies
+                <div class="custom-list-class">
+                    {% trans 'Obecné strategie' %}
+                </div>
+            </div>
+            <div class="main-block">
+                <p class="custom-list-heading">
+                    {% trans 'Snadné strategie' %}
                 </p>
                 <ul>
                     {% for link, strategy in easy_strategies.items %}
-                        <li class="strategy-list-item">
-                            <a href="/guides/{{ link }}">{{ strategy }}</a>
+                        <li class="custom-list-item">
+                            <a class="no-underscore" href="/guides/{{ link }}">{{ strategy }}</a>
                         </li>
                     {% endfor %}
                 </ul>
-                <p class="strategy-list-heading">
-                    Medium Strategies
+                <p class="custom-list-heading">
+                    {% trans 'Středně těžké strategie' %}
                 </p>
-                <p class="strategy-list-heading">
-                    Advanced Strategies
+                <ul>
+                    <li>...</li>
+                </ul>
+                <p class="custom-list-heading">
+                    {% trans 'Pokročilé strategie' %}
+                </p>
+                <ul>
+                    <li>...</li>
+                </ul>
+            </div>
+            <div class="main-block">
+                <div class="custom-list-class">
+                    {% trans 'Strategie pro specifický typu sudoku' %}
+                </div>
+            </div>
+            <div class="main-block">
+                <p class="custom-list-heading">
+                    {% trans 'Diagonální sudoku' %}
+                </p>
+                <ul>
+                    <li>...</li>
+                </ul>
+                <p class="custom-list-heading">
+                    {% trans 'Středy čtverců' %}
+                </p>
+                <ul>
+                    <li>...</li>
+                </ul>
+                <p class="custom-list-heading">
+                    ...
                 </p>
             </div>
         </div>

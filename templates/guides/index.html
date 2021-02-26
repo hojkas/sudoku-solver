@@ -1,9 +1,12 @@
 {% extends "guides/guide_base.html" %}
+{% load i18n %}
 
 {% block guide_title %}
-    Strategie #0
+    {% trans 'Strategie řešení sudoku' %}
 {% endblock %}
 
 {% block guide_content %}
-    Toto bude vysvětlení různých strategií v českém jazyce.
+    {% blocktrans %}
+        Tady bude úvod k strategiím sudoku a této stránce.
+    {% endblocktrans %}
 {% endblock %}

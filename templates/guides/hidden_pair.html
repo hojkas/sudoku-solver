@@ -1,9 +1,13 @@
 {% extends "guides/guide_base.html" %}
+{% load i18n %}
 
 {% block guide_title %}
 Hidden Pair/Triple
 {% endblock %}
 
 {% block guide_content %}
-    Text strategie Hidden Pair.
+    {% blocktrans %}
+        Text strategie Hidden Pair/Triple co ji popíše a ukáže na praktický příkladech (vygenerovaných
+        z vlastního programu). Na konci bude obsahovat link/sudoku kde se přímo musí použít.
+    {% endblocktrans %}
 {% endblock %}

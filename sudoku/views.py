@@ -1,6 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render
+import django.template.loader
+from django.template import TemplateDoesNotExist
+from django.utils.translation import gettext as _
+
 
 easy_strategies = {
     'naked_pair': 'Naked Pair/Triple',
@@ -33,4 +38,9 @@ def guides_index(request):
 
 def detail(request, name):
     template = 'guides/' + name + '.html'
+    try:
+        django.template.loader.get_template(template)
+    except TemplateDoesNotExist:
+        raise Http404(_('Guide') + ' "' + name + '" ' + _('not found.'))
+
     return render(request, template, strategies_context)
