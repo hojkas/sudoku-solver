@@ -19,7 +19,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('guides/', include('guides.urls')),
-    path('solver/', include('solver.urls')),
     path('admin/', admin.site.urls),
+    path('solver/', views.solver_index, name='solver index'),
+    path('guides/', views.guides_index, name='guide index'),
+    path('guides/<name>', views.detail, name='detail'),
 ]
