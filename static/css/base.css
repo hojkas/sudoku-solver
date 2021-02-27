@@ -44,7 +44,7 @@ body {
     font-weight: bold;
     font-size: xx-large;
     text-decoration: none;
-    margin-right: 3rem;
+    margin-right: 2rem;
     white-space: nowrap;
 }
 
@@ -66,4 +66,8 @@ body {
     font-weight: bold;
     font-size: large;
     text-align: center;
+}
+
+.nav-item {
+    margin-left: 1rem;
 }

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-block">
+                this is information TODO hide this? maybe modal window?
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="main-block">
+                <p class="custom-list-heading">
+                    {% trans 'Klasická sudoku' %}
+                </p>
+                <ul>
+                    {% for key, sudoku_type in basic_sudokus.items %}
+                    <li>
+                        <a href="solver/{{ key }}" class="custom-list-item">
+                            {{ sudoku_type }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="main-block">
+                Solver here
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="main-block">
+                Supported strategies here
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
