@@ -40,6 +40,14 @@ sudokus_context = {'basic_sudokus': basic_sudokus,
 def get_range(val):
     return range(val)
 
+@register.filter
+def get_cell_num(x, y):
+    return x + y
+
+@register.filter
+def mul(a, b):
+    return a * b
+
 def index(request):
     return render(request, 'index.html')
 

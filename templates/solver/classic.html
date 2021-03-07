@@ -6,12 +6,12 @@
               {% for x in 9|get_range %}
                   <tr>
                   {% for y in 9|get_range %}
-                      <td class="sudoku-cell">
+                      <td class="sudoku-cell" id="cell-{{ x|mul:9|add:y }}">
                         <div class="sudoku-solved-num">
 
                         </div>
                         <div class="sudoku-candidate-grid">
-                            k
+
                         </div>
                       </td>
                   {% endfor %}

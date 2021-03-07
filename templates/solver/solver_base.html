@@ -1,6 +1,70 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block modals %}
+    {{ block.super }}
+
+    <!-- Modal sudokuInfoModal -->
+    <div class="modal fade" id="sudokuInfoModal" tabindex="-1" aria-labelledby="sudokuInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                {% trans 'Typ sudoku' %}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            TODO popis co typy znamenají a že vyběrem se na ně přesune.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal solverInfoModal -->
+    <div class="modal fade" id="solverInfoModal" tabindex="-1" aria-labelledby="solverInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                {% trans 'Aplikace na řešení sudoku' %}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            TODO
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal strategyInfoModal -->
+    <div class="modal fade" id="strategyInfoModal" tabindex="-1" aria-labelledby="strategyInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                {% trans 'Aplikovatelné strategie' %}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            TODO
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -12,6 +76,13 @@
     </div>
     <div class="row">
         <div class="col-md-3">
+            <div class="main-block">
+                <div class="custom-list-class">
+                    {% trans 'Typ sudoku' %}
+                    <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
+                       data-bs-target="#sudokuInfoModal"></i>
+                </div>
+            </div>
             <div class="main-block">
                 <p class="custom-list-heading">
                     {% trans 'Klasická sudoku' %}
@@ -30,10 +101,23 @@
         </div>
         <div class="col-md-6">
             <div class="main-block">
-                {% block solver_block %}{% endblock %}
+                <div class="row">
+                    <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
+                       data-bs-target="#solverInfoModal"></i>
+                </div>
+                {% block solver_block %}
+
+                {% endblock %}
             </div>
         </div>
         <div class="col-md-3">
+            <div class="main-block">
+                <div class="custom-list-class">
+                    {% trans 'Aplikovatelné strategie' %}
+                    <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
+                       data-bs-target="#strategyInfoModal"></i>
+                </div>
+            </div>
             <div class="main-block">
                 Supported strategies here
             </div>
