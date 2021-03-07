@@ -4,7 +4,9 @@ from django.http import Http404
 from django.shortcuts import render
 import django.template.loader
 from django.template import TemplateDoesNotExist
+from django.template.defaultfilters import register
 from django.utils.translation import gettext as _
+
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
@@ -34,6 +36,10 @@ sudokus_context = {'basic_sudokus': basic_sudokus,
                    'extra_rules': extra_rules,
                    'math_sudokus': math_sudokus}
 
+@register.filter
+def get_range(val):
+    return range(val)
+
 def index(request):
     return render(request, 'index.html')
 
@@ -43,6 +49,15 @@ def index(request):
 
 def solver_index(request):
     return render(request, 'solver/index.html', sudokus_context)
+
+def solver(request, name):
+    template = 'solver/' + name + '.html'
+    try:
+        django.template.loader.get_template(template)
+    except TemplateDoesNotExist:
+        raise Http404(_('Aplikace na řešení') + ' "' + name + '" ' + _('nebyla nalezena.'))
+
+    return render(request, template, sudokus_context)
 
 # ====================================
 #           GUIDES VIEWS
@@ -57,6 +72,6 @@ def detail(request, name):
     try:
         django.template.loader.get_template(template)
     except TemplateDoesNotExist:
-        raise Http404(_('Guide') + ' "' + name + '" ' + _('not found.'))
+        raise Http404(_('Návod') + ' "' + name + '" ' + _('nebyl nalezen.'))
 
     return render(request, template, strategies_context)

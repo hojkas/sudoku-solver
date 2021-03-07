@@ -19,7 +19,7 @@
                 <ul>
                     {% for key, sudoku_type in basic_sudokus.items %}
                     <li>
-                        <a href="solver/{{ key }}" class="custom-list-item">
+                        <a href="{{ key }}" class="custom-list-item">
                             {{ sudoku_type }}
                         </a>
                     </li>
@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-6">
             <div class="main-block">
-                Solver here
+                {% block solver_block %}{% endblock %}
             </div>
         </div>
         <div class="col-md-3">

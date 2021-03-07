@@ -1,0 +1,39 @@
+.sudoku {
+    margin: auto;
+    border: solid 3px black;
+}
+
+.sudoku tr {
+    height: 3rem;
+    border: solid 1px black;
+}
+
+.sudoku td {
+    width: 3rem;
+    border: solid 1px black;
+    text-align: center;
+    place-items: center;
+}
+
+.sudoku-cell {
+
+}
+
+.sudoku-solved-num {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+}
+
+.sudoku-candidate-grid {
+    color: grey;
+}
+
+.sudoku-9x9 tr:nth-child(3n) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-9x9 td:nth-child(3n) {
+    border-right: solid 3px black;
+}
+

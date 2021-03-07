@@ -1,0 +1,22 @@
+{% extends "solver/solver_base.html" %}
+
+{% block solver_block %}
+    <div>
+          <table class="sudoku sudoku-9x9">
+              {% for x in 9|get_range %}
+                  <tr>
+                  {% for y in 9|get_range %}
+                      <td class="sudoku-cell">
+                        <div class="sudoku-solved-num">
+
+                        </div>
+                        <div class="sudoku-candidate-grid">
+                            k
+                        </div>
+                      </td>
+                  {% endfor %}
+                  </tr>
+              {% endfor %}
+          </table>
+    </div>
+{% endblock %}
