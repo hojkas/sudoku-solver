@@ -25,6 +25,19 @@
 
 }
 
+.sudoku-input {
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 100%;
+    border: 0;
+    text-align: center;
+}
+
+.sudoku-input:focus {
+    border: 0;
+    outline: none;
+}
+
 .sudoku-candidate-grid {
     color: grey;
 }

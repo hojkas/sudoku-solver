@@ -68,13 +68,6 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="main-block">
-                this is information TODO hide this? maybe modal window?
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-md-3">
             <div class="main-block">
                 <div class="custom-list-class">
@@ -101,10 +94,10 @@
         </div>
         <div class="col-md-6">
             <div class="main-block">
-                <div class="row">
+                <p class="row">
                     <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
                        data-bs-target="#solverInfoModal"></i>
-                </div>
+                </p>
                 {% block solver_block %}
 
                 {% endblock %}

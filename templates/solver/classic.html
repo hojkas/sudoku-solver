@@ -7,6 +7,7 @@
                   <tr>
                   {% for y in 9|get_range %}
                       <td class="sudoku-cell" id="cell-{{ x|mul:9|add:y }}">
+                        <input class="sudoku-input"/>
                         <div class="sudoku-solved-num">
 
                         </div>
