@@ -22,34 +22,20 @@
 .sudoku-solved-num {
     font-size: 1.5rem;
     font-weight: bold;
-
+    display: none;
 }
 
 .sudoku-candidate-grid {
     color: #080808;
-}
-
-.sudoku-candidate-grid table {
-    border: none;
     width: 100%;
     height: 100%;
+    line-height: 0.9rem;
+    letter-spacing: 1px;
 }
 
-.sudoku-candidate-grid tbody {
-    border: none;
-}
-
-.sudoku-candidate-grid tr {
-    border: none;
-    height: 100%;
-    width: 100%;
-}
-
-.sudoku-candidate-grid td {
-    border: none;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+.sudoku-candidate-grid span {
+    width: 9px;
+    display: inline-block;
 }
 
 .sudoku-9x9 tr:nth-child(3n) {
