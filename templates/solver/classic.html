@@ -7,7 +7,6 @@
                   <tr>
                   {% for y in 9|get_range %}
                       <td class="sudoku-cell" id="cell-{{ x|mul:9|add:y }}">
-                        <input class="sudoku-input"/>
                         <div class="sudoku-solved-num">
 
                         </div>
@@ -20,4 +19,66 @@
               {% endfor %}
           </table>
     </div>
+    <div>
+        <div id="divToChange1">
+        My Content 1
+        </div>
+
+        <div id="divToChange2" style="display:none;">
+            My Dynamic Content
+        </div>
+    </div>
+    <button id="changeDivButton">Click me!</button>
+
+    <div>
+        <div id="solved1">
+            Solved 1
+        </div>
+        <div id="notes1" style="display: none;">
+            Notes 1
+        </div>
+    </div>
+    <button class="switch" title="1">
+        Switch 1
+    </button>
+
+    <div>
+        <div id="solved2">
+            Solved 2
+        </div>
+        <div id="notes2" style="display: none;">
+            Notes 2
+        </div>
+    </div>
+    <button class="switch" title="2">
+        Switch 2
+    </button>
+
+    <table class="sudoku sudoku-9x9">
+        <tr>
+            <td class="sudoku-cell">
+                <div id="solved0" class="sudoku-solved-num">
+                    1
+                </div>
+                <div id="notes0" class="sudoku-candidate-grid" style="display:none;">
+                    <table>
+                        {% for r in 3|get_range %}
+                            <tr>
+                                {% for c in 3|get_range %}
+                                    <td>{{ r|mul:3|add:c|add:1 }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <button class="switch" title="0">change sudoku</button>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
 {% endblock %}
