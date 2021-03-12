@@ -31,33 +31,12 @@
               {% endfor %}
           </table>
     </div>
-    <button id="test">Test!</button>
 
-    <table class="sudoku sudoku-9x9">
-        <tr>
-            <td class="sudoku-cell" id="cell-99">
-                <div id="solved99" class="sudoku-solved-num" style="display: none;">
-                    0
-                </div>
-                <div id="notes99" class="sudoku-candidate-grid">
-                    <span id="note99-1">9</span>
-                    <span id="note99-2">&nbsp;</span>
-                    <span id="note99-3">&nbsp;</span>
-                    <br>
-                    <span id="note99-4">&nbsp;</span>
-                    <span id="note99-5">&nbsp;</span>
-                    <span id="note99-6">&nbsp;</span>
-                    <br>
-                    <span id="note99-7">&nbsp;</span>
-                    <span id="note99-8">&nbsp;</span>
-                    <span id="note99-9">&nbsp;</span>
-                </div>
-            </td>
-        </tr>
-    </table>
-
-    <button onclick="snap_visibility_to_solved(99)">to solved</button>
-    <button onclick="snap_visibility_to_notes(99)">to notes</button>
+    <div>
+        TODO potenciální Quality of Life vylepšení: <br>
+        - možnost vybrat si, zda shift vypisuje nahotovo nebo mění toggle mezi notes/solved <br>
+        - vizuální čísla které půjde klikat místo zadávání klávesnicí
+    </div>
 
 {% endblock %}
 

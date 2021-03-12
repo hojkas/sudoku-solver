@@ -44,3 +44,27 @@ function snap_visibility_to_notes(cell_id) {
     const targetDiv = '#notes' + cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
+
+function count_new_selected_cell(pressed_key, current_selected_cell, max_sudoku_number) {
+    let col = current_selected_cell % max_sudoku_number;
+    let row = (current_selected_cell - col) / max_sudoku_number;
+    if(pressed_key === 37) {
+        // LEFT
+        if (col === 0) col = max_sudoku_number - 1;
+        else col -= 1;
+    }
+    else if(pressed_key === 38) {
+        // UP
+        if (row === 0) row = max_sudoku_number - 1;
+        else row -= 1;
+    }
+    else if(pressed_key === 39) {
+        // RIGHT
+        col = (col + 1) % max_sudoku_number;
+    }
+    else if(pressed_key === 40) {
+        // DOWN
+        row = (row + 1) % max_sudoku_number;
+    }
+    return (row * max_sudoku_number) + col;
+}
