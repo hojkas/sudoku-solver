@@ -85,6 +85,7 @@ def solver_index(request):
 
 def solver(request, name):
     template = 'solver/' + name + '.html'
+    template = 'solver/classic.html'
     try:
         django.template.loader.get_template(template)
     except TemplateDoesNotExist:
