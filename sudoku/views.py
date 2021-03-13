@@ -34,7 +34,12 @@ math_sudokus = {
 }
 sudokus_context = {'basic_sudokus': basic_sudokus,
                    'extra_rules': extra_rules,
-                   'math_sudokus': math_sudokus}
+                   'math_sudokus': math_sudokus,
+                   'max_sudoku_number': 9}
+
+max_sudoku_numbers = {'sudoku4x4': 4,
+                      'sudoku6x6': 6,
+                      'sudoku16x16': 16}
 
 @register.filter
 def get_range(val):
@@ -47,6 +52,26 @@ def get_cell_num(x, y):
 @register.filter
 def mul(a, b):
     return a * b
+
+@register.filter
+def get_note_x(max_sudoku_num):
+    if max_sudoku_num == 4:
+        return 2
+    if max_sudoku_num == 6:
+        return 2
+    if max_sudoku_num == 16:
+        return 4
+    return 3
+
+@register.filter
+def get_note_y(max_sudoku_num):
+    if max_sudoku_num == 4:
+        return 2
+    if max_sudoku_num == 6:
+        return 3
+    if max_sudoku_num == 16:
+        return 4
+    return 3
 
 def index(request):
     return render(request, 'index.html')
@@ -64,6 +89,11 @@ def solver(request, name):
         django.template.loader.get_template(template)
     except TemplateDoesNotExist:
         raise Http404(_('Aplikace na řešení') + ' "' + name + '" ' + _('nebyla nalezena.'))
+
+    if name in max_sudoku_numbers.keys():
+        sudokus_context['max_sudoku_number'] = max_sudoku_numbers[name]
+    else:
+        sudokus_context['max_sudoku_number'] = 9
 
     return render(request, template, sudokus_context)
 

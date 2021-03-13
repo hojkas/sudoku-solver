@@ -1,5 +1,5 @@
 .sudoku {
-    margin: auto;
+    margin: 2rem auto 2rem auto;
     border: solid 3px black;
 }
 
@@ -46,3 +46,18 @@
     border-right: solid 3px black;
 }
 
+.sudoku-4x4 tr:nth-child(2n) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-4x4 td:nth-child(2n) {
+    border-right: solid 3px black;
+}
+
+.sudoku-controls {
+    margin: 1rem auto 1rem auto;
+}
+
+.sudoku-controls-button {
+
+}

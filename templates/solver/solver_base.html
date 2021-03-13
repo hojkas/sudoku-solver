@@ -66,6 +66,8 @@
 {% endblock %}
 
 {% block content %}
+<script> const max_sudoku_number = {{ max_sudoku_number }}; </script>
+    max num: {{ max_sudoku_number }}
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -98,6 +100,13 @@
                     <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
                        data-bs-target="#solverInfoModal"></i>
                 </p>
+
+                <div>
+                    <div class="sudoku-controls">
+                        Controls
+                    </div>
+                </div>
+
                 {% block solver_block %}
 
                 {% endblock %}

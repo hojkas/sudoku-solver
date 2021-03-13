@@ -1,6 +1,9 @@
 $(document).ready(function()
 {
     let selected_cell_id = -1;
+    let highlight_selected = true;
+    let shift_toggle_setting = false;
+    let fill_in_solved = false;
 
     // Selecting cell by click
     $('.sudoku-cell').on('click', function () {
@@ -27,7 +30,8 @@ $(document).ready(function()
             }
             //key arrow
             else if (key >= 37 && key <= 40) {
-                change_selected(count_new_selected_cell(key, selected_cell_id, max_sudoku_number));
+                let n = count_new_selected_cell(key, selected_cell_id, max_sudoku_number);
+                change_selected(n);
             }
             // test if key pressed is one of possible numbers/letters for this sudoku
             else if ((max_sudoku_number === 4 && key >= 49 && key <= 52) ||

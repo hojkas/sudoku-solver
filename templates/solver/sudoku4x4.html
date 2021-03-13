@@ -1,0 +1,28 @@
+{% extends "solver/solver_base.html" %}
+
+{% block solver_block %}
+    <script> const max_sudoku_number = 4; </script>
+
+    <div>
+          <table class="sudoku sudoku-4x4">
+              {% for x in 4|get_range %}
+                  <tr>
+                  {% for y in 4|get_range %}
+                      <td class="sudoku-cell" id="cell-{{ x|mul:4|add:y }}">
+                        <div class="sudoku-solved-num" id="solved{{ x|mul:4|add:y }}">
+                            &nbsp;
+                        </div>
+                        <div class="sudoku-candidate-grid" id="notes{{ x|mul:4|add:y }}">
+                            <span id="note{{ x|mul:4|add:y }}-1">&nbsp;</span>
+                            <span id="note{{ x|mul:4|add:y }}-2">&nbsp;</span>
+                            <br>
+                            <span id="note{{ x|mul:4|add:y }}-3">&nbsp;</span>
+                            <span id="note{{ x|mul:4|add:y }}-4">&nbsp;</span>
+                        </div>
+                      </td>
+                  {% endfor %}
+                  </tr>
+              {% endfor %}
+          </table>
+    </div>
+{% endblock %}

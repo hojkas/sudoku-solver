@@ -1,29 +1,23 @@
 {% extends "solver/solver_base.html" %}
 
 {% block solver_block %}
-    <script> const max_sudoku_number = 9; </script>
-
     <div>
-          <table class="sudoku sudoku-9x9">
-              {% for x in 9|get_range %}
+          <table class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
+              {% for x in max_sudoku_number|get_range %}
                   <tr>
-                  {% for y in 9|get_range %}
-                      <td class="sudoku-cell" id="cell-{{ x|mul:9|add:y }}">
-                        <div class="sudoku-solved-num" id="solved{{ x|mul:9|add:y }}">
+                  {% for y in max_sudoku_number|get_range %}
+                      <td class="sudoku-cell" id="cell-{{ x|mul:max_sudoku_number|add:y }}">
+                        <div class="sudoku-solved-num" id="solved{{ x|mul:max_sudoku_number|add:y }}">
                             &nbsp;
                         </div>
-                        <div class="sudoku-candidate-grid" id="notes{{ x|mul:9|add:y }}">
-                            <span id="note{{ x|mul:9|add:y }}-1">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-2">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-3">&nbsp;</span>
+                        <div class="sudoku-candidate-grid" id="notes{{ x|mul:max_sudoku_number|add:y }}">
+                        {% for notes_x in max_sudoku_number|get_note_x|get_range %}
+                            {% for notes_y in max_sudoku_number|get_note_y|get_range %}
+                                <span id="note{{ x|mul:max_sudoku_number|add:y }}-{{ max_sudoku_number|get_note_y|mul:notes_x|add:notes_y|add:1 }}">&nbsp;</span>
+                            {% endfor %}
                             <br>
-                            <span id="note{{ x|mul:9|add:y }}-4">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-5">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-6">&nbsp;</span>
-                            <br>
-                            <span id="note{{ x|mul:9|add:y }}-7">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-8">&nbsp;</span>
-                            <span id="note{{ x|mul:9|add:y }}-9">&nbsp;</span>
+                        {% endfor %}
+
                         </div>
                       </td>
                   {% endfor %}
