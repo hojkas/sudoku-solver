@@ -1,4 +1,4 @@
-{% extends "solver/solver_base.html" %}
+{% extends "solver/solver_div.html" %}
 
 {% block solver_block %}
     <div>
@@ -27,14 +27,13 @@
     </div>
 
     <div>
-        TODO potenciální Quality of Life vylepšení: <br>
-        - možnost vybrat si, zda shift vypisuje nahotovo nebo mění toggle mezi notes/solved <br>
-        - vizuální čísla které půjde klikat místo zadávání klávesnicí
-    </div>
-    <div>
-        TODO other:
-        - 16x16 janky + a-f se zobrazuje jako čísla, fix
-        - classic mapování na každé sudoku?
+        TODO other:<br>
+        - nastavení - switch mezi toggle shift a hold shift<br>
+        - nastavení - zobrazit obvious kolize<br>
+        - highlight (udělat až po vyřešení uložení dat I guess)<br>
+        - 16x16 janky + a-f se zobrazuje jako čísla, fix<br>
+        - classic mapování na každé sudoku?<br>
+        - session minimálně pro udržení nastavení<br>
     </div>
 
 {% endblock %}

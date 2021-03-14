@@ -1,0 +1,73 @@
+{% extends "solver/solver_layout.html" %}
+{% load i18n %}
+
+{% block modals %}
+    {{ block.super }}
+
+    <!-- Modal solverInfoModal -->
+    <div class="modal fade" id="solverInfoModal" tabindex="-1" aria-labelledby="solverInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                {% trans 'Aplikace na řešení sudoku' %}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            TODO
+              <br>
+              {% trans "Role klávesy Shift:" %}
+              <form style="margin: 5px 0 5px 0;">
+                  <input type="radio" id="settings-shift-toggle-on"/>
+                  {% trans "Stisknutí shift přepínáná mezi zadáváním poznámky a vyplněním čísla." %}
+                  <br>
+                  <input type="radio" id="settings-shift-toggle-off"/>
+                  {% trans "S podrženým shiftem je číslo vyplněno, bez podržení je vložena poznámka." %}
+              </form>
+              {% blocktrans %}
+                  (V režimu vyplnění při podrženém shiftu tlačítka <i class="fas fa-pen-nib"></i>/
+                  <i class="fas fa-pencil-alt"></i> pouze ukazují stav stisku klávesy a nelze přes ně přepínat režim
+                  zadávání poznámky/vyřešeného čísla.)
+              {% endblocktrans %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block solver_div %}
+    <div class="row">
+        <div class="col-md-11" style="text-align: right">
+            {% trans 'Ovládání a nastavení' %}
+        </div>
+        <div class="col-md-1" style="padding-left: 5px;">
+            <i type="button" class="fas fa-cog" data-bs-toggle="modal"
+           data-bs-target="#solverInfoModal"></i>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4" style="text-align: center;">
+            <button id="controls_fill_solved" class="sudoku-controls-button unselected">
+                <i class="fas fa-2x fa-pen-nib"></i>
+            </button>
+            <button id="controls_fill_notes" class="sudoku-controls-button selected">
+                <i class="fas fa-2x fa-pencil-alt"></i>
+            </button>
+        </div>
+
+        <div class="col-md-8">
+            something
+            <br>
+            else
+        </div>
+    </div>
+
+    {% block solver_block %}
+
+    {% endblock %}
+{% endblock %}

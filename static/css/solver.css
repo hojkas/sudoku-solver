@@ -54,10 +54,40 @@
     border-right: solid 3px black;
 }
 
+.sudoku-6x6 tr:nth-child(3n) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-6x6 td:nth-child(2n) {
+    border-right: solid 3px black;
+}
+
+
 .sudoku-controls {
     margin: 1rem auto 1rem auto;
 }
 
 .sudoku-controls-button {
+    border-radius: 5px;
+    width: 3rem;
+    height: 3rem;
+    color: grey;
+    background-color: lightskyblue;
+    border-color: grey;
+}
+
+.sudoku-controls-button.selected {
+    color: black;
+    background-color: dodgerblue;
+    border-color: black;
+}
+
+.sudoku-controls-button.unselected {
+    color: grey;
+    background-color: lightgrey;
+    border-color: grey;
+}
+
+.sudoku-controls-button i {
 
 }
