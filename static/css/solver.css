@@ -62,6 +62,31 @@
     border-right: solid 3px black;
 }
 
+.sudoku-16x16 tr {
+
+}
+
+.sudoku-16x16 td {
+
+}
+
+.sudoku-16x16 tr:nth-child(4n) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-16x16 td:nth-child(4n) {
+    border-right: solid 3px black;
+}
+
+.sudoku-16x16 .sudoku-solved-num {
+    font-size: 1rem;
+}
+
+.sudoku-16x16 .sudoku-candidate-grid {
+    line-height: 0.3rem;
+    letter-spacing: 0;
+    font-size: 0.2rem;
+}
 
 .sudoku-controls {
     margin: 1rem auto 1rem auto;

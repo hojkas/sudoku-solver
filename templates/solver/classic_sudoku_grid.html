@@ -2,7 +2,7 @@
 
 {% block solver_block %}
     <div>
-          <table class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
+          <table id="sudoku-table" class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
               {% for x in max_sudoku_number|get_range %}
                   <tr>
                   {% for y in max_sudoku_number|get_range %}
@@ -31,7 +31,8 @@
         - nastavení - switch mezi toggle shift a hold shift<br>
         - nastavení - zobrazit obvious kolize<br>
         - highlight (udělat až po vyřešení uložení dat I guess)<br>
-        - 16x16 janky + a-f se zobrazuje jako čísla, fix<br>
+        - 16x16 janky + a-f se zobrazuje jako čísla => 16x16 potřebuje vip stránku pro sebe, necháno
+        na později jako extra když bude čas<br>
         - classic mapování na každé sudoku?<br>
         - session minimálně pro udržení nastavení<br>
     </div>
