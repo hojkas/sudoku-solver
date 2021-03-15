@@ -1,7 +1,7 @@
 {% extends "solver/solver_div.html" %}
 
 {% block solver_block %}
-    <div>
+    <div id="sudoku-wrapper">
           <table id="sudoku-table" class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
               {% for x in max_sudoku_number|get_range %}
                   <tr>

@@ -5,6 +5,7 @@ $(document).ready(function()
     // ==============================
 
     let selected_cell_id = -1;
+    let highlighted_num = -1;
     let shift_is_toggle = true;
     let fill_in_solved = false;
 
@@ -30,7 +31,7 @@ $(document).ready(function()
 
     $(window).keyup(function (event) {
         if(event.keyCode === 16 && !shift_is_toggle) { //shift used as hold down for solved
-            highlight_selected_fill_in_button($('#controls_fill_notes'), $('#controls_fill_solved'));
+            highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
         }
     });
 
@@ -41,15 +42,15 @@ $(document).ready(function()
             if(shift_is_toggle) { //setting to use shift as toggle
                 if(fill_in_solved) {
                     fill_in_solved = false;
-                    highlight_selected_fill_in_button($('#controls_fill_notes'), $('#controls_fill_solved'));
+                    highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
                 }
                 else {
                     fill_in_solved = true;
-                    highlight_selected_fill_in_button($('#controls_fill_solved'), $('#controls_fill_notes'));
+                    highlight_selected_controls_button($('#controls_fill_solved'), $('#controls_fill_notes'));
                 }
             }
             else { //shift is used as hold for solved, only change appearance
-                highlight_selected_fill_in_button($('#controls_fill_solved'), $('#controls_fill_notes'));
+                highlight_selected_controls_button($('#controls_fill_solved'), $('#controls_fill_notes'));
             }
         }
 
@@ -85,14 +86,14 @@ $(document).ready(function()
 
     $('#controls_fill_solved').on('click', function() {
         if(shift_is_toggle) {
-            highlight_selected_fill_in_button($(this), $('#controls_fill_notes'));
+            highlight_selected_controls_button($(this), $('#controls_fill_notes'));
             fill_in_solved = true;
         }
     });
 
     $('#controls_fill_notes').on('click', function() {
         if(shift_is_toggle) {
-            highlight_selected_fill_in_button($(this), $('#controls_fill_solved'));
+            highlight_selected_controls_button($(this), $('#controls_fill_solved'));
             fill_in_solved = false;
         }
     });
@@ -109,7 +110,41 @@ $(document).ready(function()
             $('#settings-shift-toggle-on').prop('checked', false);
             shift_is_toggle = false;
             // setting default values
-            highlight_selected_fill_in_button($('#controls_fill_notes'), $('#controls_fill_solved'));
+            highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
         }
+    });
+
+    // Code snippet from https://stackoverflow.com/questions/38425931/download-table-as-png-using-jquery/40644383,
+    // answered on Nov 16 2016 by Christos Lytra; with small changes to work with html2canvas v1.0.0 and
+    // to scale for higher resolution
+    $('#export-sudoku').on('click', function() {
+        remove_highlight_for_download(selected_cell_id);
+        html2canvas(document.getElementById('sudoku-table'), {scale: 5}).then(function(canvas) {
+            let saveAs = function(uri, filename) {
+                let link = document.createElement('a');
+                if (typeof link.download === 'string') {
+                    document.body.appendChild(link); // Firefox requires the link to be in the body
+                    link.download = filename;
+                    link.href = uri;
+                    link.click();
+                    document.body.removeChild(link); // remove the link when done
+                } else {
+                    location.replace(uri);
+                }
+            };
+
+            let img = canvas.toDataURL(),
+                uri = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+            saveAs(uri, 'sudokuExport.png');
+        });
+        restore_highlight_for_download(selected_cell_id);
+    });
+
+    $('.highlight-button').on('click', function() {
+        let number_id = $(this).attr('id').split('_')[2];
+        highlight_selected_controls_button($('#highlight_number_' + number_id), $('#highlight_number_' + highlighted_num));
+        change_numbers_highlight(number_id, highlighted_num);
+        highlighted_num = number_id;
     });
 });

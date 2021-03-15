@@ -69,7 +69,19 @@ function count_new_selected_cell(pressed_key, current_selected_cell, max_sudoku_
     return (row * max_sudoku_number) + col;
 }
 
-function highlight_selected_fill_in_button(selected_button, other_button) {
+function highlight_selected_controls_button(selected_button, other_button) {
     selected_button.css({'background-color': 'dodgerblue', 'color': 'black', 'border-color': 'black'});
     other_button.css({'background-color': 'lightgrey', 'color': 'grey', 'border-color': 'grey'});
+}
+
+function remove_highlight_for_download(cell_id) {
+    $('#cell-' + cell_id).css({'backgroundColor':'transparent'});
+}
+
+function restore_highlight_for_download(cell_id) {
+    $('#cell-' + cell_id).css({'backgroundColor':'lightskyblue'});
+}
+
+function change_numbers_highlight(new_highlight, old_hightlight) {
+
 }

@@ -1,6 +1,7 @@
 body {
     background-image: url("/static/img/banner-poly.jpg");
     background-position-x: center;
+    overflow: hidden;
 }
 
 #page-container {

@@ -40,19 +40,15 @@
 {% endblock %}
 
 {% block solver_div %}
-    <div class="row">
-        Develop only: export sudoku as jpg <br>
-        TODO: table as jpeg export
-    </div>
-
-
-
-
-    <div class="row">
-        <div class="col-md-11" style="text-align: right">
-            {% trans 'Ovládání a nastavení' %}
+    <div class="row" style="margin: 0.2rem 0 1rem 0;">
+        <div class="col-md-7">
+            <i class="fas fa-download"></i>
+            <a href="#" id="export-sudoku">
+                {% trans "Stáhnout sudoku ve fromátu PNG" %}
+            </a>
         </div>
-        <div class="col-md-1" style="padding-left: 5px;">
+        <div class="col-md-5" style="text-align: right">
+            {% trans 'Ovládání a nastavení' %}
             <i type="button" class="fas fa-cog" data-bs-toggle="modal"
            data-bs-target="#solverInfoModal"></i>
         </div>
@@ -60,18 +56,33 @@
 
     <div class="row">
         <div class="col-md-4" style="text-align: center;">
-            <button id="controls_fill_solved" class="sudoku-controls-button unselected">
-                <i class="fas fa-2x fa-pen-nib"></i>
-            </button>
-            <button id="controls_fill_notes" class="sudoku-controls-button selected">
-                <i class="fas fa-2x fa-pencil-alt"></i>
-            </button>
+            <div><b>
+                {% trans "Mód zadávání" %}
+            </b></div>
+            <div>
+                <button id="controls_fill_solved" class="sudoku-controls-button unselected">
+                    <i class="fas fa-pen-nib"></i>
+                </button>
+                <button id="controls_fill_notes" class="sudoku-controls-button selected">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+            </div>
         </div>
 
         <div class="col-md-8">
-            something
-            <br>
-            else
+            <div>
+                <b>{% trans "Podbarvení čísel" %}</b>
+            </div>
+            <div>
+                {% for num in max_sudoku_number|get_range %}
+                    <button id="highlight_number_{{ num|add:1 }}" class="sudoku-controls-button unselected highlight-button">
+                        {{ num|add:1 }}
+                    </button>
+                {% endfor %}
+                <button id="highlight_number_-1" class="sudoku-controls-button selected highlight-button">
+                    <i class="fas fa-ban"></i>
+                </button>
+            </div>
         </div>
     </div>
 

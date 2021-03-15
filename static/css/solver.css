@@ -99,6 +99,9 @@
     color: grey;
     background-color: lightskyblue;
     border-color: grey;
+    margin-top: 3px;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .sudoku-controls-button.selected {
