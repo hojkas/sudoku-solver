@@ -1,3 +1,5 @@
+window.test_variable = 5;
+
 $(document).ready(function()
 {
     // ==============================
@@ -21,10 +23,14 @@ $(document).ready(function()
 
     // on true, obvious mistakes (same numbers twice in row/col/sector) are highlighted
     let show_obvious_mistakes = false
+    // arrays to hold ids of currently highlighted cell ids for easiers clearing
+    let obvious_mistakes_solved_colored = [];
+    let obvious_mistakes_notes_colored = [];
 
     // TODO more
 
     $('#settings-shift-toggle-on').prop('checked', true);
+    $('#settings-highlight-mistakes-off').prop('checked', true);
 
     // ==============================
     // registering handling functions
@@ -126,6 +132,20 @@ $(document).ready(function()
             shift_is_toggle = false;
             // setting default values
             highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
+        }
+    });
+
+    $('#settings-highlight-mistakes-off').change(function () {
+        if ($(this).is(':checked')) {
+            $('#settings-highlight-mistakes-on').prop('checked', false);
+            show_obvious_mistakes = false;
+        }
+    });
+
+    $('#settings-highlight-mistakes-on').change(function () {
+        if ($(this).is(':checked')) {
+            $('#settings-highlight-mistakes-off').prop('checked', false);
+            show_obvious_mistakes = true;
         }
     });
 

@@ -18,9 +18,22 @@ function change_number(key, cell_id) {
     snap_visibility_to_notes(cell_id);
 }
 
+function remove_number_from_div(div) {
+    //TODO remove num and all highlights
+}
+
+function test() {
+    alert(window.test_variable);
+}
+
+function add_number_to_div(div, number_to_add) {
+
+}
+
 function fill_number(key, cell_id) {
-    const target_solved = '#solved' + cell_id;
-    $(target_solved).html(key.toString());
+    const target_solved = $('#solved' + cell_id);
+    target_solved.html(key.toString());
+    target_solved.css({'background-color': 'transparent'});
     snap_visibility_to_solved(cell_id);
     clear_notes(cell_id);
 }
@@ -28,7 +41,11 @@ function fill_number(key, cell_id) {
 function clear_notes(cell_id) {
     let i;
     const targetNote = '#note' + cell_id + '-';
-    for(i = 1; i <= max_sudoku_number; i++) $(targetNote + i).html('&nbsp;');
+    for(i = 1; i <= max_sudoku_number; i++) {
+        let target_div_in_note = $(targetNote + i);
+        target_div_in_note.html('&nbsp;');
+        target_div_in_note.css({'background-color': 'transparent'});
+    }
 }
 
 function clear_solved(cell_id) {
@@ -83,5 +100,40 @@ function restore_highlight_for_download(cell_id) {
 }
 
 function change_numbers_highlight(new_highlight, old_hightlight) {
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for (let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            // for each possible cell id in the sudoku
+            alter_highlight(new_highlight, old_hightlight, cell_id);
+        }
+    }
+}
 
+function alter_highlight(number_to_highlight, number_to_unhighlight, cell_id) {
+    if(is_solved_visible(cell_id)) {
+        // solved is currently visible
+        let solved_ref = $('#solved' + cell_id);
+        if(solved_ref.text() === number_to_highlight) {
+            solved_ref.css({'background-color': 'lightpink'});
+        }
+        if(solved_ref.text() === number_to_unhighlight) {
+            solved_ref.css({'background-color': 'transparent'});
+        }
+    }
+    else {
+        // notes are currently visible
+        let note_to_highlight_ref = $('#note' + cell_id + '-' + number_to_highlight);
+        let note_to_unhighlight_ref = $('#note' + cell_id + '-' + number_to_unhighlight);
+        if(note_to_highlight_ref.text() === number_to_highlight) {
+            note_to_highlight_ref.css({'background-color': 'lightpink'});
+        }
+        if(note_to_unhighlight_ref.text() === number_to_unhighlight) {
+            note_to_unhighlight_ref.css({'background-color': 'transparent'});
+        }
+    }
+}
+
+// returns true if the cell currently has "solved" num visible, false if it has the "notes"
+function is_solved_visible(cell_id) {
+    return $('#solved' + cell_id).is(':visible');
 }

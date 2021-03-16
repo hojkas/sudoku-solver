@@ -17,7 +17,7 @@
           <div class="modal-body">
             TODO
               <br>
-              {% trans "Role klávesy Shift:" %}
+              <b>{% trans "Role klávesy Shift:" %}</b>
               <form style="margin: 5px 0 5px 0;">
                   <input type="radio" id="settings-shift-toggle-on"/>
                   {% trans "Stisknutí shift přepínáná mezi zadáváním poznámky a vyplněním čísla." %}
@@ -30,6 +30,16 @@
                   <i class="fas fa-pencil-alt"></i> pouze ukazují stav stisku klávesy a nelze přes ně přepínat režim
                   zadávání poznámky/vyřešeného čísla.)
               {% endblocktrans %}
+              <br>
+              <b>{% trans "Zvýraznění kolizí" %}</b>
+              <br>
+              <form style="margin: 5px 0 5px 0;">
+                  <input type="radio" id="settings-highlight-mistakes-off"/>
+                  {% trans "Nezvýrazňovat číslice v přímé kolizi" %}
+                  <br>
+                  <input type="radio" id="settings-highlight-mistakes-on"/>
+                  {% trans "Označit číslice v přímé kolizi červeně" %}
+              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -85,6 +95,8 @@
             </div>
         </div>
     </div>
+
+    <button onclick="test()">click me</button>
 
     {% block solver_block %}
 
