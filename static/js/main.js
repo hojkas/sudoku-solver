@@ -4,10 +4,25 @@ $(document).ready(function()
     // startup variables and settings
     // ==============================
 
+    // number of cell that is currently selected = highlighted
     let selected_cell_id = -1;
+
+    // value of number to be highlighter wherever it's, for the purpose of restoring highlighted cells
+    // after user changes it
     let highlighted_num = -1;
+
+    // setting to set if shift click toggles between solved and notes
+    // (on false, held down shift is solved, without shift is notes)
     let shift_is_toggle = true;
+
+    // on shift_is_toggle == true, this variable sets if the filled in numbers from user are solved
+    // or notes (solved on true, notes on false)
     let fill_in_solved = false;
+
+    // on true, obvious mistakes (same numbers twice in row/col/sector) are highlighted
+    let show_obvious_mistakes = false
+
+    // TODO more
 
     $('#settings-shift-toggle-on').prop('checked', true);
 
@@ -70,7 +85,7 @@ $(document).ready(function()
             else if ((max_sudoku_number === 4 && key >= 49 && key <= 52) ||
                (max_sudoku_number === 6 && key >= 49 && key <= 54) ||
                (max_sudoku_number === 9 && key >= 49 && key <= 57) ||
-               (max_sudoku_number === 16 && ((key >= 49 && key <= 57) || (key >= 65 && key <= 70)))) {
+               (max_sudoku_number === 16 && ((key >= 49 && key <= 57) || (key >= 65 && key <= 71)))) {
                     let num;
                     if(key <= 57) num = key - 48; //for nums 1-9
                     else num = key - 55; //for hexa
