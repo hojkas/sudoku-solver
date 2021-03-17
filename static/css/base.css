@@ -1,7 +1,14 @@
 body {
     background-image: url("/static/img/banner-poly.jpg");
     background-position-x: center;
-    overflow: hidden;
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+  display: none;
 }
 
 #page-container {

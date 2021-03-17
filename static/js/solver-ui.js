@@ -1,46 +1,44 @@
-function change_number(key, cell_id) {
-    const target_note = '#note' + cell_id + '-' + key;
+function change_number_among_notes(key) {
+    const target_note = $('#note' + window.selected_cell_id + '-' + key);
     //if there was solved key, it is kept as a note
-    const solved_num = $('#solved' + cell_id).text();
+    const solved_num = $('#solved' + window.selected_cell_id).text();
     if(solved_num !== '\xa0') {
-        $('#note' + cell_id + '-' + solved_num).html(solved_num);
-        clear_solved(cell_id);
+        add_number_to_div($('#note' + window.selected_cell_id + '-' + solved_num), solved_num);
+        clear_solved();
     }
 
-    if($(target_note).text() === '\xa0') {
+    if(target_note.text() === '\xa0') {
         //is empty and num should be added
-        $(target_note).html(key.toString());
+        add_number_to_div(target_note, key.toString());
     }
     else {
         //has num note and should be erased
-        $(target_note).html('&nbsp;');
+        remove_number_from_div(target_note)
     }
-    snap_visibility_to_notes(cell_id);
+    snap_visibility_to_notes();
 }
 
 function remove_number_from_div(div) {
-    //TODO remove num and all highlights
-}
-
-function test() {
-    alert(window.test_variable);
+    div.html('&nbsp;');
+    div.css({'background-color': 'transparent'});
 }
 
 function add_number_to_div(div, number_to_add) {
-
+    div.html(number_to_add);
+    if(number_to_add === window.highlighted_num) div.css({'background-color': 'pink'});
+    else div.css({'background-color': 'transparent'});
 }
 
-function fill_number(key, cell_id) {
-    const target_solved = $('#solved' + cell_id);
-    target_solved.html(key.toString());
-    target_solved.css({'background-color': 'transparent'});
-    snap_visibility_to_solved(cell_id);
-    clear_notes(cell_id);
+function fill_number(key) {
+    const target_solved = $('#solved' + window.selected_cell_id);
+    add_number_to_div(target_solved, key.toString());
+    snap_visibility_to_solved();
+    clear_notes();
 }
 
-function clear_notes(cell_id) {
+function clear_notes() {
     let i;
-    const targetNote = '#note' + cell_id + '-';
+    const targetNote = '#note' + window.selected_cell_id + '-';
     for(i = 1; i <= max_sudoku_number; i++) {
         let target_div_in_note = $(targetNote + i);
         target_div_in_note.html('&nbsp;');
@@ -48,23 +46,25 @@ function clear_notes(cell_id) {
     }
 }
 
-function clear_solved(cell_id) {
-    $('#solved' + cell_id).html('&nbsp;');
+function clear_solved() {
+    const targetSolved = $('#solved' + window.selected_cell_id);
+    targetSolved.html('&nbsp;');
+    targetSolved.css({'background-color': 'transparent'});
 }
 
-function snap_visibility_to_solved(cell_id) {
-    const targetDiv = '#solved' + cell_id;
+function snap_visibility_to_solved() {
+    const targetDiv = '#solved' + window.selected_cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
 
-function snap_visibility_to_notes(cell_id) {
-    const targetDiv = '#notes' + cell_id;
+function snap_visibility_to_notes() {
+    const targetDiv = '#notes' + window.selected_cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
 
-function count_new_selected_cell(pressed_key, current_selected_cell, max_sudoku_number) {
-    let col = current_selected_cell % max_sudoku_number;
-    let row = (current_selected_cell - col) / max_sudoku_number;
+function count_new_selected_cell(pressed_key) {
+    let col = window.selected_cell_id % max_sudoku_number;
+    let row = (window.selected_cell_id - col) / max_sudoku_number;
     if(pressed_key === 37) {
         // LEFT
         if (col === 0) col = max_sudoku_number - 1;
@@ -91,12 +91,12 @@ function highlight_selected_controls_button(selected_button, other_button) {
     other_button.css({'background-color': 'lightgrey', 'color': 'grey', 'border-color': 'grey'});
 }
 
-function remove_highlight_for_download(cell_id) {
-    $('#cell-' + cell_id).css({'backgroundColor':'transparent'});
+function remove_highlight_for_download() {
+    $('#cell-' + window.selected_cell_id).css({'backgroundColor':'transparent'});
 }
 
-function restore_highlight_for_download(cell_id) {
-    $('#cell-' + cell_id).css({'backgroundColor':'lightskyblue'});
+function restore_highlight_for_download() {
+    $('#cell-' + window.selected_cell_id).css({'backgroundColor':'lightskyblue'});
 }
 
 function change_numbers_highlight(new_highlight, old_hightlight) {
@@ -136,4 +136,12 @@ function alter_highlight(number_to_highlight, number_to_unhighlight, cell_id) {
 // returns true if the cell currently has "solved" num visible, false if it has the "notes"
 function is_solved_visible(cell_id) {
     return $('#solved' + cell_id).is(':visible');
+}
+
+function change_selected(new_cell) {
+    if (window.selected_cell_id !== -1) {
+        $('#cell-' + window.selected_cell_id).css({'backgroundColor':'transparent'});
+    }
+    $('#cell-' + new_cell).css({'backgroundColor':'lightskyblue'});
+    window.selected_cell_id = new_cell;
 }
