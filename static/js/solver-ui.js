@@ -145,3 +145,21 @@ function change_selected(new_cell) {
     $('#cell-' + new_cell).css({'backgroundColor':'lightskyblue'});
     window.selected_cell_id = new_cell;
 }
+
+// Highlights all collisions
+function highlight_collisions() {
+
+}
+
+// Removes all collision highlights
+function remove_all_highlighted_collisions() {
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for(let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            $('#solved' + cell_id).css({'color': 'black'});
+            for(let i = 1; i <= max_sudoku_number; i++) {
+                $('#note' + cell_id + '-' + i).css({'color': '#080808'});
+            }
+        }
+    }
+}

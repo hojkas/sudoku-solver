@@ -16,30 +16,31 @@
           </div>
           <div class="modal-body">
             TODO
-              <br>
-              <b>{% trans "Role klávesy Shift:" %}</b>
-              <form style="margin: 5px 0 5px 0;">
-                  <input type="radio" id="settings-shift-toggle-on"/>
-                  {% trans "Stisknutí shift přepínáná mezi zadáváním poznámky a vyplněním čísla." %}
-                  <br>
-                  <input type="radio" id="settings-shift-toggle-off"/>
-                  {% trans "S podrženým shiftem je číslo vyplněno, bez podržení je vložena poznámka." %}
-              </form>
-              {% blocktrans %}
-                  (V režimu vyplnění při podrženém shiftu tlačítka <i class="fas fa-pen-nib"></i>/
-                  <i class="fas fa-pencil-alt"></i> pouze ukazují stav stisku klávesy a nelze přes ně přepínat režim
-                  zadávání poznámky/vyřešeného čísla.)
-              {% endblocktrans %}
-              <br>
-              <b>{% trans "Zvýraznění kolizí" %}</b>
-              <br>
-              <form style="margin: 5px 0 5px 0;">
-                  <input type="radio" id="settings-highlight-mistakes-off"/>
-                  {% trans "Nezvýrazňovat číslice v přímé kolizi" %}
-                  <br>
-                  <input type="radio" id="settings-highlight-mistakes-on"/>
-                  {% trans "Označit číslice v přímé kolizi červeně" %}
-              </form>
+              <div class="settings-div">
+                  <b>{% trans "Role klávesy Shift:" %}</b>
+                  <form>
+                      <input type="radio" id="settings-shift-toggle-on"/>
+                      {% trans "Stisknutí shift přepínáná mezi zadáváním poznámky a vyplněním čísla." %}
+                      <br>
+                      <input type="radio" id="settings-shift-toggle-off"/>
+                      {% trans "S podrženým shiftem je číslo vyplněno, bez podržení je vložena poznámka." %}
+                  </form>
+                  {% blocktrans %}
+                      (V režimu vyplnění při podrženém shiftu tlačítka <i class="fas fa-pen-nib"></i>/
+                      <i class="fas fa-pencil-alt"></i> pouze ukazují stav stisku klávesy a nelze přes ně přepínat režim
+                      zadávání poznámky/vyřešeného čísla.)
+                  {% endblocktrans %}
+              </div>
+              <div class="settings-div">
+                  <b>{% trans "Zvýraznění kolizí" %}</b>
+                  <form>
+                      <input type="radio" id="settings-highlight-mistakes-off"/>
+                      {% trans "Nezvýrazňovat číslice v přímé kolizi" %}
+                      <br>
+                      <input type="radio" id="settings-highlight-mistakes-on"/>
+                      {% trans "Označit číslice v přímé kolizi červeně" %}
+                  </form>
+              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -64,7 +65,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin: 1rem 0 1rem 0;">
         <div class="col-md-4" style="text-align: center;">
             <div><b>
                 {% trans "Mód zadávání" %}
@@ -95,6 +96,35 @@
             </div>
         </div>
     </div>
+
+    <div class="row" style="margin: 1rem 0 1rem 0;">
+        {% if developers_tools %}
+            <div class="col-md-12">
+                <b>Custom highlight</b>
+                <div>
+                    <button id="custom-highlight-off" class="my-generic-button selected">
+                        Off
+                    </button>
+                    <button id="custom-highlight-green" class="my-generic-button unselected color-pick-button">
+                        <div class="color-pick-div" style="background-color: limegreen;">&nbsp;</div>
+                    </button>
+                    <button id="custom-highlight-yellow" class="my-generic-button unselected color-pick-button">
+                        <div class="color-pick-div" style="background-color: yellow">&nbsp;</div>
+                    </button>
+                    <button id="custom-highlight-red" class="my-generic-button unselected color-pick-button">
+                        <div class="color-pick-div" style="background-color: red">&nbsp;</div>
+                    </button>
+                    <button id="custom-highlight-remove-one" class="my-generic-button unselected color-pick-button">
+                        <div class="color-pick-div" style="background-color: white;">&nbsp;</div>
+                    </button>
+                    <button id="custom-highlight-remove-all" class="my-generic-button unselected">
+                        Remove All
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
 
 
     {% block solver_block %}

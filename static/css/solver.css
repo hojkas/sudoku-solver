@@ -104,18 +104,39 @@
     font-weight: bold;
 }
 
-.sudoku-controls-button.selected {
+.selected {
     color: black;
     background-color: dodgerblue;
     border-color: black;
 }
 
-.sudoku-controls-button.unselected {
+.unselected {
     color: grey;
     background-color: lightgrey;
     border-color: grey;
 }
 
-.sudoku-controls-button i {
-
+.settings-div {
+    margin: 1rem 0 1rem 0;
 }
+
+.my-generic-button {
+    border-radius: 5px;
+    height: 2rem;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.color-pick-button {
+    width: 2rem;
+    text-align: center;
+    padding: 0;
+}
+
+.color-pick-div {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: auto;
+    border-radius: 5px;
+}
+

@@ -7,6 +7,8 @@ from django.template import TemplateDoesNotExist
 from django.template.defaultfilters import register
 from django.utils.translation import gettext as _
 
+# Variable that allows showing of extra controls such as custom highlights for
+developers_tools = True
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
@@ -17,7 +19,8 @@ medium_strategies = {}
 advanced_strategies = {}
 strategies_context = {'easy_strategies': easy_strategies,
                       'medium_strategies': medium_strategies,
-                      'advanced_strategies': advanced_strategies}
+                      'advanced_strategies': advanced_strategies,
+                      'developers_tools': developers_tools}
 
 # === SOLVER SUPPORTING VARIABLES ===
 basic_sudokus = {
@@ -35,7 +38,8 @@ math_sudokus = {
 sudokus_context = {'basic_sudokus': basic_sudokus,
                    'extra_rules': extra_rules,
                    'math_sudokus': math_sudokus,
-                   'max_sudoku_number': 9}
+                   'max_sudoku_number': 9,
+                   'developers_tools': developers_tools}
 
 max_sudoku_numbers = {'sudoku4x4': 4,
                       'sudoku6x6': 6,
