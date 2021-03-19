@@ -20,7 +20,7 @@ window.shift_is_toggle = true;
 window.fill_in_solved = false;
 
 // on true, obvious mistakes (same numbers twice in row/col/sector) are highlighted
-window.show_obvious_mistakes = false;
+window.show_collisions = false;
 
 // arrays to hold ids of currently highlighted cell ids for easiers clearing
 window.obvious_mistakes_solved_colored = [];
@@ -37,6 +37,11 @@ $(document).ready(function()
 
     // Selecting cell by click
     $('.sudoku-cell').on('click', function () {
+        // if developer tools are on and custom highlight is set to something else than "off",
+        // selection clicks are ignored
+        if(developers_tools && (window.selected_highlight_name !== 'off')) {
+            return;
+        }
         let new_id = $(this).attr('id').split('-')[1];
         change_selected(new_id);
     });

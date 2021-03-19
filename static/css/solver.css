@@ -23,6 +23,7 @@
     font-size: 1.5rem;
     font-weight: bold;
     display: none;
+    width: 100%;
 }
 
 .sudoku-candidate-grid {

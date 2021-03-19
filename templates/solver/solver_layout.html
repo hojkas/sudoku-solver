@@ -48,8 +48,13 @@
 {% block content %}
 <script>
     const max_sudoku_number = {{ max_sudoku_number }};
-    const developers_tools = {{ developers_tools }};
 </script>
+
+{% if developers_tools %}
+    <script>const developers_tools = true;</script>
+{% else %}
+    <script>const developers_tools = false;</script>
+{% endif %}
 
 <div class="container">
     <div class="row">
@@ -94,6 +99,8 @@
             <div class="main-block">
                 Supported strategies here
             </div>
+
+            <button onclick="test()">click me</button>
         </div>
     </div>
 </div>

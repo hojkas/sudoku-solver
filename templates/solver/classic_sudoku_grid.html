@@ -13,7 +13,8 @@
                         <div class="sudoku-candidate-grid" id="notes{{ x|mul:max_sudoku_number|add:y }}">
                         {% for notes_y in max_sudoku_number|get_note_y|get_range %}
                             {% for notes_x in max_sudoku_number|get_note_x|get_range %}
-                                <span id="note{{ x|mul:max_sudoku_number|add:y }}-{{ max_sudoku_number|get_note_x|mul:notes_y|add:notes_x|add:1 }}">&nbsp;</span>
+                                <span class="sudoku-note-num"
+                                        id="note{{ x|mul:max_sudoku_number|add:y }}-{{ max_sudoku_number|get_note_x|mul:notes_y|add:notes_x|add:1 }}">&nbsp;</span>
                             {% endfor %}
                             <br>
                         {% endfor %}
