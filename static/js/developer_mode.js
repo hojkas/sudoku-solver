@@ -3,6 +3,7 @@ window.custom_highlight_green = []
 window.custom_highlight_yellow = []
 
 window.selected_highlight_name = 'off';
+window.fill_in_candidates_by_click = false;
 
 $(document).ready(function() {
     // registering click functions from all
@@ -47,6 +48,19 @@ $(document).ready(function() {
             $(this).css({'background-color': window.selected_highlight_name});
         }
     });
+
+    $('#fill_all_candidates_on_click').change(function() {
+        window.fill_in_candidates_by_click = $(this).is(':checked');
+    });
+
+    $('#fill_candidates_everywhere').on('click', function() {
+       for(let x = 0; x < max_sudoku_number; x++) {
+           for(let y = 0; y < max_sudoku_number; y++) {
+               let cell_id = x * max_sudoku_number + y;
+               if(!is_solved_visible(cell_id)) fill_all_candidates_in_cell(cell_id);
+           }
+       }
+    });
 });
 
 function custom_highlight_buttons_change(former_button_name, current_button_name) {
@@ -75,6 +89,14 @@ function remove_all_custom_highlight() {
     }
 }
 
+function fill_all_candidates_in_cell(cell_id) {
+    for(let x = 1; x <= max_sudoku_number; x++) {
+        add_number_to_div($('#note' + cell_id + '-' + x), x);
+        clear_solved();
+        snap_visibility_to_notes();
+    }
+}
+
 function test() {
-    alert(developers_tools + '<');
+    alert(window.fill_in_candidates_by_click);
 }

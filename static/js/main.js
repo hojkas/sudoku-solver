@@ -39,11 +39,20 @@ $(document).ready(function()
     $('.sudoku-cell').on('click', function () {
         // if developer tools are on and custom highlight is set to something else than "off",
         // selection clicks are ignored
-        if(developers_tools && (window.selected_highlight_name !== 'off')) {
-            return;
+        if(developers_tools) {
+            if(window.selected_highlight_name !== 'off') {
+                return;
+            }
         }
+        // "vanilla" functionality
         let new_id = $(this).attr('id').split('-')[1];
         change_selected(new_id);
+
+        if(developers_tools) {
+            if(window.fill_in_candidates_by_click && (window.selected_cell_id !== -1)) {
+                fill_all_candidates_in_cell(window.selected_cell_id);
+            }
+        }
     });
 
     $(window).keyup(function (event) {

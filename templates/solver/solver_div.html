@@ -99,7 +99,7 @@
 
     <div class="row" style="margin: 1rem 0 1rem 0;">
         {% if developers_tools %}
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <b>Custom highlight</b>
                 <div>
                     <button id="custom-highlight-off" class="my-generic-button selected">
@@ -121,6 +121,10 @@
                         Remove All
                     </button>
                 </div>
+            </div>
+            <div class="col-md-5">
+                <input type="checkbox" id="fill_all_candidates_on_click"/> Fill with candidates by click<br>
+                <button id="fill_candidates_everywhere">Fill all not solved with candidates</button>
             </div>
         {% endif %}
     </div>
