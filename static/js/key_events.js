@@ -21,8 +21,8 @@ function on_shift_key_up() {
 }
 
 function on_delete_key_down() {
-    clear_notes();
-    clear_solved();
+    clear_selected_notes();
+    clear_selected_solved();
 }
 
 function on_arrow_key_down(key) {

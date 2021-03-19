@@ -4,7 +4,7 @@ function change_number_among_notes(key) {
     const solved_num = $('#solved' + window.selected_cell_id).text();
     if(solved_num !== '\xa0') {
         add_number_to_div($('#note' + window.selected_cell_id + '-' + solved_num), solved_num);
-        clear_solved();
+        clear_selected_solved();
     }
 
     if(target_note.text() === '\xa0') {
@@ -15,7 +15,7 @@ function change_number_among_notes(key) {
         //has num note and should be erased
         remove_number_from_div(target_note)
     }
-    snap_visibility_to_notes();
+    snap_selected_visibility_to_notes();
 }
 
 function remove_number_from_div(div) {
@@ -32,11 +32,11 @@ function add_number_to_div(div, number_to_add) {
 function fill_number(key) {
     const target_solved = $('#solved' + window.selected_cell_id);
     add_number_to_div(target_solved, key.toString());
-    snap_visibility_to_solved();
-    clear_notes();
+    snap_selected_visibility_to_solved();
+    clear_selected_notes();
 }
 
-function clear_notes() {
+function clear_selected_notes() {
     let i;
     const targetNote = '#note' + window.selected_cell_id + '-';
     for(i = 1; i <= max_sudoku_number; i++) {
@@ -46,19 +46,40 @@ function clear_notes() {
     }
 }
 
-function clear_solved() {
+function clear_selected_solved() {
     const targetSolved = $('#solved' + window.selected_cell_id);
     targetSolved.html('&nbsp;');
     targetSolved.css({'background-color': 'transparent'});
 }
 
-function snap_visibility_to_solved() {
+function clear_notes(cell_id) {
+    let i;
+    const targetNote = '#note' + cell_id + '-';
+    for(i = 1; i <= max_sudoku_number; i++) {
+        let target_div_in_note = $(targetNote + i);
+        target_div_in_note.html('&nbsp;');
+        target_div_in_note.css({'background-color': 'transparent'});
+    }
+}
+
+function clear_solved(cell_id) {
+    const targetSolved = $('#solved' + cell_id);
+    targetSolved.html('&nbsp;');
+    targetSolved.css({'background-color': 'transparent'});
+}
+
+function snap_selected_visibility_to_solved() {
     const targetDiv = '#solved' + window.selected_cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
 
-function snap_visibility_to_notes() {
+function snap_selected_visibility_to_notes() {
     const targetDiv = '#notes' + window.selected_cell_id;
+    $(targetDiv).show().siblings('div').hide();
+}
+
+function snap_visibility_to_notes(cell_id) {
+    const targetDiv = '#notes' + cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
 
