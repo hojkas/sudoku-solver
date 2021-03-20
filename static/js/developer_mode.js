@@ -112,5 +112,5 @@ function fill_all_candidates_in_cell(cell_id) {
 }
 
 function test() {
-    alert(window.fill_in_candidates_by_click);
+    alert(window.variable);
 }

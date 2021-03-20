@@ -2,8 +2,6 @@
 // startup variables and settings
 // ==============================
 
-window.test_variable = 5;
-
 // number of cell that is currently selected = highlighted
 window.selected_cell_id = -1;
 
@@ -11,20 +9,9 @@ window.selected_cell_id = -1;
 // after user changes it
 window.highlighted_num = -1;
 
-// setting to set if shift click toggles between solved and notes
-// (on false, held down shift is solved, without shift is notes)
-window.shift_is_toggle = true;
-
 // on shift_is_toggle == true, this variable sets if the filled in numbers from user are solved
 // or notes (solved on true, notes on false)
 window.fill_in_solved = false;
-
-// on true, obvious mistakes (same numbers twice in row/col/sector) are highlighted
-window.show_collisions = false;
-
-// arrays to hold ids of currently highlighted cell ids for easiers clearing
-window.obvious_mistakes_solved_colored = [];
-window.obvious_mistakes_notes_colored = [];
 
 $(document).ready(function()
 {
@@ -87,14 +74,14 @@ $(document).ready(function()
     });
 
     $('#controls_fill_solved').on('click', function() {
-        if(window.shift_is_toggle) {
+        if(setting_shift_is_toggle) {
             highlight_selected_controls_button($(this), $('#controls_fill_notes'));
             window.fill_in_solved = true;
         }
     });
 
     $('#controls_fill_notes').on('click', function() {
-        if(window.shift_is_toggle) {
+        if(setting_shift_is_toggle) {
             highlight_selected_controls_button($(this), $('#controls_fill_solved'));
             window.fill_in_solved = false;
         }
@@ -103,14 +90,16 @@ $(document).ready(function()
     $('#settings-shift-toggle-on').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-shift-toggle-off').prop('checked', false);
-            window.shift_is_toggle = true;
+            setting_shift_is_toggle = true;
+            update_setting('setting_shift_is_toggle', true);
         }
     });
 
     $('#settings-shift-toggle-off').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-shift-toggle-on').prop('checked', false);
-            window.shift_is_toggle = false;
+            setting_shift_is_toggle = false;
+            update_setting('setting_shift_is_toggle', false);
             // setting default values
             highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
         }
@@ -119,14 +108,14 @@ $(document).ready(function()
     $('#settings-highlight-mistakes-off').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-highlight-mistakes-on').prop('checked', false);
-            window.show_obvioius_mistakes = false;
+            setting_show_collisions = false;
         }
     });
 
     $('#settings-highlight-mistakes-on').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-highlight-mistakes-off').prop('checked', false);
-            window.show_obvioius_mistakes = true;
+            setting_show_collisions = true;
         }
     });
 

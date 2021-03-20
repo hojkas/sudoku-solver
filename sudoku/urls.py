@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('solver/', views.solver_index, name='solver index'),
     path('solver/<name>', views.solver, name='solver'),
+    path('solver/update_setting', views.update_setting, name='update setting'),
     path('guides/', views.guides_index, name='guide index'),
     path('guides/<name>', views.detail, name='detail'),
 ]

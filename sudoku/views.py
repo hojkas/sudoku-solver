@@ -98,12 +98,24 @@ def solver(request, name):
     except TemplateDoesNotExist:
         raise Http404(_('Aplikace na řešení') + ' "' + name + '" ' + _('nebyla nalezena.'))
 
-    if name in max_sudoku_numbers.keys():
-        sudokus_context['max_sudoku_number'] = max_sudoku_numbers[name]
-    else:
-        sudokus_context['max_sudoku_number'] = 9
+    custom_context = sudokus_context.copy()
 
-    return render(request, template, sudokus_context)
+    if name in max_sudoku_numbers.keys():
+        custom_context['max_sudoku_number'] = max_sudoku_numbers[name]
+
+    # retrieving settings from session
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
+    setting_shift_is_toggle = request.session.get('setting_shift_is_toggle', True)
+    setting_show_collisions = request.session.get('setting_show_collisions', False)
+
+    custom_context['visits'] = num_visits
+    custom_context['setting_show_collisions'] = setting_show_collisions
+    custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
+    return render(request, template, custom_context)
+
+def update_setting(request):
+    return HttpResponse('ok')
 
 # ====================================
 #           GUIDES VIEWS

@@ -48,13 +48,24 @@
 {% block content %}
 <script>
     const max_sudoku_number = {{ max_sudoku_number }};
-</script>
 
-{% if developers_tools %}
-    <script>const developers_tools = true;</script>
-{% else %}
-    <script>const developers_tools = false;</script>
-{% endif %}
+    {% if developers_tools %}
+        const developers_tools = true;
+    {% else %}
+        const developers_tools = false;
+    {% endif %}
+    {% if settings_show_collisions %}
+        let setting_show_collisions = true;
+    {% else %}
+        let setting_show_collisions = false;
+    {% endif %}
+
+    {% if setting_shift_is_toggle %}
+        let setting_shift_is_toggle = true;
+    {% else %}
+        let setting_shift_is_toggle = false;
+    {% endif %}
+</script>
 
 <div class="container">
     <div class="row">
