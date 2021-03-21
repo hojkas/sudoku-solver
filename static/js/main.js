@@ -15,8 +15,11 @@ window.fill_in_solved = false;
 
 $(document).ready(function()
 {
-    $('#settings-shift-toggle-on').prop('checked', true);
-    $('#settings-highlight-mistakes-off').prop('checked', true);
+    if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
+    else $('#settings-shift-toggle-off').prop('checked', true);
+
+    if (setting_show_collisions) $('#settings-highlight-mistakes-on').prop('checked', true);
+    else $('#settings-highlight-mistakes-off').prop('checked', true);
 
     // ==============================
     // registering handling functions
@@ -108,6 +111,7 @@ $(document).ready(function()
     $('#settings-highlight-mistakes-off').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-highlight-mistakes-on').prop('checked', false);
+            update_setting('setting_show_collisions', false);
             setting_show_collisions = false;
         }
     });
@@ -115,6 +119,7 @@ $(document).ready(function()
     $('#settings-highlight-mistakes-on').change(function () {
         if ($(this).is(':checked')) {
             $('#settings-highlight-mistakes-off').prop('checked', false);
+            update_setting('setting_show_collisions', true);
             setting_show_collisions = true;
         }
     });

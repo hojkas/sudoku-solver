@@ -1,6 +1,16 @@
 async function update_setting(name_of_setting, value) {
-    let data = {name_of_setting: value};
-    $.post('/solver/update_setting', function (data) {
-        alert(data);
+    $.ajax({
+        url: '/solver/update_setting',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            setting: name_of_setting,
+            value: value.toString()
+        },
+        cache: false
+    }).done(function() {
+
     });
 }

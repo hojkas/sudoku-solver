@@ -121,6 +121,11 @@
     margin: 1rem 0 1rem 0;
 }
 
+.simple-round-button {
+    border-radius: 5px;
+    margin: 0.2rem 0 0.2rem 0;
+}
+
 .my-generic-button {
     border-radius: 5px;
     height: 2rem;

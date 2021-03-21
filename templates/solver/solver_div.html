@@ -99,6 +99,7 @@
 
     <div class="row" style="margin: 1rem 0 1rem 0;">
         {% if developers_tools %}
+            <div class="custom-list-heading">Developer's tools</div>
             <div class="col-md-7">
                 <b>Custom highlight</b>
                 <div>
@@ -124,9 +125,12 @@
             </div>
             <div class="col-md-5">
                 <input type="checkbox" id="fill_all_candidates_on_click"/> Fill with candidates by click<br>
-                <button id="fill_candidates_everywhere">Fill all not solved with candidates</button>
-                <button id="remove_candidates_everywhere">Remove all candidates</button>
-                visits - {{ visits }}
+                <button id="fill_candidates_everywhere" class="simple-round-button">
+                    Fill all not solved with candidates
+                </button>
+                <button id="remove_candidates_everywhere" class="simple-round-button">
+                    Remove all candidates
+                </button>
             </div>
         {% endif %}
     </div>

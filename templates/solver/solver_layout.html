@@ -54,7 +54,7 @@
     {% else %}
         const developers_tools = false;
     {% endif %}
-    {% if settings_show_collisions %}
+    {% if setting_show_collisions %}
         let setting_show_collisions = true;
     {% else %}
         let setting_show_collisions = false;
@@ -65,6 +65,8 @@
     {% else %}
         let setting_shift_is_toggle = false;
     {% endif %}
+
+    const csrf_token = '{{ csrf_token }}';
 </script>
 
 <div class="container">
