@@ -99,7 +99,7 @@ def index(request):
 # ====================================
 
 def solver_index(request):
-    return render(request, 'solver/classic_sudoku_grid.html', sudokus_context)
+    return render(request, 'solver/index.html', sudokus_context)
 
 def solver(request, name):
     template = 'solver/' + sudoku_template_mapper[name] + '.html'
