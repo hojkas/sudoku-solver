@@ -31,11 +31,10 @@
     width: 100%;
     height: 100%;
     line-height: 0.9rem;
-    letter-spacing: 1px;
 }
 
 .sudoku-candidate-grid span {
-    width: 9px;
+    width: 10px;
     display: inline-block;
 }
 
@@ -84,9 +83,10 @@
 }
 
 .sudoku-16x16 .sudoku-candidate-grid {
-    line-height: 0.3rem;
+    line-height: 0.5rem;
     letter-spacing: 0;
-    font-size: 0.2rem;
+    font-size: 0.5rem;
+    color: black;
 }
 
 .sudoku-controls {

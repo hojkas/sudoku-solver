@@ -81,6 +81,16 @@ def get_note_y(max_sudoku_num):
         return 4
     return 3
 
+@register.filter
+def get_width_percentage(max_sudoku_num):
+    if max_sudoku_num == 4:
+        return 33
+    if max_sudoku_num == 6:
+        return 40
+    if max_sudoku_num == 16:
+        return 25
+    return 33
+
 def index(request):
     return render(request, 'index.html')
 

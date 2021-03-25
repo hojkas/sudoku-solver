@@ -12,9 +12,9 @@ $(document).ready(function() {
         window.selected_highlight_name = 'red';
     });
 
-    $('#custom-highlight-limegreen').on('click', function() {
-        custom_highlight_buttons_change(window.selected_highlight_name, 'limegreen');
-        window.selected_highlight_name = 'limegreen';
+    $('#custom-highlight-green').on('click', function() {
+        custom_highlight_buttons_change(window.selected_highlight_name, 'green');
+        window.selected_highlight_name = 'green';
     });
 
     $('#custom-highlight-yellow').on('click', function() {
