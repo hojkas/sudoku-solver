@@ -79,3 +79,13 @@ body::-webkit-scrollbar {
 .nav-item {
     margin-left: 1rem;
 }
+
+/* Setting to forbid user selecting on sudoku that is useless and visually not pleasing
+   copied form https://www.arungudelli.com/tutorial/css/disable-text-selection-in-html-using-user-select-css-property/#using-user-select-none
+ */
+.disable-select {
+    user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+}

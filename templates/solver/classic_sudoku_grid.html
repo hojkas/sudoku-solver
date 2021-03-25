@@ -1,7 +1,7 @@
 {% extends "solver/solver_div.html" %}
 
 {% block solver_block %}
-    <div id="sudoku-wrapper">
+    <div id="sudoku-wrapper" class="disable-select">
           <table id="sudoku-table" class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
               {% for x in max_sudoku_number|get_range %}
                   <tr>
@@ -36,17 +36,12 @@
         - nastavení - zobrazit obvious kolize<br>
         - 16x16 janky + a-f se zobrazuje jako čísla => 16x16 potřebuje vip stránku pro sebe, necháno
         na později jako extra když bude čas<br>
-        - session minimálně pro udržení nastavení<br>
         <br>
         <br>
         pressing: <br>
         - when filling in, recalculate colisions accordingly <br>
         - move fill_with_candidates and fill candidates by click from developement to user part
             + add clear sudoku and clear all notes<br>
-        <br>
-        <br>
-        bugs <br>
-        - fill all not soved vyplní selected solved buňku :thonk:<br>
     </div>
 
 {% endblock %}

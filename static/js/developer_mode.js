@@ -5,6 +5,13 @@ window.custom_highlight_yellow = []
 window.selected_highlight_name = 'off';
 window.fill_in_candidates_by_click = false;
 
+let custom_highlight_color_mapping = {
+    'red': '#FF4136',
+    'yellow': '#FFDC00',
+    'green': '#2ECC40',
+    'transparent': 'transparent'
+}
+
 $(document).ready(function() {
     // registering click functions from all
     $('#custom-highlight-red').on('click', function() {
@@ -39,13 +46,13 @@ $(document).ready(function() {
     //register actions on click for custom highlight
     $('.sudoku-solved-num').on('click', function () {
         if(window.selected_highlight_name !== 'off') {
-            $(this).css({'background-color': window.selected_highlight_name});
+            $(this).css({'background-color': custom_highlight_color_mapping[window.selected_highlight_name]});
         }
     })
 
     $('.sudoku-note-num').on('click', function() {
         if(window.selected_highlight_name !== 'off') {
-            $(this).css({'background-color': window.selected_highlight_name});
+            $(this).css({'background-color': custom_highlight_color_mapping[window.selected_highlight_name]});
         }
     });
 
