@@ -132,13 +132,15 @@ function change_numbers_highlight(new_highlight, old_hightlight) {
 }
 
 function alter_highlight(number_to_highlight, number_to_unhighlight, cell_id) {
+    let hexified_number_to_highlight = number_to_hexa_mapping[number_to_highlight];
+    let hexified_number_to_unhighlight = number_to_hexa_mapping[number_to_unhighlight];
     if(is_solved_visible(cell_id)) {
         // solved is currently visible
         let solved_ref = $('#solved' + cell_id);
-        if(solved_ref.text() === number_to_highlight) {
+        if(solved_ref.text() === hexified_number_to_highlight) {
             solved_ref.css({'background-color': 'lightpink'});
         }
-        if(solved_ref.text() === number_to_unhighlight) {
+        if(solved_ref.text() === hexified_number_to_unhighlight) {
             solved_ref.css({'background-color': 'transparent'});
         }
     }
@@ -146,10 +148,10 @@ function alter_highlight(number_to_highlight, number_to_unhighlight, cell_id) {
         // notes are currently visible
         let note_to_highlight_ref = $('#note' + cell_id + '-' + number_to_highlight);
         let note_to_unhighlight_ref = $('#note' + cell_id + '-' + number_to_unhighlight);
-        if(note_to_highlight_ref.text() === number_to_highlight) {
+        if(note_to_highlight_ref.text() === hexified_number_to_highlight) {
             note_to_highlight_ref.css({'background-color': 'lightpink'});
         }
-        if(note_to_unhighlight_ref.text() === number_to_unhighlight) {
+        if(note_to_unhighlight_ref.text() === hexified_number_to_unhighlight) {
             note_to_unhighlight_ref.css({'background-color': 'transparent'});
         }
     }

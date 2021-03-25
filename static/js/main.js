@@ -13,6 +13,16 @@ window.highlighted_num = -1;
 // or notes (solved on true, notes on false)
 window.fill_in_solved = false;
 
+let number_to_hexa_mapping = {
+    '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+    '10': 'A', '11': 'B', '12': 'C', '13': 'D', '14': 'E', '15': 'F', '16': 'G'
+}
+
+let hexa_to_number_mapping = {
+    '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+    'A': '10', 'B': '11', 'C': '12', 'D': '13', 'E': '14', 'F': '15', 'G': '16'
+}
+
 $(document).ready(function()
 {
     if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
