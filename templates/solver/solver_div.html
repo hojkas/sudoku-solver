@@ -86,8 +86,8 @@
             </div>
             <div>
                 {% for num in max_sudoku_number|get_range %}
-                    <button id="highlight_number_{{ num|add:1 }}" class="sudoku-controls-button unselected highlight-button">
-                        {{ num|add:1 }}
+                    <button id="highlight_number_{{ num|add:1|transform_to_letter_if_needed }}" class="sudoku-controls-button unselected highlight-button">
+                        {{ num|add:1|transform_to_letter_if_needed }}
                     </button>
                 {% endfor %}
                 <button id="highlight_number_-1" class="sudoku-controls-button selected highlight-button">
@@ -134,8 +134,6 @@
             </div>
         {% endif %}
     </div>
-
-
 
     {% block solver_block %}
 

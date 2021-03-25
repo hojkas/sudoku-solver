@@ -79,13 +79,13 @@
 }
 
 .sudoku-16x16 .sudoku-solved-num {
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
 .sudoku-16x16 .sudoku-candidate-grid {
-    line-height: 0.5rem;
+    line-height: 0.7rem;
     letter-spacing: 0;
-    font-size: 0.5rem;
+    font-size: 0.7rem;
     color: black;
 }
 

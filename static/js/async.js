@@ -14,3 +14,7 @@ async function update_setting(name_of_setting, value) {
 
     });
 }
+
+async function count_next_step() {
+
+}

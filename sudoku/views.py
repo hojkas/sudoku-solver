@@ -91,6 +91,12 @@ def get_width_percentage(max_sudoku_num):
         return 25
     return 33
 
+@register.filter
+def transform_to_letter_if_needed(num):
+    if num < 10:
+        return num
+    return chr(int(num) + 55)
+
 def index(request):
     return render(request, 'index.html')
 

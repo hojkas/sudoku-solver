@@ -24,7 +24,8 @@ function remove_number_from_div(div) {
 }
 
 function add_number_to_div(div, number_to_add) {
-    div.html(number_to_add);
+    if (number_to_add < 10) div.html(number_to_add);
+    else div.html(String.fromCharCode(55 + parseInt(number_to_add)));
     if(number_to_add === window.highlighted_num) div.css({'background-color': 'pink'});
     else div.css({'background-color': 'transparent'});
 }
