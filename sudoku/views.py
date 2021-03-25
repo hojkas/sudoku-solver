@@ -12,8 +12,13 @@ developers_tools = True
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
-    'naked_pair': 'Naked Pair/Triple',
-    'hidden_pair': 'Hidden Pair/Triple'
+    'remove_collisions': _('Odstranění přímých kolizí'),
+    'naked_single': 'Naked Single',
+    'hidden_single': 'Hidden Single',
+    'naked_pair': 'Naked Pair',
+    'hidden_pair': 'Hidden Pair',
+    'naked_triple': 'Naked Triple/Quad',
+    'hidden_triple': 'Hidden Triple/Quad'
 }
 medium_strategies = {}
 advanced_strategies = {}
@@ -125,6 +130,11 @@ def solver(request, name):
 
     custom_context['setting_show_collisions'] = setting_show_collisions
     custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
+
+    custom_context['easy_strategies'] = easy_strategies
+    custom_context['medium_strategies'] = medium_strategies
+    custom_context['advanced_strategies'] = advanced_strategies
+
     return render(request, template, custom_context)
 
 def update_setting(request):

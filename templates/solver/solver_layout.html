@@ -66,10 +66,24 @@
                 </div>
             </div>
             <div class="main-block">
-                Supported strategies here
+                <div class="custom-list-heading">{% trans 'Snadné strategie' %}</div>
+                    {% for strategy_ref, strategy_name in easy_strategies.items %}
+                        <div>
+                            <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0 }}"
+                               id="icon-before-{{ strategy_ref }}"></i>
+                            <a class="custom-list-item" href="/guides/{{ strategy_ref }}"
+                               target="_blank">{{ strategy_name }}</a>
+                        </div>
+                    {% endfor %}
+                <div class="custom-list-heading">{% trans 'Středně těžké strategie' %}</div>
+
+                <div class="custom-list-heading">{% trans 'Pokročilé strategie' %}</div>
+
+                <div style="margin-top: 1rem;">* {% trans 'Strategie specifická pro tento druh sudoku.' %}</div>
             </div>
 
             <button onclick="test()">click me</button>
+            <button onclick="reset_strategy_icons()">reste</button>
         </div>
     </div>
 </div>

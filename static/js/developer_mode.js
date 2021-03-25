@@ -117,7 +117,3 @@ function fill_all_candidates_in_cell(cell_id) {
         snap_visibility_to_notes(cell_id);
     }
 }
-
-function test() {
-    alert(window.variable);
-}

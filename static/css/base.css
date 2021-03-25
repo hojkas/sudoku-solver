@@ -89,3 +89,9 @@ body::-webkit-scrollbar {
    -moz-user-select: none; /* Firefox */
    -ms-user-select: none; /* Internet Explorer/Edge */
 }
+
+.strategy_list_icon {
+    width: 15px;
+    text-align: center;
+    color: grey;
+}

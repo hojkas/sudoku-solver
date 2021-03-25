@@ -185,3 +185,38 @@ function remove_all_highlighted_collisions() {
         }
     }
 }
+
+function test() {
+    mark_successful_strategy('hidden_pair');
+}
+
+function mark_successful_strategy(strategy_name) {
+    let el_classes = $('#icon-before-' + strategy_name).attr('class').split(/\s+/);
+    let pos = -1;
+
+    el_classes.forEach(function(el_class) {
+        if(el_class.includes('strategy_list_icon_')) pos = parseInt(el_class.split('_')[3]);
+    });
+
+    for(let i = 0; i < pos; i++) {
+        let strategy_ref = $('.strategy_list_icon_' + i);
+        strategy_ref.removeClass('fa-minus');
+        strategy_ref.addClass('fa-times');
+        strategy_ref.css({'color': 'red'});
+        strategy_ref.siblings('a').css({'color': 'grey'});
+    }
+    let strategy_ref = $('.strategy_list_icon_' + pos);
+    strategy_ref.removeClass('fa-minus');
+    strategy_ref.addClass('fa-check');
+    strategy_ref.css({'color': 'green'});
+    strategy_ref.siblings('a').css({'color': 'green', 'font-weight': 'bold'});
+}
+
+function reset_strategy_icons() {
+    let strategy_icon_ref = $('.strategy_list_icon')
+    strategy_icon_ref.removeClass('fa-times');
+    strategy_icon_ref.removeClass('fa-check');
+    strategy_icon_ref.addClass('fa-minus');
+    strategy_icon_ref.css({'color': 'grey'});
+    strategy_icon_ref.siblings('a').css({'color': 'blue', 'font-weight': 'normal'});
+}

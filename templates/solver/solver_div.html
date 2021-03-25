@@ -138,4 +138,23 @@
     {% block solver_block %}
 
     {% endblock %}
+
+    <div id="strategy_explanation" class="strategy_explanation_div">
+        {% blocktrans %}
+            Zde se při vygenerování dalšího kroku sudoku zobrazí vysvětlení aplikované strategie.
+        {% endblocktrans %}
+    </div>
+
+
+    <div>
+        TODO other:<br>
+        - nastavení - zobrazit obvious kolize<br>
+        - jiný font mimo sudoku?<br>
+        pressing: <br>
+        - when filling in, recalculate colisions accordingly <br>
+        - add clear sudoku and clear all notes<br>
+        - nefunguje highlight A-G - řešení udělat tlačítka jako 10,11,12 a předělat to v highlight
+        nebo v highlight pouze přemapovat notes (easier?)<br>
+    </div>
+
 {% endblock %}

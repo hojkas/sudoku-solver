@@ -1,5 +1,5 @@
 .sudoku {
-    margin: 2rem auto 2rem auto;
+    margin: 0.5rem auto 0.5rem auto;
     border: solid 3px black;
 }
 
@@ -146,3 +146,9 @@
     border-radius: 5px;
 }
 
+.strategy_explanation_div {
+    border-radius: 5px;
+    background-color: lightgrey;
+    padding: 5px;
+    font-size: 0.8rem;
+}
