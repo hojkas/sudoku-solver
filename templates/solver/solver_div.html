@@ -41,6 +41,43 @@
                       {% trans "Označit číslice v přímé kolizi červeně" %}
                   </form>
               </div>
+              <hr>
+              <div class="settings-div">
+                  <b>{% trans "Rozložení stránky" %}</b>
+                  <div class="row">
+                      <div class="col-md-5 settings-layout-options-div">
+                          <div class="row settings-layout-options-div-inner">
+                              <div class="main-block" style="width: 350px; margin-left: auto; margin-right: auto;">
+                                  sudoku
+                                  <table style="margin: auto; zoom: 0.5;" class="sudoku sudoku-4x4">
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                  </table>
+                              </div>
+                              <div class="main-block" style="width: 190px; margin-left: auto; margin-right: auto;">
+                                  {% trans 'A. Strategie' %}<hr><hr><hr></div>
+                          </div>
+                          <input type="radio" id="settings-sudoku-full-size-off"/>
+                      </div>
+                      <div class="col-md-5 settings-layout-options-div">
+                          <div class="settings-layout-options-div-inner">
+                              <div class="main-block">
+                                  sudoku
+                                  <table style="margin: auto; zoom: 0.5;" class="sudoku sudoku-4x4">
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                  </table>
+                              </div>
+                              <div class="main-block">{% trans 'Aplikovatelné strategie' %}<hr><hr><hr></div>
+                          </div>
+                          <input type="radio" id="settings-sudoku-full-size-on"/>
+                      </div>
+                  </div>
+              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -131,6 +168,7 @@
                 <button id="remove_candidates_everywhere" class="simple-round-button">
                     Remove all candidates
                 </button>
+                <button onclick="clear_sudoku()" class="simple-round-button">Clear All</button>
             </div>
         {% endif %}
     </div>
@@ -152,9 +190,7 @@
         - jiný font mimo sudoku?<br>
         pressing: <br>
         - when filling in, recalculate colisions accordingly <br>
-        - add clear sudoku and clear all notes<br>
-        - nefunguje highlight A-G - řešení udělat tlačítka jako 10,11,12 a předělat to v highlight
-        nebo v highlight pouze přemapovat notes (easier?)<br>
+        - add clear sudoku and clear all notes, bude i v generátor části takže asi tam až dát na real<br>
     </div>
 
 {% endblock %}

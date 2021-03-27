@@ -46,18 +46,32 @@
         let setting_shift_is_toggle = false;
     {% endif %}
 
+    {% if setting_sudoku_full_size %}
+        let setting_sudoku_full_size = true;
+    {% else %}
+        let setting_sudoku_full_size = false;
+    {% endif %}
+
     const csrf_token = '{{ csrf_token }}';
 </script>
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        {% if setting_sudoku_full_size %}
+        <div class="col-md-12" id="sudoku-solver-wrapper-col">
+        {% else %}
+        <div class="col-md-8" id="sudoku-solver-wrapper-col">
+        {% endif %}
             <div class="main-block">
                 {% block solver_div %}
                 {% endblock %}
             </div>
         </div>
-        <div class="col-md-4">
+        {% if setting_sudoku_full_size %}
+        <div class="col-md-12" id="strategy-list-wrapper-col">
+        {% else %}
+        <div class="col-md-4" id="strategy-list-wrapper-col">
+        {% endif %}
             <div class="main-block">
                 <div class="custom-list-class">
                     {% trans 'Aplikovatelné strategie' %}
@@ -82,8 +96,9 @@
                 <div style="margin-top: 1rem;">* {% trans 'Strategie specifická pro tento druh sudoku.' %}</div>
             </div>
 
-            <button onclick="test()">click me</button>
-            <button onclick="reset_strategy_icons()">reste</button>
+            <button onclick="test()">strategy highlight test</button>
+            <button onclick="reset_strategy_icons()">reset</button>
+            <button onclick="change_strategy_description('hello i am test')">click me</button>
         </div>
     </div>
 </div>

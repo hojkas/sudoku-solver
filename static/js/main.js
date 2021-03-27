@@ -31,6 +31,9 @@ $(document).ready(function()
     if (setting_show_collisions) $('#settings-highlight-mistakes-on').prop('checked', true);
     else $('#settings-highlight-mistakes-off').prop('checked', true);
 
+    if (setting_sudoku_full_size) $('#settings-sudoku-full-size-on').prop('checked', true);
+    else $('#settings-sudoku-full-size-off').prop('checked', true);
+
     // ==============================
     // registering handling functions
     // ==============================
@@ -131,6 +134,22 @@ $(document).ready(function()
             $('#settings-highlight-mistakes-off').prop('checked', false);
             update_setting('setting_show_collisions', true);
             setting_show_collisions = true;
+        }
+    });
+
+    $('#settings-sudoku-full-size-off').change(function() {
+        if ($(this).is(':checked')) {
+            $('#settings-sudoku-full-size-on').prop('checked', false);
+            update_setting('setting_sudoku_full_size', false);
+            change_sudoku_strategy_position(false);
+        }
+    });
+
+    $('#settings-sudoku-full-size-on').change(function() {
+        if ($(this).is(':checked')) {
+            $('#settings-sudoku-full-size-off').prop('checked', false);
+            update_setting('setting_sudoku_full_size', true);
+            change_sudoku_strategy_position(true);
         }
     });
 

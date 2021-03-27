@@ -222,3 +222,35 @@ function reset_strategy_icons() {
     strategy_icon_ref.css({'color': 'grey'});
     strategy_icon_ref.siblings('a').css({'color': 'blue', 'font-weight': 'normal'});
 }
+
+function change_sudoku_strategy_position(to_full) {
+    let sudoku_wrapper_ref = $('#sudoku-solver-wrapper-col');
+    let strategy_wrapper_ref = $('#strategy-list-wrapper-col');
+    if(to_full) {
+        sudoku_wrapper_ref.removeClass('col-md-8');
+        strategy_wrapper_ref.removeClass('col-md-4');
+        sudoku_wrapper_ref.addClass('col-md-12');
+        strategy_wrapper_ref.addClass('col-md-12');
+    }
+    else {
+        sudoku_wrapper_ref.removeClass('col-md-12');
+        strategy_wrapper_ref.removeClass('col-md-12');
+        sudoku_wrapper_ref.addClass('col-md-8');
+        strategy_wrapper_ref.addClass('col-md-4');
+    }
+}
+
+function clear_sudoku() {
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for (let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            clear_solved(cell_id);
+            clear_notes(cell_id);
+            snap_visibility_to_notes(cell_id);
+        }
+    }
+}
+
+function change_strategy_description(new_description) {
+    $('#strategy_explanation').html(new_description);
+}

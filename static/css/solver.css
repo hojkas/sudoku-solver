@@ -152,3 +152,16 @@
     padding: 5px;
     font-size: 0.8rem;
 }
+
+.settings-layout-options-div {
+    text-align: center;
+    width: 300px;
+    margin: 0 auto 0 auto;
+}
+
+.settings-layout-options-div-inner {
+    background-color: dodgerblue;
+    border: solid 2px grey;
+    height: 300px;
+    zoom: 0.5;
+}
