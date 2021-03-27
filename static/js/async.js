@@ -27,6 +27,18 @@ async function count_next_step() {
         cache: false
     }).done(function(response_string) {
         let response_json = JSON.parse(response_string);
-
+        if(response_json['success']) {
+            // strategy was found
+            $('#next-step-next-action-wrapper').show().siblings('div').hide();
+            window.candidates_to_be_deleted = response_json['candidates_to_remove'];
+            mark_successful_strategy(response_json['strategy_applied']);
+            apply_highlight_from_list_of_dict(response_json['highlight']);
+            change_strategy_description(response_json['text']);
+        }
+        else {
+            // strategy wasn't found!
+            $('#next-step-default-button-wrapper').show().siblings('div').hide();
+            alert(response_json['text']);
+        }
     });
 }

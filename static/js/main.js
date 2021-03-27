@@ -191,4 +191,24 @@ $(document).ready(function()
             window.highlighted_num = number_id;
         }
     });
+
+    $('#get-next-step').on('click', function() {
+        $('#next-step-loading').show().siblings('div').hide();
+        count_next_step();
+    });
+
+    $('#apply-next-step').on('click', function () {
+        apply_prepared_step();
+        reset_strategy_icons();
+        show_default_strategy_description();
+        remove_all_custom_highlight();
+        $('#next-step-default-button-wrapper').show().siblings('div').hide();
+    });
+
+    $('#cancel-next-step').on('click', function() {
+        reset_strategy_icons();
+        show_default_strategy_description();
+        remove_all_custom_highlight();
+        $('#next-step-default-button-wrapper').show().siblings('div').hide();
+    });
 });

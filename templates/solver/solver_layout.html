@@ -85,21 +85,26 @@
                         {% trans "Napovědět další krok" %}
                     </button>
                 </div>
-                <div id="next-step-default-button-wrapper">
-                    <button class="simple-round-button next-step" id="get-next-step">
-                        <i class="fas fa-angle-double-right"></i>
-                        {% trans "Najít další krok" %}
-                    </button>
-                </div>
-                <div id="next-step-next-action-wrapper">
-                    <button class="simple-round-button next-step-approve" id="apply-next-step">
-                        <i class="fas fa-angle-double-right"></i>
-                        {% trans "Aplikovat krok" %}
-                    </button>
-                    <button class="simple-round-button next-step-cancel" id="cancel-next-step">
-                        <i class="fas fa-ban"></i>
-                        {% trans "Zrušit krok" %}
-                    </button>
+                <div>
+                    <div id="next-step-default-button-wrapper">
+                        <button class="simple-round-button next-step" id="get-next-step">
+                            <i class="fas fa-angle-double-right"></i>
+                            {% trans "Najít další krok" %}
+                        </button>
+                    </div>
+                    <div id="next-step-next-action-wrapper" style="display: none">
+                        <button class="simple-round-button next-step-approve" id="apply-next-step">
+                            <i class="fas fa-angle-double-right"></i>
+                            {% trans "Aplikovat krok" %}
+                        </button>
+                        <button class="simple-round-button next-step-cancel" id="cancel-next-step">
+                            <i class="fas fa-ban"></i>
+                            {% trans "Zrušit krok" %}
+                        </button>
+                    </div>
+                    <div id="next-step-loading" style="display:none; width: 100%; text-align: center;">
+                        <i class="fas fa-spinner fa-pulse"></i>
+                    </div>
                 </div>
             </div>
             <div class="main-block">

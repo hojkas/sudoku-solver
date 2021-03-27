@@ -178,9 +178,12 @@
     {% endblock %}
 
     <div id="strategy_explanation" class="strategy_explanation_div">
-        {% blocktrans %}
-            Zde se při vygenerování dalšího kroku sudoku zobrazí vysvětlení aplikované strategie.
-        {% endblocktrans %}
+        <div id="strategy_explanation_default">
+            {% blocktrans %}
+                Zde se při vygenerování dalšího kroku sudoku zobrazí vysvětlení aplikované strategie.
+            {% endblocktrans %}
+        </div>
+        <div id="strategy_explanation_custom" style="display: none;"></div>
     </div>
 
 

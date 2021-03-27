@@ -154,7 +154,7 @@ def get_next_step(request):
     test_json = {
         "strategy_applied": "naked_pair",
         "success": True,
-        "text_to_show": "I am<br>two-lined text",
+        "text": "I am<br>two-lined text",
         "highlight": [
             {
                 "cell_id": 0,

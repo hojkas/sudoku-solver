@@ -272,7 +272,13 @@ function clear_sudoku() {
 }
 
 function change_strategy_description(new_description) {
-    $('#strategy_explanation').html(new_description);
+    let expl_ref = $('#strategy_explanation_custom');
+    expl_ref.html(new_description);
+    expl_ref.show().siblings('div').hide();
+}
+
+function show_default_strategy_description() {
+    $('#strategy_explanation_default').show().siblings('div').hide();
 }
 
 function collect_sudoku_json() {
@@ -317,4 +323,12 @@ function remove_all_custom_highlight() {
         }
     }
     change_numbers_highlight(window.highlighted_num, -1);
+}
+
+function apply_highlight_from_list_of_dict(list_of_dict) {
+    // TODO
+}
+
+function apply_prepared_step() {
+    // TODO
 }
