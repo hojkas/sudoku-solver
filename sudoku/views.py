@@ -6,6 +6,7 @@ import django.template.loader
 from django.template import TemplateDoesNotExist
 from django.template.defaultfilters import register
 from django.utils.translation import gettext as _
+import json
 
 # Variable that allows showing of extra controls such as custom highlights for
 developers_tools = True
@@ -146,6 +147,37 @@ def update_setting(request):
             or setting == 'setting_sudoku_full_size'):
         request.session[setting] = (value.lower() == 'true')
     return HttpResponse('ok')
+
+# ======== HINTS AND STEPS by strategies ==========
+
+def get_next_step(request):
+    test_json = {
+        "strategy_applied": "naked_pair",
+        "success": True,
+        "text_to_show": "I am<br>two-lined text",
+        "highlight": [
+            {
+                "cell_id": 0,
+                "is_solved": True,
+                "note_id": None,
+                "color": "green"
+            },
+            {
+                "cell_id": 1,
+                "is_solved": False,
+                "note_id": 5,
+                "color": "red"
+            }
+        ],
+        "candidates_to_remove": [
+            {
+                "cell_id": 0,
+                "note_id": 5
+            }
+        ]
+    }
+
+    return HttpResponse(json.dumps(test_json))
 
 # ====================================
 #           GUIDES VIEWS

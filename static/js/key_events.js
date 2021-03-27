@@ -23,6 +23,7 @@ function on_shift_key_up() {
 function on_delete_key_down() {
     clear_selected_notes();
     clear_selected_solved();
+    snap_selected_visibility_to_notes();
 }
 
 function on_arrow_key_down(key) {

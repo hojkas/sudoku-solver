@@ -94,26 +94,38 @@ function custom_highlight_buttons_change(former_button_name, current_button_name
     }
 }
 
-function remove_all_custom_highlight() {
-    for(let x = 0; x < max_sudoku_number; x++) {
-        for(let y = 0; y < max_sudoku_number; y++) {
-            let cell_id = x * max_sudoku_number + y;
-            let solved_target_ref = $('#solved' + cell_id);
-            if(solved_target_ref.css('background-color') !== 'pink')
-                solved_target_ref.css({'background-color': 'transparent'});
-            for(let i = 1; i <= max_sudoku_number; i++) {
-                let note_target_ref = $('#note' + cell_id + '-' + i);
-                if(note_target_ref.css('background-color') !== 'pink')
-                    note_target_ref.css({'background-color': 'transparent'});
-            }
-        }
-    }
-}
-
 function fill_all_candidates_in_cell(cell_id) {
     for(let x = 1; x <= max_sudoku_number; x++) {
         add_number_to_div($('#note' + cell_id + '-' + x), x);
         clear_solved(cell_id);
         snap_visibility_to_notes(cell_id);
+    }
+}
+
+function load_test_sudoku() {
+    let sudoku = [
+        5, 3, null, null, 7, null, null, null, null,
+        6, null, null, 1, 9, 5, null, null, null,
+        null, 9, 8, null, null, null, null, 6, null,
+        8, null, null, null, 6, null, null, null, 3,
+        4, null, null, 8, null, 3, null, null, 1,
+        7, null, null, null, 2, null, null, null, 6,
+        null, 6, null, null, null, null, 2, 8, null,
+        null, null, null, 4, 1, 9, null, null, 5,
+        null, null, null, null, 8, null, null, 7, 9
+    ]
+
+    if(sudoku.length === (max_sudoku_number * max_sudoku_number)) {
+        for(let x = 0; x < max_sudoku_number; x++) {
+            for (let y = 0; y < max_sudoku_number; y++) {
+                let cell_id = x * max_sudoku_number + y;
+                if(sudoku[cell_id] != null) fill_cell_with_number(cell_id, sudoku[cell_id]);
+                else {
+                        clear_notes(cell_id);
+                        clear_solved(cell_id);
+                        snap_visibility_to_notes(cell_id);
+                }
+            }
+        }
     }
 }

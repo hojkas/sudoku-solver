@@ -73,6 +73,36 @@
         <div class="col-md-4" id="strategy-list-wrapper-col">
         {% endif %}
             <div class="main-block">
+                <div>
+                    <button class="simple-round-button" id="check-if-solvable">
+                        {% trans "Otestovat řešitelnost" %}
+                    </button>
+                    <button class="simple-round-button" id="get-difficulty-estimate">
+                        {% trans "Odhadnout obtížnost" %}
+                    </button>
+                    <button class="simple-round-button" id="get-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        {% trans "Napovědět další krok" %}
+                    </button>
+                </div>
+                <div id="next-step-default-button-wrapper">
+                    <button class="simple-round-button next-step" id="get-next-step">
+                        <i class="fas fa-angle-double-right"></i>
+                        {% trans "Najít další krok" %}
+                    </button>
+                </div>
+                <div id="next-step-next-action-wrapper">
+                    <button class="simple-round-button next-step-approve" id="apply-next-step">
+                        <i class="fas fa-angle-double-right"></i>
+                        {% trans "Aplikovat krok" %}
+                    </button>
+                    <button class="simple-round-button next-step-cancel" id="cancel-next-step">
+                        <i class="fas fa-ban"></i>
+                        {% trans "Zrušit krok" %}
+                    </button>
+                </div>
+            </div>
+            <div class="main-block">
                 <div class="custom-list-class">
                     {% trans 'Aplikovatelné strategie' %}
                     <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
@@ -98,7 +128,8 @@
 
             <button onclick="test()">strategy highlight test</button>
             <button onclick="reset_strategy_icons()">reset</button>
-            <button onclick="change_strategy_description('hello i am test')">click me</button>
+            <button onclick="count_next_step()">click me</button>
+            <button onclick="load_test_sudoku()">Load suduoku</button>
         </div>
     </div>
 </div>

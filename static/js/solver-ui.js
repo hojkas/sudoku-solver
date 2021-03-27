@@ -37,6 +37,13 @@ function fill_number(key) {
     clear_selected_notes();
 }
 
+function fill_cell_with_number(cell_id, num) {
+    const target_solved = $('#solved' + cell_id);
+    add_number_to_div(target_solved, num);
+    snap_visibility_to_solved(cell_id);
+    clear_notes(cell_id);
+}
+
 function clear_selected_notes() {
     let i;
     const targetNote = '#note' + window.selected_cell_id + '-';
@@ -76,6 +83,11 @@ function snap_selected_visibility_to_solved() {
 
 function snap_selected_visibility_to_notes() {
     const targetDiv = '#notes' + window.selected_cell_id;
+    $(targetDiv).show().siblings('div').hide();
+}
+
+function snap_visibility_to_solved(cell_id) {
+    const targetDiv = '#solved' + cell_id;
     $(targetDiv).show().siblings('div').hide();
 }
 
@@ -214,6 +226,14 @@ function mark_successful_strategy(strategy_name) {
     strategy_ref.siblings('a').css({'color': 'green', 'font-weight': 'bold'});
 }
 
+function mark_all_strategies_as_failed() {
+    let strategy_icon_ref = $('.strategy_list_icon')
+    strategy_icon_ref.removeClass('fa-minus');
+    strategy_icon_ref.addClass('fa-times');
+    strategy_icon_ref.css({'color': 'red'});
+    strategy_icon_ref.siblings('a').css({'color': 'grey'});
+}
+
 function reset_strategy_icons() {
     let strategy_icon_ref = $('.strategy_list_icon')
     strategy_icon_ref.removeClass('fa-times');
@@ -253,4 +273,48 @@ function clear_sudoku() {
 
 function change_strategy_description(new_description) {
     $('#strategy_explanation').html(new_description);
+}
+
+function collect_sudoku_json() {
+    let sudoku_d = {
+        "max_sudoku_number": max_sudoku_number,
+        "board": []
+    }
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for (let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            let cell_d = {
+                "cell_id": cell_id,
+                "notes": []
+            }
+            if (is_solved_visible(cell_id)) {
+                cell_d["solved"] = parseInt(hexa_to_number_mapping[$('#solved' + cell_id).text()]);
+            } else {
+                cell_d["solved"] = null;
+                for (let i = 1; i <= max_sudoku_number; i++) {
+                    let note_ref = $('#note' + cell_id + '-' + i);
+                    if (parseInt(hexa_to_number_mapping[note_ref.text()]) === i) cell_d["notes"].push(i);
+                }
+            }
+            sudoku_d["board"].push(cell_d);
+        }
+    }
+    return JSON.stringify(sudoku_d);
+}
+
+function remove_all_custom_highlight() {
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for(let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            let solved_target_ref = $('#solved' + cell_id);
+            if(solved_target_ref.css('background-color') !== 'pink')
+                solved_target_ref.css({'background-color': 'transparent'});
+            for(let i = 1; i <= max_sudoku_number; i++) {
+                let note_target_ref = $('#note' + cell_id + '-' + i);
+                if(note_target_ref.css('background-color') !== 'pink')
+                    note_target_ref.css({'background-color': 'transparent'});
+            }
+        }
+    }
+    change_numbers_highlight(window.highlighted_num, -1);
 }

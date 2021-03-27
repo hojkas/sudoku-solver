@@ -124,6 +124,34 @@
 .simple-round-button {
     border-radius: 5px;
     margin: 0.2rem 0 0.2rem 0;
+    background-color: lightgrey;
+}
+
+.next-step {
+    background-color: lightskyblue;
+    width: 100%;
+}
+
+.next-step-approve {
+    background-color: lightgreen;
+    width: 49%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#next-step-next-action-wrapper {
+    text-align: center;
+}
+
+#next-step-default-button-wrapper {
+    text-align: center;
+}
+
+.next-step-cancel {
+    background-color: lightcoral;
+    width: 49%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .my-generic-button {
