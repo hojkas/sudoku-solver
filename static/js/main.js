@@ -26,6 +26,13 @@ let hexa_to_number_mapping = {
     'A': '10', 'B': '11', 'C': '12', 'D': '13', 'E': '14', 'F': '15', 'G': '16'
 }
 
+let custom_highlight_color_mapping = {
+    'red': '#FF4136',
+    'yellow': '#FFDC00',
+    'green': '#2ECC40',
+    'transparent': 'transparent'
+}
+
 $(document).ready(function()
 {
     if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);

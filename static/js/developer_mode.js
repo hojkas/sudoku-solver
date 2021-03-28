@@ -5,13 +5,6 @@ window.custom_highlight_yellow = []
 window.selected_highlight_name = 'off';
 window.fill_in_candidates_by_click = false;
 
-let custom_highlight_color_mapping = {
-    'red': '#FF4136',
-    'yellow': '#FFDC00',
-    'green': '#2ECC40',
-    'transparent': 'transparent'
-}
-
 $(document).ready(function() {
     // registering click functions from all
     $('#custom-highlight-red').on('click', function() {

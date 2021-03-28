@@ -326,9 +326,22 @@ function remove_all_custom_highlight() {
 }
 
 function apply_highlight_from_list_of_dict(list_of_dict) {
-    // TODO
+    list_of_dict.forEach(function(highlight_d) {
+       let highlight_ref;
+       if(highlight_d['is_solved']) {
+           highlight_ref = $('#solved' + highlight_d['cell_id']);
+       }
+       else {
+           highlight_ref = $('#note' + highlight_d['cell_id'] + '-' + highlight_d['note_id']);
+       }
+       highlight_ref.css({'background-color': custom_highlight_color_mapping[highlight_d['color']]});
+    });
 }
 
 function apply_prepared_step() {
-    // TODO
+    window.candidates_to_be_deleted.forEach(function(candidate_d) {
+        let note_cell_ref = $('#note' + candidate_d['cell_id'] + '-' + candidate_d['note_id']);
+        note_cell_ref.html('&nbsp;');
+        note_cell_ref.css({'background-color': 'transparent'});
+    });
 }
