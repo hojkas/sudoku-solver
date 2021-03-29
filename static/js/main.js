@@ -224,4 +224,16 @@ $(document).ready(function()
         window.candidates_to_be_deleted = null;
         window.number_to_be_solved = null;
     });
+    
+    $('#fill_candidates_everywhere').on('click', function() {
+       for(let x = 0; x < max_sudoku_number; x++) {
+           for(let y = 0; y < max_sudoku_number; y++) {
+               let cell_id = x * max_sudoku_number + y;
+
+               if(!is_solved_visible(cell_id)) {
+                   fill_all_candidates_in_cell(cell_id);
+               }
+           }
+       }
+    });
 });

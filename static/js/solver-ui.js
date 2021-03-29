@@ -346,11 +346,9 @@ function apply_prepared_step() {
     if(window.number_to_be_solved != null) {
         fill_cell_with_number(window.number_to_be_solved['cell_id'], window.number_to_be_solved['number']);
     }
-
-    let list_of_empty = search_for_truly_empty_cells();
-    alert(list_of_empty);
 }
 
+// TODO probably not needed delete later
 function search_for_truly_empty_cells() {
     let list_of_empty_ids = [];
     for(let x = 0; x < max_sudoku_number; x++) {
