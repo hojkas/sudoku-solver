@@ -346,4 +346,27 @@ function apply_prepared_step() {
     if(window.number_to_be_solved != null) {
         fill_cell_with_number(window.number_to_be_solved['cell_id'], window.number_to_be_solved['number']);
     }
+
+    let list_of_empty = search_for_truly_empty_cells();
+    alert(list_of_empty);
+}
+
+function search_for_truly_empty_cells() {
+    let list_of_empty_ids = [];
+    for(let x = 0; x < max_sudoku_number; x++) {
+        for(let y = 0; y < max_sudoku_number; y++) {
+            let cell_id = x * max_sudoku_number + y;
+            if(!is_solved_visible(cell_id)) {
+                let non_empty = false;
+                for(let i = 1; i <= max_sudoku_number; i++) {
+                    if($('#note' + cell_id + '-' + i).text() !== '\xa0') {
+                        non_empty = true;
+                        break;
+                    }
+                }
+                if(!non_empty) list_of_empty_ids.push(cell_id);
+            }
+        }
+    }
+    return list_of_empty_ids;
 }

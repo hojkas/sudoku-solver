@@ -2,9 +2,20 @@
 
 {% block solver_block %}
     <div id="sudoku-wrapper" class="disable-select">
+            <table class="sudoku-top">
+                <tr>
+                    <td></td>
+                  {% for x in max_sudoku_number|get_range %}
+                    <td class="outside-table-top">
+                        {{ x|add:1 }}
+                    </td>
+                  {% endfor %}
+                </tr>
+            </table>
           <table id="sudoku-table" class="sudoku sudoku-{{ max_sudoku_number }}x{{ max_sudoku_number }}">
               {% for x in max_sudoku_number|get_range %}
                   <tr>
+                  <td class="outside-table-left">{{ x|add:1 }}</td>
                   {% for y in max_sudoku_number|get_range %}
                       <td class="sudoku-cell" id="cell-{{ x|mul:max_sudoku_number|add:y }}">
                         <div class="sudoku-solved-num" id="solved{{ x|mul:max_sudoku_number|add:y }}">
