@@ -15,6 +15,9 @@ window.fill_in_solved = false;
 
 // variable to hold dictionary with information about candidates to be delted if step is applied
 window.candidates_to_be_deleted = null;
+// variable to hold number to be solved after applying of next step
+window.number_to_be_solved = null;
+
 
 let number_to_hexa_mapping = {
     '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
@@ -210,6 +213,8 @@ $(document).ready(function()
         show_default_strategy_description();
         remove_all_custom_highlight();
         $('#next-step-default-button-wrapper').show().siblings('div').hide();
+        window.candidates_to_be_deleted = null;
+        window.number_to_be_solved = null;
     });
 
     $('#cancel-next-step').on('click', function() {
@@ -217,5 +222,7 @@ $(document).ready(function()
         show_default_strategy_description();
         remove_all_custom_highlight();
         $('#next-step-default-button-wrapper').show().siblings('div').hide();
+        window.candidates_to_be_deleted = null;
+        window.number_to_be_solved = null;
     });
 });

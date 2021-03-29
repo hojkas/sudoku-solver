@@ -24,8 +24,7 @@ function remove_number_from_div(div) {
 }
 
 function add_number_to_div(div, number_to_add) {
-    if (number_to_add < 10) div.html(number_to_add);
-    else div.html(String.fromCharCode(55 + parseInt(number_to_add)));
+    div.html(number_to_hexa_mapping[number_to_add.toString()]);
     if(number_to_add === window.highlighted_num) div.css({'background-color': 'pink'});
     else div.css({'background-color': 'transparent'});
 }
@@ -344,4 +343,7 @@ function apply_prepared_step() {
         note_cell_ref.html('&nbsp;');
         note_cell_ref.css({'background-color': 'transparent'});
     });
+    if(window.number_to_be_solved != null) {
+        fill_cell_with_number(window.number_to_be_solved['cell_id'], window.number_to_be_solved['number']);
+    }
 }

@@ -8,6 +8,9 @@ from django.template.defaultfilters import register
 from django.utils.translation import gettext as _
 import json
 
+
+
+
 # Variable that allows showing of extra controls such as custom highlights for
 developers_tools = True
 
@@ -171,10 +174,14 @@ def get_next_step(request):
         ],
         "candidates_to_remove": [
             {
-                "cell_id": 0,
+                "cell_id": 1,
                 "note_id": 5
             }
-        ]
+        ],
+        "solve_number": {
+            "cell_id": 2,
+            "number": 3
+        }
     }
 
     return HttpResponse(json.dumps(test_json))

@@ -31,6 +31,7 @@ async function count_next_step() {
             // strategy was found
             $('#next-step-next-action-wrapper').show().siblings('div').hide();
             window.candidates_to_be_deleted = response_json['candidates_to_remove'];
+            window.number_to_be_solved = response_json['solve_number'];
             mark_successful_strategy(response_json['strategy_applied']);
             apply_highlight_from_list_of_dict(response_json['highlight']);
             change_strategy_description(response_json['text']);
