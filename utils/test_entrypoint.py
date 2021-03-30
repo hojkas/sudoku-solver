@@ -1,6 +1,6 @@
-from sudoku_class import *
-from sudoku_convertor import *
-from simple_strategies import *
+from utils.sudoku_class import *
+from utils.sudoku_convertor import *
+from utils.simple_strategies import *
 
 test_naked_single = [
     5, 3, None, None, 7, None, None, None, None,
@@ -44,7 +44,7 @@ sa.remove_all_collisions(sudoku)
 
 print('SOLVING START\n==================\n')
 i = 0
-while(True):
+while True:
     # if sudoku is already solved, breaks
     if sudoku.is_fully_solved():
         break

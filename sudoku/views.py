@@ -8,8 +8,8 @@ from django.template.defaultfilters import register
 from django.utils.translation import gettext as _
 import json
 
-
-
+from utils.strategy_manager import StrategyApplier
+from utils.sudoku_convertor import convert_js_json_to_sudoku_board
 
 # Variable that allows showing of extra controls such as custom highlights for
 developers_tools = True
@@ -52,11 +52,16 @@ sudokus_context = {'basic_sudokus': basic_sudokus,
 
 max_sudoku_numbers = {'sudoku4x4': 4,
                       'sudoku6x6': 6,
+                      'sudoku9x9': 9,
                       'sudoku16x16': 16}
 sudoku_template_mapper = {'sudoku4x4': 'classic_sudoku_grid',
                           'sudoku6x6': 'classic_sudoku_grid',
                           'sudoku9x9': 'classic_sudoku_grid',
                           'sudoku16x16': 'classic_sudoku_grid'}
+sudoku_type_mapper = {'sudoku4x4': 'classic',
+                      'sudoku6x6': 'classic',
+                      'sudoku9x9': 'classic',
+                      'sudoku16x16': 'classic'}
 
 @register.filter
 def get_range(val):
@@ -141,6 +146,9 @@ def solver(request, name):
     custom_context['medium_strategies'] = medium_strategies
     custom_context['advanced_strategies'] = advanced_strategies
 
+    request.session['max_sudoku_number'] = max_sudoku_numbers[name]
+    request.session['sudoku_type'] = sudoku_type_mapper[name]
+
     return render(request, template, custom_context)
 
 def update_setting(request):
@@ -155,6 +163,10 @@ def update_setting(request):
 
 def get_next_step(request):
     sudoku_json = json.loads(request.POST.get('json'))
+    sudoku = convert_js_json_to_sudoku_board(sudoku_json)
+    strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), request.session.get('sudoku_type'))
+    result_json = strategy_applier.find_next_step(sudoku)
+
     test_json = {
         "strategy_applied": "naked_pair",
         "success": True,
@@ -185,7 +197,7 @@ def get_next_step(request):
         }
     }
 
-    return HttpResponse(json.dumps(test_json))
+    return HttpResponse(json.dumps(result_json))
 
 # ====================================
 #           GUIDES VIEWS

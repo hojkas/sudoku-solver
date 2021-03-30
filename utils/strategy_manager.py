@@ -1,15 +1,25 @@
-from sudoku_class import *
+from utils.sudoku_class import *
+from django.utils.translation import gettext as _
+
+""" Function fills non-solved cells with all possible candidate numbers
+@param sudokou Current state of sudoku upon which the operation is executed.
+"""
+
+
+def fill_with_candidates(sudoku):
+    sudoku.fill_candidates_in_all_not_solved()
+
 
 class StrategyApplier:
-    """ Inicialization of StrategyApplier creates number of variables derived from
-    max_sudoku_number and sudoku_type_name that help to apply strategies more effectively
-    without doing the same math operations repeatedly.
-    @param max_sudoku_number Highest number in sudoku/number of possible options/number of columns
-        and rows and such.
-    @param sudoku_type_name Type of sudoku to derive extra rules. TODO only supports "classic" at the
-        moment.
-    """
     def __init__(self, max_sudoku_number, sudoku_type_name, collect_report=True):
+        """ Inicialization of StrategyApplier creates number of variables derived from
+        max_sudoku_number and sudoku_type_name that help to apply strategies more effectively
+        without doing the same math operations repeatedly.
+        @param max_sudoku_number Highest number in sudoku/number of possible options/number of columns
+            and rows and such.
+        @param sudoku_type_name Type of sudoku to derive extra rules. TODO only supports "classic" at the
+            moment.
+        """
         self.__max_sudoku_number = max_sudoku_number
         self.__cell_id_limit = max_sudoku_number * max_sudoku_number
         self.__row_ids = []
@@ -26,7 +36,7 @@ class StrategyApplier:
             'success': None,
             'solve_number': None
         }
-        
+
         for x in range(max_sudoku_number):
             c = []
             r = []
@@ -35,7 +45,7 @@ class StrategyApplier:
                 c.append(x + max_sudoku_number * y)
             self.__col_ids.append(c)
             self.__row_ids.append(r)
-        
+
         if sudoku_type_name == "classic":
             if max_sudoku_number == 6:
                 sectors_width = 3
@@ -66,8 +76,8 @@ class StrategyApplier:
         # for quicker usage
         # creating empty dictionaries for each cell with key being its id
         for cell_id in range(max_sudoku_number * max_sudoku_number):
-            self.__cell_id_mapping[cell_id] = {} 
-        # going through row "chunks" (list of list of ids in row, one chunk = one row) to register
+            self.__cell_id_mapping[cell_id] = {}
+            # going through row "chunks" (list of list of ids in row, one chunk = one row) to register
         # the mapping
         for row_chunk_id, row_chunk in enumerate(self.__row_ids):
             for cell_id in row_chunk:
@@ -80,16 +90,15 @@ class StrategyApplier:
             for cell_id in sector_chunk:
                 self.__cell_id_mapping[cell_id]['sector_id'] = sector_chunk_id
         for extras_chunk_id, extras_chunk in enumerate(self.__extras_ids):
-            for cell_id in extras_chunk_id:
+            for cell_id in extras_chunk:
                 pass
                 # figure out extras chunks mapping or don't and do it differently TODO
 
-    """ Function fills non-solved cells with all possible candidate numbers
-    @param sudokou Current state of sudoku upon which the operation is executed.
-    """
-    # FILL WITH CANDIDATES
-    def fill_with_candidates(self, sudoku):
-        sudoku.fill_candidates_in_all_not_solved()
+    # ENTRY POINT
+    def find_next_step(self, sudoku):
+        # TODO check for empty cells, if yes, shortcut unsolvable
+        self.remove_all_collisions(sudoku)
+        return self.__report_json
 
     # REMOVE COLLISIONS
     """ Function removes any candidate number that is in the same row/column/sector as the
@@ -98,6 +107,7 @@ class StrategyApplier:
     @param sudoku Current state of sudoku upon which the operation is executed.
     @returns bool True if function removed at least one candidate number
     """
+
     def remove_all_collisions(self, sudoku):
         changed_something = False
 
@@ -105,6 +115,9 @@ class StrategyApplier:
             if self.remove_collisions_around_cell(sudoku, i):
                 changed_something = True
 
+        if changed_something and self.__collect_report:
+            self.__report_json['text'] = _('Nalezeny přímé kolize vyplněných čísel (žlutě) s možnými kandidáty '
+                                           '(červeně).')
         return changed_something
 
     """ Function searches the row, col and sector (aka ids of other cells belonging to this
@@ -115,6 +128,7 @@ class StrategyApplier:
     @param cell_id Id of a cell with solved number that should be inspected in related row/col/sector.
     @returns bool True if any candidate number was eliminated in the process, false if not.
     """
+
     def remove_collisions_around_cell(self, sudoku, cell_id):
         changed_something = False
         row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
@@ -141,14 +155,14 @@ class StrategyApplier:
                                 "color": "yellow"
                             })
                             # color the canddiate to be eliminated
-                            self.__collect_report['highlight'].append({
+                            self.__report_json['highlight'].append({
                                 "cell_id": cell_id_2,
                                 "is_solved": False,
                                 "note_id": num,
                                 "color": "red"
                             })
                             # mark the candidate for elimination
-                            self.__collect_report['candidates_to_remove'].append({
+                            self.__report_json['candidates_to_remove'].append({
                                 "cell_id": cell_id_2,
                                 "note_id": num
                             })
@@ -197,6 +211,7 @@ class StrategyApplier:
     @param cell_id Id of cell to get position of.
     @returns (row_id, column_id, sector_id) Tuple consisting of row id, column id and sector id.
     """
+
     def get_row_col_sector_id_of_cell(self, cell_id):
         return (self.__cell_id_mapping[cell_id]['row_id'],
                 self.__cell_id_mapping[cell_id]['col_id'],
@@ -223,13 +238,14 @@ class StrategyApplier:
                     sudoku.cells[cell_ids[0]].fill_in_solved(number)
                     return True
         return False
-    
+
     """ Function to help with hidden single/pair/triple/quadruple
     @param sudoku Current state of sudoku upon which the operation is executed.
     @param block_ids List of cell ids which belong to one block
     @param target_number Int value of how many candidate occurencies we search for.
     @returns result List of tuples with numbers and cells of their occurence in the correct count.
     """
+
     def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
         occurence = {}
         res = []
@@ -243,7 +259,7 @@ class StrategyApplier:
             # for searching for 3/4, important combinations may occur not only with three 
             # triple-occurences, but also with 3 3 2 and so on, so it also marks 2+ occurences for them
             if ((target_number <= 2 and len(occurence[num]) == target_number) or
-                (target_number > 2 and len(occurence[num]) <= target_number
-                and len(occurence[num]) > 1)):
-                res.append((num,occurence[num]))
+                    (target_number > 2 and len(occurence[num]) <= target_number
+                     and len(occurence[num]) > 1)):
+                res.append((num, occurence[num]))
         return res
