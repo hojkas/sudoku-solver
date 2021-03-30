@@ -97,7 +97,17 @@ class StrategyApplier:
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # TODO check for empty cells, if yes, shortcut unsolvable
-        self.remove_all_collisions(sudoku)
+        if self.remove_all_collisions(sudoku):
+            return self.__report_json
+
+        if self.naked_single(sudoku):
+            return self.__report_json
+
+        # TODO dát sem možná ještě check řešitelnosti a reflektovat to v odpovědi
+        self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
+                                       'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
+                                       'strategii, která by vedla k řešení.')
+        self.__report_json['success'] = False
         return self.__report_json
 
     # REMOVE COLLISIONS
@@ -269,7 +279,23 @@ class StrategyApplier:
         changed_something = False
         for i in range(self.__cell_id_limit):
             if sudoku.cells[i].count_candidates() == 1:
-                sudoku.cells[i].fill_in_solved(sudoku.cells[i].notes[0])
+                if self.__collect_report:
+                    row_id = self.__cell_id_mapping[i]['row_id'] + 1
+                    col_id = self.__cell_id_mapping[i]['col_id'] + 1
+                    self.__report_json['solve_number'] = {"cell_id": i, "number": sudoku.cells[i].notes[0]}
+                    self.__report_json['success'] = True
+                    self.__report_json['strategy_applied'] = "naked_single"
+                    self.__report_json['text'] = _('V políčku r' + str(row_id) + 'c' + str(col_id) +
+                                                   ' se nachází pouze jedno možné kandidátní číslo.')
+                    self.__report_json['highlight'].append({
+                        'cell_id': i,
+                        'is_solved': False,
+                        'note_id': sudoku.cells[i].notes[0],
+                        'color': 'green'
+                    })
+                    return True
+                else:
+                    sudoku.cells[i].fill_in_solved(sudoku.cells[i].notes[0])
                 changed_something = True
         return changed_something
 
