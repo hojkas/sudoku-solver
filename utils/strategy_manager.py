@@ -183,7 +183,31 @@ class StrategyApplier:
                     # if the number is still in notes
                     if num in sudoku.cells[cell_id_2].notes:
                         # it is removed (number solved in same block excludes its posibility)
-                        sudoku.cells[cell_id_2].notes.remove(num)
+                        if self.__collect_report:
+                            self.__report_json['success'] = True
+                            self.__report_json['strategy_applied'] = 'remove_collisions'
+                            # color solved number that caused the collision elimination
+                            self.__report_json['highlight'].append({
+                                "cell_id": cell_id,
+                                "is_solved": True,
+                                "note_id": None,
+                                "color": "yellow"
+                            })
+                            # color the canddiate to be eliminated
+                            self.__report_json['highlight'].append({
+                                "cell_id": cell_id_2,
+                                "is_solved": False,
+                                "note_id": num,
+                                "color": "red"
+                            })
+                            # mark the candidate for elimination
+                            self.__report_json['candidates_to_remove'].append({
+                                "cell_id": cell_id_2,
+                                "note_id": num
+                            })
+                        else:
+                            # it is removed (number solved in same block excludes its posibility)
+                            sudoku.cells[cell_id_2].notes.remove(num)
                         changed_something = True
         # for sector
         if sudoku.cells[cell_id].is_solved():
@@ -197,8 +221,31 @@ class StrategyApplier:
                 if not sudoku.cells[cell_id_2].is_solved():
                     # if the number is still in notes
                     if num in sudoku.cells[cell_id_2].notes:
-                        # it is removed (number solved in same block excludes its posibility)
-                        sudoku.cells[cell_id_2].notes.remove(num)
+                        if self.__collect_report:
+                            self.__report_json['success'] = True
+                            self.__report_json['strategy_applied'] = 'remove_collisions'
+                            # color solved number that caused the collision elimination
+                            self.__report_json['highlight'].append({
+                                "cell_id": cell_id,
+                                "is_solved": True,
+                                "note_id": None,
+                                "color": "yellow"
+                            })
+                            # color the canddiate to be eliminated
+                            self.__report_json['highlight'].append({
+                                "cell_id": cell_id_2,
+                                "is_solved": False,
+                                "note_id": num,
+                                "color": "red"
+                            })
+                            # mark the candidate for elimination
+                            self.__report_json['candidates_to_remove'].append({
+                                "cell_id": cell_id_2,
+                                "note_id": num
+                            })
+                        else:
+                            # it is removed (number solved in same block excludes its posibility)
+                            sudoku.cells[cell_id_2].notes.remove(num)
                         changed_something = True
         # for extras (eg. diagonal)
         if len(self.__extras_ids) != 0:
