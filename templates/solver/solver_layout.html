@@ -81,7 +81,9 @@
                 {% endblocktrans %}</div>
                 <div>
                     <button id="fill_candidates_everywhere" class="simple-round-button">
-                        {% trans "Automatické doplnění kandidátů" %}
+                        <div id="automatic-candidates-default">{% trans "Automatické doplnění kandidátů" %}</div>
+                        <div id="automatic-candidates-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-pulse"></i></div>
                     </button>
                     <button class="simple-round-button" id="check-if-solvable">
                         {% trans "Otestovat řešitelnost" %}
