@@ -154,6 +154,7 @@ def update_setting(request):
 # ======== HINTS AND STEPS by strategies ==========
 
 def get_next_step(request):
+    sudoku_json = json.loads(request.POST.get('json'))
     test_json = {
         "strategy_applied": "naked_pair",
         "success": True,
