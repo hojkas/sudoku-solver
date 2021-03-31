@@ -256,22 +256,29 @@ class StrategyApplier:
     # HIDDEN SINGLE
     def hidden_single(self, sudoku):
         # for every block chunk, aka area of sudoku where 1-max_sudoku_number can be once, like row, col, sector
-        for block_chunk in (self.__row_ids + self.__col_ids + self.__sector_ids):
-            # check all candidates if some is present only once (assuming remove_collisions very called beforehand)
-            res = self.__find_candidates_with_n_occurences(sudoku, block_chunk, 1)
-            if len(res) > 0:
-                # res containes tuples with number that is only once mentioned and cell_id where it is
-                for number, cell_ids in res:
-                    if self.__collect_report:
-                        self.report_add_highlight(cell_ids[0], False, "green", number)
-                        self.report_add_solved_number(cell_ids[0], number)
-                        self.__report_json['success'] = True
-                        self.__report_json['strategy_applied'] = 'hidden_single'
-                        self.__report_json['text'] = _('V buňce ' + self.get_cell_pos_str(cell_ids[0]) + 'xxx')
-                        # TODO needs to know if it's in row/column/sector
-                    else:
-                        sudoku.cells[cell_ids[0]].fill_in_solved(number)
-                    return True
+        for i, set_of_ids in enumerate((self.__row_ids, self.__col_ids, self.__sector_ids)):
+            for block_chunk in set_of_ids:
+                # check all candidates if some is present only once (assuming remove_collisions very called beforehand)
+                res = self.__find_candidates_with_n_occurences(sudoku, block_chunk, 1)
+                if len(res) > 0:
+                    # res containes tuples with number that is only once mentioned and cell_id where it is
+                    for number, cell_ids in res:
+                        if self.__collect_report:
+                            self.report_add_highlight(cell_ids[0], False, "green", number)
+                            self.report_add_solved_number(cell_ids[0], number)
+                            self.__report_json['success'] = True
+                            self.__report_json['strategy_applied'] = 'hidden_single'
+                            location_map = {
+                                0: _('v řádku'),
+                                1: _('v sloupci'),
+                                2: _('v sektoru')
+                            }
+                            self.__report_json['text'] = _('V buňce ' + self.get_cell_pos_str(cell_ids[0]) +
+                                ' bude doplněn zeleně zvýrazněný kandidát, protože toto je jeho jediné možné '
+                                'umístění ' + location_map[i] + '.')
+                        else:
+                            sudoku.cells[cell_ids[0]].fill_in_solved(number)
+                        return True
         return False
 
     """ Function to help with hidden single/pair/triple/quadruple
