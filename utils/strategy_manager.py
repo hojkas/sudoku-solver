@@ -92,7 +92,7 @@ class StrategyApplier:
         for extras_chunk_id, extras_chunk in enumerate(self.__extras_ids):
             for cell_id in extras_chunk:
                 pass
-                # figure out extras chunks mapping or don't and do it differently TODO
+                # TODO figure out extras chunks mapping or don't and do it differently
 
     # HELP functions for report collection
     def report_add_highlight(self, cell_id, is_solved, color, note_id=None):
@@ -110,7 +110,14 @@ class StrategyApplier:
         })
 
     def report_add_solved_number(self, cell_id, number):
-        pass
+        self.__report_json['solve_number'] = {
+            "cell_id": cell_id,
+            "number": number
+        }
+
+    def get_cell_pos_str(self, cell_id):
+        res = 'r' + str(int(cell_id/self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
+        return res
 
     # ENTRY POINT
     def find_next_step(self, sudoku):
@@ -133,6 +140,9 @@ class StrategyApplier:
             return self.__report_json
 
         if self.naked_single(sudoku):
+            return self.__report_json
+
+        if self.hidden_single(sudoku):
             return self.__report_json
 
         # TODO dát sem možná ještě check řešitelnosti a reflektovat to v odpovědi
@@ -225,7 +235,8 @@ class StrategyApplier:
                 if self.__collect_report:
                     row_id = self.__cell_id_mapping[i]['row_id'] + 1
                     col_id = self.__cell_id_mapping[i]['col_id'] + 1
-                    self.__report_json['solve_number'] = {"cell_id": i, "number": sudoku.cells[i].notes[0]}
+                    self.report_add_solved_number(i, sudoku.cells[i].notes[0])
+
                     self.__report_json['success'] = True
                     self.__report_json['strategy_applied'] = "naked_single"
                     self.__report_json['text'] = _('V políčku r' + str(row_id) + 'c' + str(col_id) +
@@ -251,7 +262,15 @@ class StrategyApplier:
             if len(res) > 0:
                 # res containes tuples with number that is only once mentioned and cell_id where it is
                 for number, cell_ids in res:
-                    sudoku.cells[cell_ids[0]].fill_in_solved(number)
+                    if self.__collect_report:
+                        self.report_add_highlight(cell_ids[0], False, "green", number)
+                        self.report_add_solved_number(cell_ids[0], number)
+                        self.__report_json['success'] = True
+                        self.__report_json['strategy_applied'] = 'hidden_single'
+                        self.__report_json['text'] = _('V buňce ' + self.get_cell_pos_str(cell_ids[0]) + 'xxx')
+                        # TODO needs to know if it's in row/column/sector
+                    else:
+                        sudoku.cells[cell_ids[0]].fill_in_solved(number)
                     return True
         return False
 
@@ -274,8 +293,7 @@ class StrategyApplier:
             # in searching for 1/2 occurences, it requires exactly target_number of occurences
             # for searching for 3/4, important combinations may occur not only with three 
             # triple-occurences, but also with 3 3 2 and so on, so it also marks 2+ occurences for them
-            if ((target_number <= 2 and len(occurence[num]) == target_number) or
-                    (target_number > 2 and len(occurence[num]) <= target_number
-                     and len(occurence[num]) > 1)):
+            if ((2 >= target_number == len(occurence[num])) or
+                    (target_number > 2 and target_number >= len(occurence[num]) > 1)):
                 res.append((num, occurence[num]))
         return res
