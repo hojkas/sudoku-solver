@@ -1,6 +1,6 @@
 from utils.sudoku_class import *
 from utils.sudoku_convertor import *
-from utils.simple_strategies import *
+from utils.strategy_manager import *
 
 test_naked_single = [
     5, 3, None, None, 7, None, None, None, None,
@@ -36,11 +36,17 @@ test_json = {"max_sudoku_number": 9, "board": [{"cell_id": 0, "notes": [], "solv
 # creation of board
 # sudoku = convert_simple_array_to_sudoku_board(source_sudoku, 9)
 sudoku = convert_js_json_to_sudoku_board(test_json)
-sa = StrategyApplier(9, 'classic')
+sa = StrategyApplier(9, 'classic', collect_report=False)
 
 # prep
 # sa.fill_with_candidates(sudoku)
-sa.remove_all_collisions(sudoku)
+# sa.remove_all_collisions(sudoku)
+
+
+
+
+
+exit(0)
 
 print('SOLVING START\n==================\n')
 i = 0

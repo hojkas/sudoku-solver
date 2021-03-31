@@ -16,11 +16,18 @@ class SudokuBoard:
                 return False
         return True
 
+    def has_unsolvable_cell(self):
+        for i in range(self.max_sudoku_number * self.max_sudoku_number):
+            if not self.cells[i].is_solved():
+                if len(self.cells[i].notes) == 0:
+                    return True
+        return False
+
     # TODO only test function
     def print_full_sudoku(self):
         divider = '#-------#-------#-------#'
         for x in range(self.max_sudoku_number):
-            if (x % 3 == 0):
+            if x % 3 == 0:
                 print(divider)
             for y in range(self.max_sudoku_number):
                 if y % 3 == 0:
@@ -29,6 +36,7 @@ class SudokuBoard:
                 print(' ', end='')
             print('|')
         print(divider)
+
     # TODO only test function
     def print_all_cells(self):
         for i in range(self.max_sudoku_number * self.max_sudoku_number):
@@ -62,7 +70,7 @@ class SudokuCell:
             return False
         else:
             return True
-    
+
     def fill_in_all_candidates(self):
         self.solved = None
         self.notes = []
@@ -82,6 +90,7 @@ class SudokuCell:
             for val in self.notes:
                 print(val, end=' ')
             print(']')
+
     # TODO only test function
     def print_solved_cell(self):
         if self.solved:

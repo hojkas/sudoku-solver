@@ -167,36 +167,6 @@ def get_next_step(request):
     strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), request.session.get('sudoku_type'))
     result_json = strategy_applier.find_next_step(sudoku)
 
-    test_json = {
-        "strategy_applied": "naked_pair",
-        "success": True,
-        "text": "I am<br>two-lined text",
-        "highlight": [
-            {
-                "cell_id": 0,
-                "is_solved": True,
-                "note_id": None,
-                "color": "green"
-            },
-            {
-                "cell_id": 1,
-                "is_solved": False,
-                "note_id": 5,
-                "color": "red"
-            }
-        ],
-        "candidates_to_remove": [
-            {
-                "cell_id": 1,
-                "note_id": 5
-            }
-        ],
-        "solve_number": {
-            "cell_id": 2,
-            "number": 3
-        }
-    }
-
     return HttpResponse(json.dumps(result_json))
 
 # ====================================

@@ -94,9 +94,41 @@ class StrategyApplier:
                 pass
                 # figure out extras chunks mapping or don't and do it differently TODO
 
+    # HELP functions for report collection
+    def report_add_highlight(self, cell_id, is_solved, color, note_id=None):
+        self.__report_json['highlight'].append({
+            "cell_id": cell_id,
+            "is_solved": is_solved,
+            "note_id": note_id,
+            "color": color
+        })
+
+    def report_add_candidate_to_remove(self, cell_id, note_id):
+        self.__report_json['candidates_to_remove'].append({
+            "cell_id": cell_id,
+            "note_id": note_id
+        })
+
+    def report_add_solved_number(self, cell_id, number):
+        pass
+
     # ENTRY POINT
     def find_next_step(self, sudoku):
-        # TODO check for empty cells, if yes, shortcut unsolvable
+        # check if sudoku is already solved
+        if sudoku.is_fully_solved():
+            self.__report_json['success'] = False
+            self.__report_json['text'] = _('Sudoku už je vyřešené.')
+            return self.__report_json
+
+        # check if sudoku has truly empty cells, thus unsolvable
+        if sudoku.has_unsolvable_cell():
+            self.__report_json['success'] = False
+            self.__report_json['text'] = _('Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
+                                           'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
+                                           'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
+                                           'políček všechny možné kandidáty a zkusit najít krok znovu.')
+            return self.__report_json
+
         if self.remove_all_collisions(sudoku):
             return self.__report_json
 
@@ -145,8 +177,8 @@ class StrategyApplier:
         # for row
         if sudoku.cells[cell_id].is_solved():
             num = sudoku.cells[cell_id].solved
-            # for each other id in current block
-            for cell_id_2 in self.__row_ids[row_id]:
+            # for each other id in cells row block/col block/sector
+            for cell_id_2 in (self.__row_ids[row_id]+self.__col_ids[col_id]+self.__sector_ids[sector_id]):
                 # excluding the current one
                 if cell_id == cell_id_2:
                     continue
@@ -158,108 +190,19 @@ class StrategyApplier:
                             self.__report_json['success'] = True
                             self.__report_json['strategy_applied'] = 'remove_collisions'
                             # color solved number that caused the collision elimination
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id,
-                                "is_solved": True,
-                                "note_id": None,
-                                "color": "yellow"
-                            })
+                            self.report_add_highlight(cell_id, True, "yellow")
                             # color the canddiate to be eliminated
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id_2,
-                                "is_solved": False,
-                                "note_id": num,
-                                "color": "red"
-                            })
+                            self.report_add_highlight(cell_id=cell_id_2, is_solved=False, color="red", note_id=num)
                             # mark the candidate for elimination
-                            self.__report_json['candidates_to_remove'].append({
-                                "cell_id": cell_id_2,
-                                "note_id": num
-                            })
+                            self.report_add_candidate_to_remove(cell_id_2, num)
                         else:
                             # it is removed (number solved in same block excludes its posibility)
                             sudoku.cells[cell_id_2].notes.remove(num)
                         changed_something = True
-        # for col
-        if sudoku.cells[cell_id].is_solved():
-            num = sudoku.cells[cell_id].solved
-            # for each other id in current block
-            for cell_id_2 in self.__col_ids[col_id]:
-                # excluding the current one
-                if cell_id == cell_id_2:
-                    continue
-                # if cell isn't already solved
-                if not sudoku.cells[cell_id_2].is_solved():
-                    # if the number is still in notes
-                    if num in sudoku.cells[cell_id_2].notes:
-                        # it is removed (number solved in same block excludes its posibility)
-                        if self.__collect_report:
-                            self.__report_json['success'] = True
-                            self.__report_json['strategy_applied'] = 'remove_collisions'
-                            # color solved number that caused the collision elimination
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id,
-                                "is_solved": True,
-                                "note_id": None,
-                                "color": "yellow"
-                            })
-                            # color the canddiate to be eliminated
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id_2,
-                                "is_solved": False,
-                                "note_id": num,
-                                "color": "red"
-                            })
-                            # mark the candidate for elimination
-                            self.__report_json['candidates_to_remove'].append({
-                                "cell_id": cell_id_2,
-                                "note_id": num
-                            })
-                        else:
-                            # it is removed (number solved in same block excludes its posibility)
-                            sudoku.cells[cell_id_2].notes.remove(num)
-                        changed_something = True
-        # for sector
-        if sudoku.cells[cell_id].is_solved():
-            num = sudoku.cells[cell_id].solved
-            # for each other id in current block
-            for cell_id_2 in self.__sector_ids[sector_id]:
-                # excluding the current one
-                if cell_id == cell_id_2:
-                    continue
-                # if cell isn't already solved
-                if not sudoku.cells[cell_id_2].is_solved():
-                    # if the number is still in notes
-                    if num in sudoku.cells[cell_id_2].notes:
-                        if self.__collect_report:
-                            self.__report_json['success'] = True
-                            self.__report_json['strategy_applied'] = 'remove_collisions'
-                            # color solved number that caused the collision elimination
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id,
-                                "is_solved": True,
-                                "note_id": None,
-                                "color": "yellow"
-                            })
-                            # color the canddiate to be eliminated
-                            self.__report_json['highlight'].append({
-                                "cell_id": cell_id_2,
-                                "is_solved": False,
-                                "note_id": num,
-                                "color": "red"
-                            })
-                            # mark the candidate for elimination
-                            self.__report_json['candidates_to_remove'].append({
-                                "cell_id": cell_id_2,
-                                "note_id": num
-                            })
-                        else:
-                            # it is removed (number solved in same block excludes its posibility)
-                            sudoku.cells[cell_id_2].notes.remove(num)
-                        changed_something = True
+
         # for extras (eg. diagonal)
         if len(self.__extras_ids) != 0:
-            # TODO
+            # TODO extra sectors
             pass
         return changed_something
 
