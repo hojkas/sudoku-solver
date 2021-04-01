@@ -48,8 +48,8 @@ class StrategyApplier:
 
         if sudoku_type_name == "classic":
             if max_sudoku_number == 6:
-                sectors_width = 3
-                sectors_height = 2
+                sectors_width = 2
+                sectors_height = 3
             elif max_sudoku_number == 9:
                 sectors_height = 3
                 sectors_width = 3
@@ -60,8 +60,8 @@ class StrategyApplier:
                 sectors_height = 4
                 sectors_width = 4
 
-            for i in range(sectors_height):
-                for j in range(sectors_width):
+            for i in range(sectors_width):
+                for j in range(sectors_height):
                     starting_x = i * sectors_height
                     starting_y = j * sectors_width
                     s = []
@@ -119,12 +119,43 @@ class StrategyApplier:
         res = 'r' + str(int(cell_id/self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
         return res
 
+    def has_obvious_mistakes(self, sudoku):
+        collisions = {}
+        for cell_id in range(self.__cell_id_limit):
+            row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
+            # for row
+            if sudoku.cells[cell_id].is_solved():
+                # for each other id in cells row block/col block/sector
+                for cell_id_2 in (self.__row_ids[row_id] + self.__col_ids[col_id] + self.__sector_ids[sector_id]):
+                    # excluding the current one
+                    if cell_id == cell_id_2:
+                        continue
+                    # if cell already solved
+                    if sudoku.cells[cell_id_2].is_solved():
+                        if sudoku.cells[cell_id].solved == sudoku.cells[cell_id_2].solved:
+                            collisions[self.get_cell_pos_str(cell_id)] = True
+        if len(collisions) == 0:
+            return None
+        else:
+            s = ""
+            for key in collisions.keys():
+                s += key + ', '
+            return s[:-2]
+
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # check if sudoku is already solved
         if sudoku.is_fully_solved():
             self.__report_json['success'] = False
             self.__report_json['text'] = _('Sudoku už je vyřešené.')
+            return self.__report_json
+
+        # check if sudoku isn't obviously wrong
+        collisions = self.has_obvious_mistakes(sudoku)
+        if collisions is not None:
+            self.__report_json['success'] = False
+            self.__report_json['text'] = _('V sudoku se nachází vyplněná číslice v přímé kolizi. '
+                                           'Sudoku není vyřešitelné. Kolize na pozicích: ' + collisions)
             return self.__report_json
 
         # check if sudoku has truly empty cells, thus unsolvable
@@ -152,15 +183,14 @@ class StrategyApplier:
         self.__report_json['success'] = False
         return self.__report_json
 
-    # REMOVE COLLISIONS
-    """ Function removes any candidate number that is in the same row/column/sector as the
-    same number that is already marked as solved.
-
-    @param sudoku Current state of sudoku upon which the operation is executed.
-    @returns bool True if function removed at least one candidate number
-    """
-
+    # REMOVE COLLISIONS - DONE
     def remove_all_collisions(self, sudoku):
+        """ Function removes any candidate number that is in the same row/column/sector as the
+        same number that is already marked as solved.
+
+        @param sudoku Current state of sudoku upon which the operation is executed.
+        @returns bool True if function removed at least one candidate number
+        """
         changed_something = False
 
         for i in range(self.__cell_id_limit):
@@ -172,16 +202,15 @@ class StrategyApplier:
                                            '(červeně).')
         return changed_something
 
-    """ Function searches the row, col and sector (aka ids of other cells belonging to this
-    block as defined upon StrategyApllier creation) and removes all candidate numbers
-    in these cells with number equal to cell of which cell_id is given.
-
-    @param sudoku Current state of sudoku upon which the operation is executed.
-    @param cell_id Id of a cell with solved number that should be inspected in related row/col/sector.
-    @returns bool True if any candidate number was eliminated in the process, false if not.
-    """
-
     def remove_collisions_around_cell(self, sudoku, cell_id):
+        """ Function searches the row, col and sector (aka ids of other cells belonging to this
+        block as defined upon StrategyApllier creation) and removes all candidate numbers
+        in these cells with number equal to cell of which cell_id is given.
+
+        @param sudoku Current state of sudoku upon which the operation is executed.
+        @param cell_id Id of a cell with solved number that should be inspected in related row/col/sector.
+        @returns bool True if any candidate number was eliminated in the process, false if not.
+        """
         changed_something = False
         row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
         # for row
@@ -216,19 +245,24 @@ class StrategyApplier:
             pass
         return changed_something
 
-    """ Function returns id of row/col/sector the cell is part of.
-
-    @param cell_id Id of cell to get position of.
-    @returns (row_id, column_id, sector_id) Tuple consisting of row id, column id and sector id.
-    """
-
     def get_row_col_sector_id_of_cell(self, cell_id):
+        """ Function returns id of row/col/sector the cell is part of.
+
+        @param cell_id Id of cell to get position of.
+        @returns (row_id, column_id, sector_id) Tuple consisting of row id, column id and sector id.
+        """
         return (self.__cell_id_mapping[cell_id]['row_id'],
                 self.__cell_id_mapping[cell_id]['col_id'],
                 self.__cell_id_mapping[cell_id]['sector_id'])
 
-    # NAKED SINGLE
+    # NAKED SINGLE - DONE
     def naked_single(self, sudoku):
+        """ Function searches through all cells in sudoku. In each one, it test if there isn't only one possible
+        candidate. If this condition is met, the sole candidate is marked for filling/filled into the cell as solved.
+
+        @param sudoku SudokuBoard instance with current state of sudoku.
+        @return bool True if the strategy was found and applied, False if not.
+        """
         changed_something = False
         for i in range(self.__cell_id_limit):
             if sudoku.cells[i].count_candidates() == 1:
@@ -253,8 +287,15 @@ class StrategyApplier:
                 changed_something = True
         return changed_something
 
-    # HIDDEN SINGLE
+    # HIDDEN SINGLE - DONE
     def hidden_single(self, sudoku):
+        """ Function searches through all blocks (rows, cols, sectors, extras) in sudoku. In each one, it tries to
+        find candidate with only one occurence accross block. If this condition is met, the sole candidate is marked
+        for filling/filled into the cell as solved.
+
+        @param sudoku SudokuBoard instance with current state of sudoku.
+        @return bool True if the strategy was found and applied, False if not.
+        """
         # for every block chunk, aka area of sudoku where 1-max_sudoku_number can be once, like row, col, sector
         for i, set_of_ids in enumerate((self.__row_ids, self.__col_ids, self.__sector_ids)):
             for block_chunk in set_of_ids:
@@ -281,14 +322,13 @@ class StrategyApplier:
                         return True
         return False
 
-    """ Function to help with hidden single/pair/triple/quadruple
-    @param sudoku Current state of sudoku upon which the operation is executed.
-    @param block_ids List of cell ids which belong to one block
-    @param target_number Int value of how many candidate occurencies we search for.
-    @returns result List of tuples with numbers and cells of their occurence in the correct count.
-    """
-
     def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
+        """ Function to help with hidden single/pair/triple/quadruple
+        @param sudoku Current state of sudoku upon which the operation is executed.
+        @param block_ids List of cell ids which belong to one block
+        @param target_number Int value of how many candidate occurencies we search for.
+        @returns result List of tuples with numbers and cells of their occurence in the correct count.
+        """
         occurence = {}
         res = []
         for num in range(1, self.__max_sudoku_number + 1):

@@ -1,6 +1,6 @@
 class SudokuBoard:
     def __init__(self, max_sudoku_number=9):
-        self.max_sudoku_number = 9
+        self.max_sudoku_number = max_sudoku_number
         self.cells = []
         for i in range(max_sudoku_number * max_sudoku_number):
             self.cells.append(SudokuCell(i, max_sudoku_number))
