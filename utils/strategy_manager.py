@@ -230,6 +230,15 @@ class StrategyApplier:
         if self.naked_pair(sudoku):
             return self.__report_json
 
+        if self.hidden_pair(sudoku):
+            return self.__report_json
+
+        if self.naked_triple(sudoku):
+            return self.__report_json
+
+        if self.hidden_triple(sudoku):
+            return self.__report_json
+
         # TODO dát sem možná ještě check řešitelnosti a reflektovat to v odpovědi
         self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
                                        'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
@@ -437,6 +446,15 @@ class StrategyApplier:
             self.report_add_candidate_to_remove(cell_id, num)
         else:
             sudoku.cells[cell_id].notes.remove(num)
+
+    def hidden_pair(self, sudoku):
+        pass
+
+    def naked_triple(self, sudoku):
+        pass
+
+    def hidden_triple(self, sudoku):
+        pass
 
     # HELP functions for strategies
     def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
