@@ -119,6 +119,38 @@ class StrategyApplier:
         res = 'r' + str(int(cell_id/self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
         return res
 
+    def get_bold_cell_pos_str(self, cell_id):
+        return '<b>' + self.get_cell_pos_str(cell_id) + '</b>'
+
+    def __apply_for_each(self, sudoku, func_name, name_of_unit, **kwargs):
+        if name_of_unit == 'block':
+            if self.__apply_for_each(sudoku, func_name, 'row', **kwargs):
+                return True
+            if self.__apply_for_each(sudoku, func_name, 'col', **kwargs):
+                return True
+            if self.__apply_for_each(sudoku, func_name, 'sector', **kwargs):
+                return True
+            if self.__apply_for_each(sudoku, func_name, 'extra', **kwargs):
+                return True
+        elif name_of_unit == 'row':
+            for set_of_ids in self.__row_ids:
+                if func_name(sudoku, set_of_ids, 'row', **kwargs):
+                    return True
+        elif name_of_unit == 'col':
+            for set_of_ids in self.__col_ids:
+                if func_name(sudoku, set_of_ids, 'col', **kwargs):
+                    return True
+        elif name_of_unit == 'sector':
+            for set_of_ids in self.__sector_ids:
+                if func_name(sudoku, set_of_ids, 'sector', **kwargs):
+                    return True
+        elif name_of_unit == 'extra':
+            for set_of_ids in self.__extras_ids:
+                if func_name(sudoku, set_of_ids, 'extra', **kwargs):
+                    return True
+            # TODO maybe more with extras later
+        return False
+
     def has_obvious_mistakes(self, sudoku):
         collisions = {}
         for cell_id in range(self.__cell_id_limit):
@@ -267,13 +299,11 @@ class StrategyApplier:
         for i in range(self.__cell_id_limit):
             if sudoku.cells[i].count_candidates() == 1:
                 if self.__collect_report:
-                    row_id = self.__cell_id_mapping[i]['row_id'] + 1
-                    col_id = self.__cell_id_mapping[i]['col_id'] + 1
                     self.report_add_solved_number(i, sudoku.cells[i].notes[0])
 
                     self.__report_json['success'] = True
                     self.__report_json['strategy_applied'] = "naked_single"
-                    self.__report_json['text'] = _('V políčku r' + str(row_id) + 'c' + str(col_id) +
+                    self.__report_json['text'] = _('V políčku ' + self.get_bold_cell_pos_str(i) +
                                                    ' se nachází pouze jedno možné kandidátní číslo.')
                     self.__report_json['highlight'].append({
                         'cell_id': i,
@@ -296,30 +326,30 @@ class StrategyApplier:
         @param sudoku SudokuBoard instance with current state of sudoku.
         @return bool True if the strategy was found and applied, False if not.
         """
-        # for every block chunk, aka area of sudoku where 1-max_sudoku_number can be once, like row, col, sector
-        for i, set_of_ids in enumerate((self.__row_ids, self.__col_ids, self.__sector_ids)):
-            for block_chunk in set_of_ids:
-                # check all candidates if some is present only once (assuming remove_collisions very called beforehand)
-                res = self.__find_candidates_with_n_occurences(sudoku, block_chunk, 1)
-                if len(res) > 0:
-                    # res containes tuples with number that is only once mentioned and cell_id where it is
-                    for number, cell_ids in res:
-                        if self.__collect_report:
-                            self.report_add_highlight(cell_ids[0], False, "green", number)
-                            self.report_add_solved_number(cell_ids[0], number)
-                            self.__report_json['success'] = True
-                            self.__report_json['strategy_applied'] = 'hidden_single'
-                            location_map = {
-                                0: _('v řádku'),
-                                1: _('v sloupci'),
-                                2: _('v sektoru')
-                            }
-                            self.__report_json['text'] = _('V buňce ' + self.get_cell_pos_str(cell_ids[0]) +
-                                ' bude doplněn zeleně zvýrazněný kandidát, protože toto je jeho jediné možné '
-                                'umístění ' + location_map[i] + '.')
-                        else:
-                            sudoku.cells[cell_ids[0]].fill_in_solved(number)
-                        return True
+        return self.__apply_for_each(sudoku, self.hidden_single_on_one_block, 'block')
+
+    def hidden_single_on_one_block(self, sudoku, ids_chunk, location):
+        res = self.__find_candidates_with_n_occurences(sudoku, ids_chunk, 1)
+        if len(res) > 0:
+            # res containes tuples with number that is only once mentioned and cell_id where it is
+            for number, cell_ids in res:
+                if self.__collect_report:
+                    self.report_add_highlight(cell_ids[0], False, "green", number)
+                    self.report_add_solved_number(cell_ids[0], number)
+                    self.__report_json['success'] = True
+                    self.__report_json['strategy_applied'] = 'hidden_single'
+                    location_map = {
+                        'row': _('v řádku'),
+                        'col': _('v sloupci'),
+                        'sector': _('v sektoru'),
+                        'extra': _('v extra bloku')  # TODO make more specific?
+                    }
+                    self.__report_json['text'] = _('V buňce ' + self.get_bold_cell_pos_str(cell_ids[0]) +
+                           ' bude doplněn zeleně zvýrazněný kandidát, protože je to jeho jediné možné '
+                           'umístění ' + location_map[location] + '.')
+                else:
+                    sudoku.cells[cell_ids[0]].fill_in_solved(number)
+                return True
         return False
 
     def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
