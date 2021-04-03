@@ -9,6 +9,24 @@ from django.utils.translation import gettext as _
 def fill_with_candidates(sudoku):
     sudoku.fill_candidates_in_all_not_solved()
 
+def is_group_of_same_numbers(lists):
+    s = set()
+    for l in lists:
+        s = s.union(set(l))
+    if len(s) <= len(lists):
+        return True
+    return False
+
+def collect_cell_candidates_info_list(sudoku, block_ids):
+    res = []
+    for cell_id in block_ids:
+        if sudoku.cells[cell_id].is_solved():
+            continue
+        res.append({'cell_id': cell_id,
+                    'total': len(sudoku.cells[cell_id].notes),
+                    'notes': sudoku.cells[cell_id].notes})
+    return res
+
 
 class StrategyApplier:
     def __init__(self, max_sudoku_number, sudoku_type_name, collect_report=True):
@@ -122,6 +140,7 @@ class StrategyApplier:
     def get_bold_cell_pos_str(self, cell_id):
         return '<b>' + self.get_cell_pos_str(cell_id) + '</b>'
 
+    # HELP function for functions
     def __apply_for_each(self, sudoku, func_name, name_of_unit, **kwargs):
         if name_of_unit == 'block':
             if self.__apply_for_each(sudoku, func_name, 'row', **kwargs):
@@ -206,6 +225,9 @@ class StrategyApplier:
             return self.__report_json
 
         if self.hidden_single(sudoku):
+            return self.__report_json
+
+        if self.naked_pair(sudoku):
             return self.__report_json
 
         # TODO dát sem možná ještě check řešitelnosti a reflektovat to v odpovědi
@@ -352,6 +374,71 @@ class StrategyApplier:
                 return True
         return False
 
+    # NAKED PAIR - DONE
+    def naked_pair(self, sudoku):
+        return self.__apply_for_each(sudoku, self.naked_pair_on_one_block, 'block')
+
+    def naked_pair_on_one_block(self, sudoku, ids_chunk, location):
+        cells_info_list = collect_cell_candidates_info_list(sudoku, ids_chunk)
+        x = 0
+        while x < len(cells_info_list):
+            y = x + 1
+            while y < len(cells_info_list):
+                # compares each two cells if they have the same notes
+                if cells_info_list[x]['total'] == 2 and cells_info_list[y]['total'] == 2:
+                    if cells_info_list[x]['notes'] == cells_info_list[y]['notes']:
+                        # found naked pair, but it is yet not determined if the naked pair makes any change
+                        np_cell_id_1 = cells_info_list[x]['cell_id']
+                        np_cell_id_2 = cells_info_list[y]['cell_id']
+                        num_1, num_2 = cells_info_list[x]['notes']
+                        something_changed = False
+                        for cell_id in ids_chunk:
+                            if cell_id == np_cell_id_1 or cell_id == np_cell_id_2:
+                                continue
+                            if num_1 in sudoku.cells[cell_id].notes:
+                                # strategy naked pair can be applied to eliminate this candidate
+                                self.apply_naked_pair_on_cell(sudoku, cell_id, num_1)
+                                something_changed = True
+                            if num_2 in sudoku.cells[cell_id].notes:
+                                # strategy naked pair can be applied to eliminate this candidata
+                                self.apply_naked_pair_on_cell(sudoku, cell_id, num_2)
+                                something_changed = True
+                        # if something changed == strategy can be applied to make a change
+                        if something_changed:
+                            if self.__collect_report:
+                                self.report_add_highlight(np_cell_id_1, False, 'yellow', note_id=num_1)
+                                self.report_add_highlight(np_cell_id_1, False, 'yellow', note_id=num_2)
+                                self.report_add_highlight(np_cell_id_2, False, 'yellow', note_id=num_1)
+                                self.report_add_highlight(np_cell_id_2, False, 'yellow', note_id=num_2)
+                                self.__report_json['success'] = True
+                                self.__report_json['strategy_applied'] = 'naked_pair'
+                                location_mapper = {
+                                    'col': _('sloupce'),
+                                    'row': _('řádku'),
+                                    'sector': _('sektoru'),
+                                    'extra': _('TODO')  # TODO
+                                }
+                                t = _('Buňky ' + self.get_bold_cell_pos_str(np_cell_id_1) + ' a ' +
+                                      self.get_bold_cell_pos_str(np_cell_id_2) + ' obsahují pouze kandidáty <b>' +
+                                      str(num_1) + ',' + str(num_2) + '</b> (žlutě). Tito kandidáti proto nemůžou být '
+                                      + 'v ostatních buňkách tohoto ' + location_mapper[location] +
+                                      ' (červeně).')
+                                self.__report_json['text'] = t
+                            return True
+                y += 1
+            x += 1
+        return False
+
+    def apply_naked_pair_on_cell(self, sudoku, cell_id, num):
+        """Depending on variable __collect_report, either highlights candidate in cell with value num and marks
+        it for removal, or removes it on spot."""
+        if self.__collect_report:
+            self.report_add_highlight(cell_id, False, 'red', note_id=num)
+            self.report_add_candidate_to_remove(cell_id, num)
+        else:
+            sudoku.cells[cell_id].notes.remove(num)
+
+    # HELP functions for strategies
     def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
         """ Function to help with hidden single/pair/triple/quadruple
         @param sudoku Current state of sudoku upon which the operation is executed.
@@ -374,3 +461,4 @@ class StrategyApplier:
                     (target_number > 2 and target_number >= len(occurence[num]) > 1)):
                 res.append((num, occurence[num]))
         return res
+
