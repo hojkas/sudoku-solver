@@ -10,6 +10,7 @@ s.cells[2].notes = [1, 2, 3]
 s.cells[3].notes = [1, 2, 3, 4]
 s.cells[5].notes = [1, 2]
 s.cells[6].notes = [1, 3]
-l = collect_cell_candidates_info_list(s, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], limit=9)
-res = naked_triple_check_for_groups(l)
-print(res)
+s.cells[7].notes = [8, 9]
+s.cells[8].notes = [7, 8, 9]
+l = collect_candidate_occurences_info_list(s, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], limit=3)
+print(l)

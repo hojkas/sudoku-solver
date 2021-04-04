@@ -1,12 +1,10 @@
 from utils.sudoku_class import *
 from django.utils.translation import gettext as _
 
-""" Function fills non-solved cells with all possible candidate numbers
-@param sudokou Current state of sudoku upon which the operation is executed.
-"""
-
-
 def fill_with_candidates(sudoku):
+    """ Function fills non-solved cells with all possible candidate numbers
+    @param sudoku Current state of sudoku upon which the operation is executed.
+    """
     sudoku.fill_candidates_in_all_not_solved()
 
 def is_group_of_same_numbers(lists):
@@ -30,6 +28,28 @@ def collect_cell_candidates_info_list(sudoku, block_ids, limit=None):
                     'notes': sudoku.cells[cell_id].notes})
     return res
 
+def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
+    prep_d = {}
+    for n in range(1, sudoku.max_sudoku_number+1):
+        prep_d[n] = {
+            "num": n,
+            "cell_ids": [],
+            "total": 0
+        }
+    for cell_id in block_ids:
+        if sudoku.cells[cell_id].is_solved():
+            continue
+        for note in sudoku.cells[cell_id].notes:
+            prep_d[note]["total"] += 1
+            prep_d[note]["cell_ids"].append(cell_id)
+
+    res = []
+    for key, value in prep_d.items():
+        if value['total'] == 0:
+            continue
+        if limit is None or value['total'] <= limit:
+            res.append(value)
+    return res
 
 def naked_triple_check_for_groups(cells_info_list):
     res = []
@@ -418,10 +438,12 @@ class StrategyApplier:
         return self.__apply_for_each(sudoku, self.hidden_single_on_one_block, 'block')
 
     def hidden_single_on_one_block(self, sudoku, ids_chunk, location):
-        res = self.__find_candidates_with_n_occurences(sudoku, ids_chunk, 1)
+        res = collect_candidate_occurences_info_list(sudoku, ids_chunk, 1)
         if len(res) > 0:
             # res containes tuples with number that is only once mentioned and cell_id where it is
-            for number, cell_ids in res:
+            for info_dict in res:
+                cell_ids = info_dict['cell_ids']
+                number = info_dict['num']
                 if self.__collect_report:
                     self.report_add_highlight(cell_ids[0], False, "green", number)
                     self.report_add_solved_number(cell_ids[0], number)
@@ -505,8 +527,12 @@ class StrategyApplier:
         else:
             sudoku.cells[cell_id].notes.remove(num)
 
+    # HIDDEN PAIR
     def hidden_pair(self, sudoku):
-        return False
+        return self.__apply_for_each(sudoku, self.hidden_pair_on_one_block, 'block')
+
+    def hidden_pair_on_one_block(self, sudoku, ids_chunk, location):
+        pass
 
     # NAKED TRIPLE/QUAD - DONE
     def naked_triple(self, sudoku):
@@ -566,27 +592,4 @@ class StrategyApplier:
     def hidden_triple(self, sudoku):
         return False
 
-    # HELP functions for strategies
-    def __find_candidates_with_n_occurences(self, sudoku, block_ids, target_number):
-        """ Function to help with hidden single/pair/triple/quadruple
-        @param sudoku Current state of sudoku upon which the operation is executed.
-        @param block_ids List of cell ids which belong to one block
-        @param target_number Int value of how many candidate occurencies we search for.
-        @returns result List of tuples with numbers and cells of their occurence in the correct count.
-        """
-        occurence = {}
-        res = []
-        for num in range(1, self.__max_sudoku_number + 1):
-            occurence[num] = []
-        for cell_id in block_ids:
-            for candidate in sudoku.cells[cell_id].notes:
-                occurence[candidate].append(cell_id)
-        for num in range(1, self.__max_sudoku_number + 1):
-            # in searching for 1/2 occurences, it requires exactly target_number of occurences
-            # for searching for 3/4, important combinations may occur not only with three 
-            # triple-occurences, but also with 3 3 2 and so on, so it also marks 2+ occurences for them
-            if ((2 >= target_number == len(occurence[num])) or
-                    (target_number > 2 and target_number >= len(occurence[num]) > 1)):
-                res.append((num, occurence[num]))
-        return res
 
