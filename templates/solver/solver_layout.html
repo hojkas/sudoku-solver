@@ -136,16 +136,21 @@
                         </div>
                     {% endfor %}
                 <div class="custom-list-heading">{% trans 'Středně těžké strategie' %}</div>
-
+                    {% for strategy_ref, strategy_name in medium_strategies.items %}
+                        <div>
+                            <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0|add_prev_strategies_medium }}"
+                               id="icon-before-{{ strategy_ref }}"></i>
+                            <a class="custom-list-item" href="/guides/{{ strategy_ref }}"
+                               target="_blank">{{ strategy_name }}</a>
+                        </div>
+                    {% endfor %}
                 <div class="custom-list-heading">{% trans 'Pokročilé strategie' %}</div>
 
                 <div style="margin-top: 1rem;">* {% trans 'Strategie specifická pro tento druh sudoku.' %}</div>
             </div>
 
-            <button onclick="test()">strategy highlight test</button>
-            <button onclick="reset_strategy_icons()">reset</button>
-            <button onclick="count_next_step()">click me</button>
-            <button onclick="load_test_sudoku()">Load suduoku</button>
+            <button onclick="load_test_sudoku(0)">Load sudoku (singles)</button>
+            <button onclick="load_test_sudoku(1)">Load sudoku (triples)</button>
         </div>
     </div>
 </div>

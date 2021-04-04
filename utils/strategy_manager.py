@@ -687,10 +687,10 @@ class StrategyApplier:
                     return True
         return False
 
+    # HIDDEN TRIPLE/QUAD
     def hidden_triple(self, sudoku):
         return self.__apply_for_each(sudoku, self.hidden_triple_on_one_block, 'block')
 
-    # HIDDEN TRIPLE/QUAD
     def hidden_triple_on_one_block(self, sudoku, ids_chunk, location):
         info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=4)
         found_groups = hidden_triple_check_for_groups(info_list)

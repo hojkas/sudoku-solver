@@ -83,24 +83,37 @@ function fill_all_candidates_in_cell(cell_id) {
     }
 }
 
-function load_test_sudoku() {
-    let sudoku = [
-        5, 3, null, null, 7, null, null, null, null,
-        6, null, null, 1, 9, 5, null, null, null,
-        null, 9, 8, null, null, null, null, 6, null,
-        8, null, null, null, 6, null, null, null, 3,
-        4, null, null, 8, null, 3, null, null, 1,
-        7, null, null, null, 2, null, null, null, 6,
-        null, 6, null, null, null, null, 2, 8, null,
-        null, null, null, 4, 1, 9, null, null, 5,
-        null, null, null, null, 8, null, null, 7, 9
-    ]
+function load_test_sudoku(num) {
+    let sudoku = [[
+            5, 3, null, null, 7, null, null, null, null,
+            6, null, null, 1, 9, 5, null, null, null,
+            null, 9, 8, null, null, null, null, 6, null,
+            8, null, null, null, 6, null, null, null, 3,
+            4, null, null, 8, null, 3, null, null, 1,
+            7, null, null, null, 2, null, null, null, 6,
+            null, 6, null, null, null, null, 2, 8, null,
+            null, null, null, 4, 1, 9, null, null, 5,
+            null, null, null, null, 8, null, null, 7, 9
+        ],
+        [
+            5, null, null, 6, 2, null, null, 3, 7,
+            null, null, 4, 8, 9, null, null, null, null,
+            null, null, null, null, 5, null, null, null, null,
+            9, 3, null, null, null, null, null, null, null,
+            null, 2, null, null, null, null, 6, null, 5,
+            7, null, null, null, null, null, null, null, 3,
+            null, null, null, null, null, 9, null, null, null,
+            null, null, null, null, null, null, 7, null, null,
+            6, 8, null, 5, 7, null, null, null, 2
+        ]];
 
-    if(sudoku.length === (max_sudoku_number * max_sudoku_number)) {
+
+
+    if(sudoku[num].length === (max_sudoku_number * max_sudoku_number)) {
         for(let x = 0; x < max_sudoku_number; x++) {
             for (let y = 0; y < max_sudoku_number; y++) {
                 let cell_id = x * max_sudoku_number + y;
-                if(sudoku[cell_id] != null) fill_cell_with_number(cell_id, sudoku[cell_id]);
+                if(sudoku[num][cell_id] != null) fill_cell_with_number(cell_id, sudoku[num][cell_id]);
                 else {
                         clear_notes(cell_id);
                         clear_solved(cell_id);

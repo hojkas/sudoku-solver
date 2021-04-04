@@ -25,7 +25,9 @@ easy_strategies = {
     'hidden_triple': 'Hidden Triple/Quad'
 }
 # TODO pro sudoku 16x16 musí jít hidden/naked až po 5-6-7-8čky
-medium_strategies = {}
+medium_strategies = {
+    'intersection_removal': _('Intersection Removal')  # TODO not final name
+}
 advanced_strategies = {}
 strategies_context = {'easy_strategies': easy_strategies,
                       'medium_strategies': medium_strategies,
@@ -111,6 +113,10 @@ def transform_to_letter_if_needed(num):
     if num < 10:
         return num
     return chr(int(num) + 55)
+
+@register.filter
+def add_prev_strategies_medium(counter):
+    return counter + len(easy_strategies)
 
 def index(request):
     return render(request, 'index.html')
