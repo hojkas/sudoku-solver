@@ -24,6 +24,7 @@ easy_strategies = {
     'naked_triple': 'Naked Triple/Quad',
     'hidden_triple': 'Hidden Triple/Quad'
 }
+# TODO pro sudoku 16x16 musí jít hidden/naked až po 5-6-7-8čky
 medium_strategies = {}
 advanced_strategies = {}
 strategies_context = {'easy_strategies': easy_strategies,

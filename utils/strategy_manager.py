@@ -90,6 +90,60 @@ def naked_triple_check_for_groups(cells_info_list):
                         })
     return res
 
+def hidden_triple_check_for_groups(candidate_info_list):
+    """Finds groups of 3/4 hidden numbers in given info list.
+    @param candidate_info_list List created by function collect_candidate_occurences_info_list.
+    @return List of dictionary for each group found in format {"cell_ids": [list of group cell ids],
+    "notes": [list of numbers creating group]}"""
+    res = []
+    len_of_list = len(candidate_info_list)
+    if len_of_list <= 2:
+        return res  # can't find triple in list of two or less
+
+    # searching numbers to find group of 3
+    for x in range(0, len_of_list):
+        for y in range(x+1, len_of_list):
+            for z in range(y+1, len_of_list):
+                # test if cell ids of these numbers form group of max 3
+                group = is_group_of_same_numbers([
+                    candidate_info_list[x]['cell_ids'],
+                    candidate_info_list[y]['cell_ids'],
+                    candidate_info_list[z]['cell_ids']
+                ])
+                if group is not None:
+                    res.append({
+                        'cell_ids': list(group),
+                        'notes': [
+                            candidate_info_list[x]['num'],
+                            candidate_info_list[y]['num'],
+                            candidate_info_list[z]['num']
+                        ]
+                    })
+
+    # searching for group of 4
+    for x in range(0, len_of_list):
+        for y in range(x+1, len_of_list):
+            for z in range(y+1, len_of_list):
+                for k in range(z+1, len_of_list):
+                    # test if cell ids of these numbers form group of max 4
+                    group = is_group_of_same_numbers([
+                        candidate_info_list[x]['cell_ids'],
+                        candidate_info_list[y]['cell_ids'],
+                        candidate_info_list[z]['cell_ids'],
+                        candidate_info_list[k]['cell_ids']
+                    ])
+                    if group is not None:
+                        res.append({
+                            'cell_ids': list(group),
+                            'notes': [
+                                candidate_info_list[x]['num'],
+                                candidate_info_list[y]['num'],
+                                candidate_info_list[z]['num'],
+                                candidate_info_list[k]['num']
+                            ]
+                        })
+    return res
+
 def get_bold_num_list(num_list):
     res = ""
     for num in num_list:
@@ -527,7 +581,7 @@ class StrategyApplier:
         else:
             sudoku.cells[cell_id].notes.remove(num)
 
-    # HIDDEN PAIR
+    # HIDDEN PAIR - DONE
     def hidden_pair(self, sudoku):
         return self.__apply_for_each(sudoku, self.hidden_pair_on_one_block, 'block')
 
@@ -576,6 +630,7 @@ class StrategyApplier:
                                     location_mapper[location] + ' kandidáty ' + num_str + ' (žlutě). Proto je v těchto '
                                     + 'buňkách možné odstranit všechny ostatní kandidáty (červeně).')
                         return True
+        return False
 
     # NAKED TRIPLE/QUAD - DONE
     def naked_triple(self, sudoku):
@@ -633,6 +688,46 @@ class StrategyApplier:
         return False
 
     def hidden_triple(self, sudoku):
+        return self.__apply_for_each(sudoku, self.hidden_triple_on_one_block, 'block')
+
+    # HIDDEN TRIPLE/QUAD
+    def hidden_triple_on_one_block(self, sudoku, ids_chunk, location):
+        info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=4)
+        found_groups = hidden_triple_check_for_groups(info_list)
+        for group_d in found_groups:
+            # have found hidden group of 3/4, now has to check if the group makes any change
+            changed_something = False
+            for cell_id in group_d['cell_ids']:
+                notes = group_d['notes']
+                for n in range(1, self.__max_sudoku_number + 1):
+                    if n in notes:
+                        continue
+                    if n in sudoku.cells[cell_id].notes:
+                        # in one of cells of found group, there is another candidate not part of group that
+                        # can be erased
+                        changed_something = True
+                        if self.__collect_report:
+                            self.report_add_highlight(cell_id, False, 'red', n)
+                            self.report_add_candidate_to_remove(cell_id, n)
+                        else:
+                            sudoku.cells[cell_id].notes.remove(n)
+            # end of search for one group
+            if changed_something:
+                if self.__collect_report:
+                    self.__report_json['success'] = True
+                    self.__report_json['strategy_applied'] = 'hidden_triple'
+                    for cell_id in group_d['cell_ids']:
+                        for n in group_d['notes']:
+                            if n in sudoku.cells[cell_id].notes:
+                                self.report_add_highlight(cell_id, False, 'yellow', n)
+                    ids_str = self.get_multiple_bold_cell_pos_str(group_d['cell_ids'])
+                    num_str = get_bold_num_list(group_d['notes'])
+                    location_mapper = {'row': _('řádku'), 'col': _('sloupci'), 'sector': _('sektoru'),
+                                       'extra': _('extra')} # TODO extra
+                    self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
+                                    location_mapper[location] + ' kandidáty ' + num_str + ' (žlutě). Proto je v těchto '
+                                    + 'buňkách možné odstranit všechny ostatní kandidáty (červeně).')
+                return True
         return False
 
 
