@@ -532,7 +532,50 @@ class StrategyApplier:
         return self.__apply_for_each(sudoku, self.hidden_pair_on_one_block, 'block')
 
     def hidden_pair_on_one_block(self, sudoku, ids_chunk, location):
-        pass
+        info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=2)
+        info_list_len = len(info_list)
+        for x in range(0, info_list_len):
+            for y in range(x+1, info_list_len):
+                # for each two candidates in block with only two occurences
+                if info_list[x]['cell_ids'] == info_list[y]['cell_ids'] and len(info_list[x]['cell_ids']) == 2:
+                    # found hidden pair, but it may not make change
+                    num_1 = info_list[x]['num']
+                    num_2 = info_list[y]['num']
+                    changed_something = False
+                    for cell_id in info_list[x]['cell_ids']:
+                        for n in range(1, self.__max_sudoku_number + 1):
+                            if n == num_1 or n == num_2:
+                                continue
+                            if n in sudoku.cells[cell_id].notes:
+                                # cell of hidden pair has other candidate that can be eliminated
+                                changed_something = True
+                                if self.__collect_report:
+                                    self.report_add_highlight(cell_id, False, 'red', n)
+                                    self.report_add_candidate_to_remove(cell_id, n)
+                                else:
+                                    sudoku.cells[cell_id].notes.remove(n)
+                    # if something was changed, this pair was the hidden pair we looked for and strategy is complete
+                    if changed_something:
+                        # report collection
+                        if self.__collect_report:
+                            cell_id_1, cell_id_2 = info_list[x]['cell_ids']
+                            self.report_add_highlight(cell_id_1, False, 'yellow', num_1)
+                            self.report_add_highlight(cell_id_1, False, 'yellow', num_2)
+                            self.report_add_highlight(cell_id_2, False, 'yellow', num_1)
+                            self.report_add_highlight(cell_id_2, False, 'yellow', num_2)
+
+                            self.__report_json['success'] = True
+                            self.__report_json['strategy_applied'] = 'hidden_pair'
+                            ids_str = self.get_multiple_bold_cell_pos_str(info_list[x]['cell_ids'])
+                            num_str = get_bold_num_list([num_1, num_2])
+                            location_mapper = {'row': _('řádku'),
+                                               'col': _('sloupci'),
+                                               'sector': _('sektoru'),
+                                               'extra': _('TODO')}  # TODO
+                            self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
+                                    location_mapper[location] + ' kandidáty ' + num_str + ' (žlutě). Proto je v těchto '
+                                    + 'buňkách možné odstranit všechny ostatní kandidáty (červeně).')
+                        return True
 
     # NAKED TRIPLE/QUAD - DONE
     def naked_triple(self, sudoku):
@@ -576,10 +619,10 @@ class StrategyApplier:
                                     # and should be highlighted
                                     self.report_add_highlight(cell_id, False, 'yellow', note_id=num)
                         location_mapper = {
-                            'col': 'sloupci',
-                            'row': 'řádku',
-                            'sector': 'sektoru',
-                            'extra': 'TODO' #TODO
+                            'col': _('sloupci'),
+                            'row': _('řádku'),
+                            'sector': _('sektoru'),
+                            'extra': _('TODO') #TODO
                         }
                         self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází pouze ' +
                                                        str(len(group['notes'])) + ' stejné kandidáty ' +
