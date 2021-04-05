@@ -124,8 +124,21 @@ function highlight_selected_controls_button(selected_button, other_button) {
     other_button.css({'background-color': 'lightgrey', 'color': 'grey', 'border-color': 'grey'});
 }
 
+function is_special_cell(target_cell) {
+    let el_classes = target_cell.attr('class').split(/\s+/);
+    let is_special = false;
+
+    el_classes.forEach(function(el_class) {
+        if(el_class === 'special-sudoku-cell') is_special = true;
+    });
+    return is_special;
+}
+
 function remove_highlight_for_download() {
-    $('#cell-' + window.selected_cell_id).css({'backgroundColor':'transparent'});
+    let target_cell = $('#cell-' + window.selected_cell_id);
+
+    if(is_special_cell(target_cell)) target_cell.css({'background-color': '#bde6ff'});
+    else target_cell.css({'backgroundColor':'transparent'});
 }
 
 function restore_highlight_for_download() {
@@ -175,7 +188,9 @@ function is_solved_visible(cell_id) {
 
 function change_selected(new_cell) {
     if (window.selected_cell_id !== -1) {
-        $('#cell-' + window.selected_cell_id).css({'backgroundColor':'transparent'});
+        let target_cell = $('#cell-' + window.selected_cell_id);
+        if(is_special_cell(target_cell)) target_cell.css({'background-color': '#bde6ff'});
+        else target_cell.css({'backgroundColor':'transparent'});
     }
     $('#cell-' + new_cell).css({'backgroundColor':'lightskyblue'});
     window.selected_cell_id = new_cell;

@@ -47,6 +47,10 @@
 
 }
 
+.special-sudoku-cell {
+    background-color: #bde6ff;
+}
+
 .sudoku-solved-num {
     font-size: 1.5rem;
     font-weight: bold;
