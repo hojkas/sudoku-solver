@@ -189,6 +189,18 @@ def generate_sudoku(request):
     result_list = [1, 2, 3, None, None, None, None, None, None, 1, 2, 3, None, None, None, None]
     return HttpResponse(json.dumps({'success': True, 'sudoku': result_list}))
 
+def get_hint(request):
+    # TODO
+    return HttpResponse('HI')
+
+def check_solvability(request):
+    # TODO
+    return HttpResponse('HI')
+
+def check_difficulty(request):
+    # TODO
+    return HttpResponse('HI')
+
 # ====================================
 #           GUIDES VIEWS
 # ====================================
