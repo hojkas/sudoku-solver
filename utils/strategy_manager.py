@@ -362,6 +362,14 @@ class StrategyApplier:
         if self.naked_pair(sudoku):
             return self.__report_json
 
+        if self.__max_sudoku_number == 4:
+            # sudoku 4x4 doesn't benefit from more complex strategies, thus ending here
+            self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
+                                           'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
+                                           'strategii, která by vedla k řešení.')
+            self.__report_json['success'] = False
+            return self.__report_json
+
         if self.hidden_pair(sudoku):
             return self.__report_json
 
@@ -371,7 +379,6 @@ class StrategyApplier:
         if self.hidden_triple(sudoku):
             return self.__report_json
 
-        # TODO dát sem možná ještě check řešitelnosti a reflektovat to v odpovědi
         self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
                                        'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
                                        'strategii, která by vedla k řešení.')

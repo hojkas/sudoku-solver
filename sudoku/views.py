@@ -24,11 +24,13 @@ easy_strategies = {
     'naked_triple': 'Naked Triple/Quad',
     'hidden_triple': 'Hidden Triple/Quad'
 }
-# TODO pro sudoku 16x16 musí jít hidden/naked až po 5-6-7-8čky
+# TODO pro sudoku 16x16 musí jít hidden/naked až po 5-6-7-8čky ---- add in calling template
 medium_strategies = {
     'intersection_removal': _('Intersection Removal')  # TODO not final name
 }
-advanced_strategies = {}
+advanced_strategies = {
+
+}
 strategies_context = {'easy_strategies': easy_strategies,
                       'medium_strategies': medium_strategies,
                       'advanced_strategies': advanced_strategies,
@@ -115,8 +117,8 @@ def transform_to_letter_if_needed(num):
     return chr(int(num) + 55)
 
 @register.filter
-def add_prev_strategies_medium(counter):
-    return counter + len(easy_strategies)
+def add_prev_strategies(curr_counter, prev_strategies_dict):
+    return curr_counter + len(prev_strategies_dict)
 
 def index(request):
     return render(request, 'index.html')
@@ -147,9 +149,19 @@ def solver(request, name):
     custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
     custom_context['setting_sudoku_full_size'] = setting_sudoku_full_size
 
-    custom_context['easy_strategies'] = easy_strategies
-    custom_context['medium_strategies'] = medium_strategies
-    custom_context['advanced_strategies'] = advanced_strategies
+    if name == 'sudoku4x4':
+        # creating custom strategies from 4x4 sudoku
+        custom_context['easy_strategies'] = {
+            'remove_collisions': _('Odstranění přímých kolizí'),
+            'naked_single': 'Naked Single',
+            'hidden_single': 'Hidden Single',
+            'naked_pair': 'Naked Pair'
+        }
+
+    else:
+        custom_context['easy_strategies'] = easy_strategies
+        custom_context['medium_strategies'] = medium_strategies
+        custom_context['advanced_strategies'] = advanced_strategies
 
     request.session['max_sudoku_number'] = max_sudoku_numbers[name]
     request.session['sudoku_type'] = sudoku_type_mapper[name]
