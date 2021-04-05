@@ -67,6 +67,10 @@ $(document).ready(function()
         }
     });
 
+    $('#clear_sudoku').on('click', function() {
+       clear_sudoku();
+    });
+
     $(window).keyup(function (event) {
         if(event.keyCode === 16) on_shift_key_up();
     });
@@ -180,6 +184,12 @@ $(document).ready(function()
             change_numbers_highlight(number_id, window.highlighted_num);
             window.highlighted_num = number_id;
         }
+    });
+
+    $('#generate_sudoku').on('click', function() {
+        $('#generate_sudoku_alt').show();
+        $('#generate_sudoku').hide();
+        generate_sudoku($('generate_difficulty').val());
     });
 
     $('#get-next-step').on('click', function() {

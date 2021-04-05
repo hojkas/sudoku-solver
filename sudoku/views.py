@@ -131,13 +131,13 @@ def solver_index(request):
     return render(request, 'solver/index.html', sudokus_context)
 
 def solver(request, name):
-    template = 'solver/' + sudoku_template_mapper[name] + '.html'
     try:
-        django.template.loader.get_template(template)
-    except TemplateDoesNotExist:
+        template = 'solver/' + sudoku_template_mapper[name] + '.html'
+    except KeyError:
         raise Http404(_('Aplikace na řešení') + ' "' + name + '" ' + _('nebyla nalezena.'))
 
     custom_context = sudokus_context.copy()
+    custom_context['sudoku_name'] = name
 
     if name in max_sudoku_numbers.keys():
         custom_context['max_sudoku_number'] = max_sudoku_numbers[name]
@@ -171,7 +171,7 @@ def solver(request, name):
 def update_setting(request):
     setting = request.POST.get('setting')
     value = request.POST.get('value')
-    if (setting == 'setting_shift_is_toggle' or setting == 'setting_sudoku_full_size'):
+    if setting == 'setting_shift_is_toggle' or setting == 'setting_sudoku_full_size':
         request.session[setting] = (value.lower() == 'true')
     return HttpResponse('ok')
 
@@ -184,6 +184,10 @@ def get_next_step(request):
     result_json = strategy_applier.find_next_step(sudoku)
 
     return HttpResponse(json.dumps(result_json))
+
+def generate_sudoku(request):
+    result_list = [1, 2, 3, None, None, None, None, None, None, 1, 2, 3, None, None, None, None]
+    return HttpResponse(json.dumps({'success': True, 'sudoku': result_list}))
 
 # ====================================
 #           GUIDES VIEWS

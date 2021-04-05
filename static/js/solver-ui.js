@@ -361,3 +361,19 @@ function search_for_truly_empty_cells() {
     }
     return list_of_empty_ids;
 }
+
+function load_sudoku_from_list(sudoku) {
+    if(sudoku.length === (max_sudoku_number * max_sudoku_number)) {
+        for(let x = 0; x < max_sudoku_number; x++) {
+            for (let y = 0; y < max_sudoku_number; y++) {
+                let cell_id = x * max_sudoku_number + y;
+                if(sudoku[cell_id] != null) fill_cell_with_number(cell_id, sudoku[cell_id]);
+                else {
+                        clear_notes(cell_id);
+                        clear_solved(cell_id);
+                        snap_visibility_to_notes(cell_id);
+                }
+            }
+        }
+    }
+}

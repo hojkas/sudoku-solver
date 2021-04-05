@@ -107,19 +107,6 @@ function load_test_sudoku(num) {
             6, 8, null, 5, 7, null, null, null, 2
         ]];
 
-
-
-    if(sudoku[num].length === (max_sudoku_number * max_sudoku_number)) {
-        for(let x = 0; x < max_sudoku_number; x++) {
-            for (let y = 0; y < max_sudoku_number; y++) {
-                let cell_id = x * max_sudoku_number + y;
-                if(sudoku[num][cell_id] != null) fill_cell_with_number(cell_id, sudoku[num][cell_id]);
-                else {
-                        clear_notes(cell_id);
-                        clear_solved(cell_id);
-                        snap_visibility_to_notes(cell_id);
-                }
-            }
-        }
-    }
+    load_sudoku_from_list(sudoku[num]);
 }
+

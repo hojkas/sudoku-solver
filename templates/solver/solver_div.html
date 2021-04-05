@@ -88,7 +88,22 @@
           </div>
           <div class="modal-body">
               {% blocktrans %}
-
+                  Aplikace po stisknutí tlačítka "Vygenerovat" vygeneruje právě otevřený typ sudoku.
+                  Obtížnost sudoku vychází z obtížnosti potřebných strategií pro jeho vyřešení (ne z počtu vyplněných
+                  čísel).<br>
+                  <br>
+                  <b>Obtížnosti:</b>
+                  <ul>
+                    <li><em>Velmi snadné</em>: Nejtěžší možná použitá strategie je Hidden Single.</li>
+                    <li><em>Snadné</em>: Nejtěžší možná použitá strategie je Hidden Triple/Quad.</li>
+                    <li><em>Středně těžké</em>: Nejtěžší možná použitá strategie je TODO.</li> <!-- TODO -->
+                    <li><em>Těžké</em>: Může vyžadovat využití libovolné ze všech popsaných strategií.</li>
+                    <li><em>Náhodné (řešitelné logickou cestou)</em>: Obtížnost je náhodná, avšak je ověřeno, že
+                        strategie zde popsané povedou k řešení.</li>
+                    <li><em>Náhodné (nezaručena řešitelnost logickou cestou)</em>: Náhodně vygenerované sudoku,
+                        které má pořád pouze jedno řešení, avšak není ověřeno, že je vyřešitelné pouze použitím zde
+                        popsaných strategií.</li>
+                  </ul>
               {% endblocktrans %}
           </div>
           <div class="modal-footer">
@@ -122,16 +137,21 @@
                         data-bs-target="#generatorInfoModal"></i>
             </div>
             <div>
-                <form>
-                    <select id="generate_difficulty" name="difficulty">
-                        <option value="easiest">{% trans "Velmi snadné" %}</option>
-                        <option value="easy">{% trans "Snadné" %}</option>
-                        <option value="medium">{% trans "Středně těžké" %}</option>
-                        <option value="advanced">{% trans "Těžké" %}</option>
-                        <option value="random-solvable">{% trans "Náhodně (řešitelné logickou cestou)" %}</option>
-                        <option value="random">{% trans "Náhodně (nezaručena řešitelnost logickou cestou)" %}</option>
-                    </select>
-                </form>
+                <select id="generate_difficulty" name="difficulty">
+                    <option value="easiest">{% trans "Velmi snadné" %}</option>
+                    <option value="easy">{% trans "Snadné" %}</option>
+                    {% if sudoku_name != 'sudoku4x4' %}
+                    <option value="medium">{% trans "Středně těžké" %}</option>
+                    <option value="advanced">{% trans "Těžké" %}</option>
+                    {% endif %}
+                    <option value="random-solvable">{% trans "Náhodné (řešitelné logickou cestou)" %}</option>
+                    <option value="random">{% trans "Náhodné (nezaručena řešitelnost logickou cestou)" %}</option>
+                </select>
+                <button id="generate_sudoku" class="simple-round-button"
+                        title="{{ sudoku_name }}">{% trans "Vygenerovat" %}</button>
+                <button id="generate_sudoku_alt" class="simple-round-button" style="display: none">
+                    <i class="fas fa-spinner fa-pulse"></i></button>
+                <button id="clear_sudoku" class="simple-round-button">{% trans "Vymazat celé sudoku" %}</button>
             </div>
         </div>
     </div>
@@ -199,7 +219,6 @@
                 <button id="remove_candidates_everywhere" class="simple-round-button">
                     Remove all candidates
                 </button>
-                <button onclick="clear_sudoku()" class="simple-round-button">Clear All</button>
             </div>
         {% endif %}
     </div>
@@ -220,12 +239,9 @@
 
     <div>
         TODO other:<br>
-        - nastavení - zobrazit obvious kolize<br>
-        - jiný font mimo sudoku?<br>
         - až bude načítání sudoku a help done, ujistit se že highlight čísel se aplikuje i na ně<br>
         - další možnost vyplňování - stisk čísla vybere co se vyplňuje, klik to vyplní<br>
         pressing: <br>
-        - when filling in, recalculate colisions accordingly <br>
         - add clear sudoku and clear all notes, bude i v generátor části takže asi tam až dát na real<br>
     </div>
 

@@ -45,3 +45,28 @@ async function count_next_step() {
         }
     });
 }
+
+async function generate_sudoku(difficulty) {
+    $.ajax({
+        url: '/solver/generate_sudoku',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            difficulty: difficulty,
+            sudoku_name: sudoku_name
+        },
+        cache: false
+    }).done(function(response_string) {
+        let response_json = JSON.parse(response_string);
+        if(response_json['success']) {
+            load_sudoku_from_list(response_json['sudoku']);
+        }
+        else {
+            alert(response_json['text']);
+        }
+        $('#generate_sudoku').show();
+        $('#generate_sudoku_alt').hide();
+    });
+}
