@@ -142,10 +142,8 @@ def solver(request, name):
 
     # retrieving settings from session
     setting_shift_is_toggle = request.session.get('setting_shift_is_toggle', True)
-    setting_show_collisions = request.session.get('setting_show_collisions', False)
     setting_sudoku_full_size = request.session.get('setting_sudoku_full_size', False)
 
-    custom_context['setting_show_collisions'] = setting_show_collisions
     custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
     custom_context['setting_sudoku_full_size'] = setting_sudoku_full_size
 
@@ -161,8 +159,7 @@ def solver(request, name):
 def update_setting(request):
     setting = request.POST.get('setting')
     value = request.POST.get('value')
-    if (setting == 'setting_show_collisions' or setting == 'setting_shift_is_toggle'
-            or setting == 'setting_sudoku_full_size'):
+    if (setting == 'setting_shift_is_toggle' or setting == 'setting_sudoku_full_size'):
         request.session[setting] = (value.lower() == 'true')
     return HttpResponse('ok')
 

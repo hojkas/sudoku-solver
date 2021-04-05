@@ -40,9 +40,6 @@ $(document).ready(function()
     if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
     else $('#settings-shift-toggle-off').prop('checked', true);
 
-    if (setting_show_collisions) $('#settings-highlight-mistakes-on').prop('checked', true);
-    else $('#settings-highlight-mistakes-off').prop('checked', true);
-
     if (setting_sudoku_full_size) $('#settings-sudoku-full-size-on').prop('checked', true);
     else $('#settings-sudoku-full-size-off').prop('checked', true);
 
@@ -130,22 +127,6 @@ $(document).ready(function()
             update_setting('setting_shift_is_toggle', false);
             // setting default values
             highlight_selected_controls_button($('#controls_fill_notes'), $('#controls_fill_solved'));
-        }
-    });
-
-    $('#settings-highlight-mistakes-off').change(function () {
-        if ($(this).is(':checked')) {
-            $('#settings-highlight-mistakes-on').prop('checked', false);
-            update_setting('setting_show_collisions', false);
-            setting_show_collisions = false;
-        }
-    });
-
-    $('#settings-highlight-mistakes-on').change(function () {
-        if ($(this).is(':checked')) {
-            $('#settings-highlight-mistakes-off').prop('checked', false);
-            update_setting('setting_show_collisions', true);
-            setting_show_collisions = true;
         }
     });
 
