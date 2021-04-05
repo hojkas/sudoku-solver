@@ -233,4 +233,16 @@ $(document).ready(function()
             text_ref.show().siblings('div').hide();
         }, 0);
     });
+
+    $('#check-solvability').on('click', function() {
+        check_solvability();
+    });
+
+    $('#check-difficulty').on('click', function() {
+        check_difficulty();
+    });
+
+    $('#get-hint').on('click', function() {
+        get_hint();
+    });
 });

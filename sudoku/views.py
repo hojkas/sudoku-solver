@@ -191,15 +191,15 @@ def generate_sudoku(request):
 
 def get_hint(request):
     # TODO
-    return HttpResponse('HI')
+    return HttpResponse('HI from hint')
 
 def check_solvability(request):
     # TODO
-    return HttpResponse('HI')
+    return HttpResponse('HI from solvability')
 
 def check_difficulty(request):
     # TODO
-    return HttpResponse('HI')
+    return HttpResponse('HI from difficulty')
 
 # ====================================
 #           GUIDES VIEWS

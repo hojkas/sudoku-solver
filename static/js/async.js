@@ -70,3 +70,54 @@ async function generate_sudoku(difficulty) {
         $('#generate_sudoku_alt').hide();
     });
 }
+
+async function get_hint() {
+    let sudoku_json = collect_sudoku_json(); //already stringified
+    $.ajax({
+        url: '/solver/get_hint',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            json: sudoku_json
+        },
+        cache: false
+    }).done(function(response_string) {
+        alert(response_string);
+    });
+}
+
+async function check_difficulty() {
+    let sudoku_json = collect_sudoku_json(); //already stringified
+    $.ajax({
+        url: '/solver/check_difficulty',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            json: sudoku_json
+        },
+        cache: false
+    }).done(function(response_string) {
+        alert(response_string);
+    });
+}
+
+async function check_solvability() {
+    let sudoku_json = collect_sudoku_json(); //already stringified
+    $.ajax({
+        url: '/solver/check_solvability',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            json: sudoku_json
+        },
+        cache: false
+    }).done(function(response_string) {
+        alert(response_string);
+    });
+}
