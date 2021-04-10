@@ -159,15 +159,18 @@ class StrategyApplier:
         without doing the same math operations repeatedly.
         @param max_sudoku_number Highest number in sudoku/number of possible options/number of columns
             and rows and such.
-        @param sudoku_type_name Type of sudoku to derive extra rules. TODO only supports "classic" at the
-            moment.
+        @param sudoku_type_name Type of sudoku to derive extra rule.
         """
         self.__max_sudoku_number = max_sudoku_number
         self.__cell_id_limit = max_sudoku_number * max_sudoku_number
         self.__row_ids = []
         self.__col_ids = []
         self.__sector_ids = []
-        self.__extras_ids = []
+        self.__diagonal_a_ids = []
+        self.__diagonal_b_ids = []
+        self.__center_ids = []
+
+        self.__extras_ids = []  # TODO remove later when dependencies are all fixed
         self.__cell_id_mapping = {}
         self.__collect_report = collect_report
         self.__report_json = {
@@ -188,7 +191,7 @@ class StrategyApplier:
             self.__col_ids.append(c)
             self.__row_ids.append(r)
 
-        if sudoku_type_name == "classic":
+        if sudoku_type_name in ["classic", "diagonal", "centers", "diagonal_centers"]:
             if max_sudoku_number == 6:
                 sectors_width = 2
                 sectors_height = 3
@@ -214,11 +217,32 @@ class StrategyApplier:
 
         else:
             print('NOT SUPPORTED YET')
+
+        # creating extra ids blocks for diagonal + centers
+        if sudoku_type_name in ["centers", "diagonal_centers"]:
+            s = []
+            for x in [1, 4, 7]:
+                for y in [1, 4, 7]:
+                    s.append(x * 9 + y)
+            self.__center_ids = s
+        if sudoku_type_name in ["diagonal", "diagonal_centers"]:
+            diagonal_a = []
+            diagonal_b = []
+            for x in range(0, 9):
+                diagonal_a.append(x * 9 + x)
+                diagonal_b.append(x * 9 + (8 - x))
+            self.__diagonal_a_ids = diagonal_a
+            self.__diagonal_b_ids = diagonal_b
+
         # creating mapping for cells_id to row_ids, col_ids and sector_ids the cell is in
         # for quicker usage
         # creating empty dictionaries for each cell with key being its id
         for cell_id in range(max_sudoku_number * max_sudoku_number):
-            self.__cell_id_mapping[cell_id] = {}
+            self.__cell_id_mapping[cell_id] = {
+                "diagonal_a": False,
+                "diagonal_b": False,
+                "center": False
+            }
             # going through row "chunks" (list of list of ids in row, one chunk = one row) to register
         # the mapping
         for row_chunk_id, row_chunk in enumerate(self.__row_ids):
@@ -231,10 +255,18 @@ class StrategyApplier:
         for sector_chunk_id, sector_chunk in enumerate(self.__sector_ids):
             for cell_id in sector_chunk:
                 self.__cell_id_mapping[cell_id]['sector_id'] = sector_chunk_id
-        for extras_chunk_id, extras_chunk in enumerate(self.__extras_ids):
-            for cell_id in extras_chunk:
-                pass
-                # TODO figure out extras chunks mapping or don't and do it differently
+
+        # adding diagonal ids for diagonal sudokus
+        if sudoku_type_name in ["diagonal", "diagonal_centers"]:
+            for diagonal_id in self.__diagonal_a_ids:
+                self.__cell_id_mapping[diagonal_id]["diagonal_a"] = True
+            for diagonal_id in self.__diagonal_b_ids:
+                self.__cell_id_mapping[diagonal_id]["diagonal_b"] = True
+
+        # adding flag they are centers for center sudokus cells
+        if sudoku_type_name in ["centers", "diagonal_centers"]:
+            for center_id in self.__center_ids:
+                self.__cell_id_mapping[center_id]["center"] = True
 
     # HELP functions for report collection
     def report_add_highlight(self, cell_id, is_solved, color, note_id=None):
@@ -281,7 +313,11 @@ class StrategyApplier:
                 return True
             if self.__apply_for_each(sudoku, func_name, 'sector', **kwargs):
                 return True
-            if self.__apply_for_each(sudoku, func_name, 'extra', **kwargs):
+            if self.__apply_for_each(sudoku, func_name, 'diagonal_a', **kwargs):
+                return True
+            if self.__apply_for_each(sudoku, func_name, 'diagonal_b', **kwargs):
+                return True
+            if self.__apply_for_each(sudoku, func_name, 'center', **kwargs):
                 return True
         elif name_of_unit == 'row':
             for set_of_ids in self.__row_ids:
@@ -295,11 +331,15 @@ class StrategyApplier:
             for set_of_ids in self.__sector_ids:
                 if func_name(sudoku, set_of_ids, 'sector', **kwargs):
                     return True
-        elif name_of_unit == 'extra':
-            for set_of_ids in self.__extras_ids:
-                if func_name(sudoku, set_of_ids, 'extra', **kwargs):
-                    return True
-            # TODO maybe more with extras later
+        elif name_of_unit == 'diagonal_a':
+            if func_name(sudoku, self.__diagonal_a_ids, 'diagonal_a', **kwargs):
+                return True
+        elif name_of_unit == 'diagonal_b':
+            if func_name(sudoku, self.__diagonal_b_ids, 'diagonal_b', **kwargs):
+                return True
+        elif name_of_unit == 'center':
+            if func_name(sudoku, self.__center_ids, 'center', **kwargs):
+                return True
         return False
 
     def has_obvious_mistakes(self, sudoku):
@@ -347,7 +387,7 @@ class StrategyApplier:
             self.__report_json['text'] = _('Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
                                            'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
                                            'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
-                                           'políček všechny možné kandidáty a zkusit najít krok znovu.')
+                                           'políček všechna možná kandidátní čísla a zkusit najít krok znovu.')
             return self.__report_json
 
         if self.remove_all_collisions(sudoku):
@@ -400,8 +440,8 @@ class StrategyApplier:
                 changed_something = True
 
         if changed_something and self.__collect_report:
-            self.__report_json['text'] = _('Nalezeny přímé kolize vyplněných čísel (žlutě) s možnými kandidáty '
-                                           '(červeně).')
+            self.__report_json['text'] = _('Nalezeny přímé kolize vyplněných čísel (žlutě) s možnými kandidátními čísly'
+                                           ' (červeně).')
         return changed_something
 
     def remove_collisions_around_cell(self, sudoku, cell_id):
@@ -415,11 +455,20 @@ class StrategyApplier:
         """
         changed_something = False
         row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
+        # preparing extra id chunks from diagonals/centers cell is in
+        extra_ids = []
+        if self.__cell_id_mapping[cell_id]['diagonal_a']:
+            extra_ids += self.__diagonal_a_ids
+        if self.__cell_id_mapping[cell_id]['diagonal_b']:
+            extra_ids += self.__diagonal_b_ids
+        if self.__cell_id_mapping[cell_id]['center']:
+            extra_ids += self.__center_ids
+
         # for row
         if sudoku.cells[cell_id].is_solved():
             num = sudoku.cells[cell_id].solved
             # for each other id in cells row block/col block/sector
-            for cell_id_2 in (self.__row_ids[row_id]+self.__col_ids[col_id]+self.__sector_ids[sector_id]):
+            for cell_id_2 in (self.__row_ids[row_id]+self.__col_ids[col_id]+self.__sector_ids[sector_id]+extra_ids):
                 # excluding the current one
                 if cell_id == cell_id_2:
                     continue
@@ -441,10 +490,6 @@ class StrategyApplier:
                             sudoku.cells[cell_id_2].notes.remove(num)
                         changed_something = True
 
-        # for extras (eg. diagonal)
-        if len(self.__extras_ids) != 0:
-            # TODO extra sectors
-            pass
         return changed_something
 
     def get_row_col_sector_id_of_cell(self, cell_id):
@@ -514,11 +559,13 @@ class StrategyApplier:
                         'row': _('v řádku'),
                         'col': _('v sloupci'),
                         'sector': _('v sektoru'),
-                        'extra': _('v extra bloku')  # TODO make more specific?
+                        'diagonal_a': _('na diagonále'),
+                        'diagonal_b': _('na diagonále'),
+                        'center': _('v centrech čtverců')
                     }
                     self.__report_json['text'] = _('V buňce ' + self.get_bold_cell_pos_str(cell_ids[0]) +
-                           ' bude doplněn zeleně zvýrazněný kandidát, protože je to jeho jediné možné '
-                           'umístění ' + location_map[location] + '.')
+                           ' bude doplněno zeleně zvýrazněné kandidátní číslo, protože je to jediné možné '
+                           'umístění číslice ' + location_map[location] + '.')
                 else:
                     sudoku.cells[cell_ids[0]].fill_in_solved(number)
                 return True
@@ -563,15 +610,18 @@ class StrategyApplier:
                                 self.__report_json['success'] = True
                                 self.__report_json['strategy_applied'] = 'naked_pair'
                                 location_mapper = {
-                                    'col': _('sloupce'),
-                                    'row': _('řádku'),
-                                    'sector': _('sektoru'),
-                                    'extra': _('TODO')  # TODO
+                                    'col': _('tohoto sloupce'),
+                                    'row': _('tohoto řádku'),
+                                    'sector': _('tohoto sektoru'),
+                                    'diagonal_a': _('této diagonály'),
+                                    'diagonal_b': _('této diagonály'),
+                                    'center': _('středů čtverců')
                                 }
                                 t = _('Buňky ' + self.get_bold_cell_pos_str(np_cell_id_1) + ' a ' +
-                                      self.get_bold_cell_pos_str(np_cell_id_2) + ' obsahují pouze kandidáty <b>' +
-                                      str(num_1) + ',' + str(num_2) + '</b> (žlutě). Tito kandidáti proto nemůžou být '
-                                      + 'v ostatních buňkách tohoto ' + location_mapper[location] +
+                                      self.get_bold_cell_pos_str(np_cell_id_2) + ' obsahují pouze kandidátní čísla <b>'
+                                      + str(num_1) + ',' + str(num_2) + '</b> (žlutě). Tato kandidátní čísla proto '
+                                                                        'nemůžou být '
+                                      + ' v ostatních buňkách ' + location_mapper[location] +
                                       ' (červeně).')
                                 self.__report_json['text'] = t
                             return True
@@ -634,8 +684,8 @@ class StrategyApplier:
                                                'sector': _('sektoru'),
                                                'extra': _('TODO')}  # TODO
                             self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
-                                    location_mapper[location] + ' kandidáty ' + num_str + ' (žlutě). Proto je v těchto '
-                                    + 'buňkách možné odstranit všechny ostatní kandidáty (červeně).')
+                                    location_mapper[location] + ' kandidátní čísla ' + num_str + '(žlutě). Proto je v '
+                                    'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                         return True
         return False
 
@@ -687,10 +737,10 @@ class StrategyApplier:
                             'extra': _('TODO') #TODO
                         }
                         self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází pouze ' +
-                                                       str(len(group['notes'])) + ' stejné kandidáty ' +
+                                                       str(len(group['notes'])) + ' stejná kandidátní čísla ' +
                                                        num_list_str + ' (žlutě). Protože leží všechny tyto buňky v '
-                                                       + 'jednom ' + location_mapper[location] + ', je možno tyto ' +
-                                                       'kandidáty z ostatních buňek bloku odstranit (červeně).')
+                                                       + 'jednom ' + location_mapper[location] + ', je možno tato ' +
+                                                       'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
                     return True
         return False
 
@@ -732,8 +782,8 @@ class StrategyApplier:
                     location_mapper = {'row': _('řádku'), 'col': _('sloupci'), 'sector': _('sektoru'),
                                        'extra': _('extra')} # TODO extra
                     self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
-                                    location_mapper[location] + ' kandidáty ' + num_str + ' (žlutě). Proto je v těchto '
-                                    + 'buňkách možné odstranit všechny ostatní kandidáty (červeně).')
+                                    location_mapper[location] + ' kandidátní čísla ' + num_str + ' (žlutě). Proto je v'
+                                    'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                 return True
         return False
 

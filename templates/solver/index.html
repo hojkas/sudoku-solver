@@ -48,7 +48,18 @@
                     </li>
                     {% endfor %}
                 </ul>
-                TODO další typy
+                <p class="custom-list-heading">
+                    {% trans 'Sudoku 9x9 s extra pravidly' %}
+                </p>
+                <ul>
+                    {% for key, sudoku_type in extra_rules.items %}
+                    <li>
+                        <a href="{{ key }}" class="custom-list-item">
+                            {{ sudoku_type }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
         <div class="col-md-8">

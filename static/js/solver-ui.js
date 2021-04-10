@@ -125,13 +125,8 @@ function highlight_selected_controls_button(selected_button, other_button) {
 }
 
 function is_special_cell(target_cell) {
-    let el_classes = target_cell.attr('class').split(/\s+/);
-    let is_special = false;
-
-    el_classes.forEach(function(el_class) {
-        if(el_class === 'special-sudoku-cell') is_special = true;
-    });
-    return is_special;
+    if(target_cell.hasClass('special-sudoku-cell')) return true;
+    else return false;
 }
 
 function remove_highlight_for_download() {

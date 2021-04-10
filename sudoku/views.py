@@ -44,7 +44,9 @@ basic_sudokus = {
     'sudoku16x16': 'Sudoku 16x16'
 }
 extra_rules = {
-
+    'diagonal': _('Diagonální sudoku'),
+    'centers': _('Sudoku se středy čtverců'),
+    'diagonal_centers': _('Diagonální sudoku se středy čtverců')
 }
 math_sudokus = {
 
@@ -62,11 +64,17 @@ max_sudoku_numbers = {'sudoku4x4': 4,
 sudoku_template_mapper = {'sudoku4x4': 'classic_sudoku_grid',
                           'sudoku6x6': 'classic_sudoku_grid',
                           'sudoku9x9': 'classic_sudoku_grid',
-                          'sudoku16x16': 'classic_sudoku_grid'}
+                          'sudoku16x16': 'classic_sudoku_grid',
+                          'diagonal': 'special_cells_sudoku_grid',
+                          'centers': 'special_cells_sudoku_grid',
+                          'diagonal_centers': 'special_cells_sudoku_grid'}
 sudoku_type_mapper = {'sudoku4x4': 'classic',
                       'sudoku6x6': 'classic',
                       'sudoku9x9': 'classic',
-                      'sudoku16x16': 'classic'}
+                      'sudoku16x16': 'classic',
+                      'diagonal': 'diagonal',
+                      'centers': 'centers',
+                      'diagonal_centers': 'diagonal_centers'}
 
 @register.filter
 def get_range(val):
@@ -120,8 +128,27 @@ def transform_to_letter_if_needed(num):
 def add_prev_strategies(curr_counter, prev_strategies_dict):
     return curr_counter + len(prev_strategies_dict)
 
+@register.filter
+def is_diagonal(x, y):
+    if x == y or x == (8 - y):
+        return "special-sudoku-cell"
+    return ""
+
+@register.filter
+def is_diagonal_or_center(x, y):
+    if (x in [1, 4, 7] and y in [1, 4, 7]) or x == y or x == (8 - y):
+        return "special-sudoku-cell"
+    return ""
+
+@register.filter
+def is_center(x, y):
+    if x in [1, 4, 7] and y in [1, 4, 7]:
+        return "special-sudoku-cell"
+    return ""
+
 def index(request):
     return render(request, 'index.html')
+
 
 # ====================================
 #           SOLVER VIEWS
@@ -163,7 +190,10 @@ def solver(request, name):
         custom_context['medium_strategies'] = medium_strategies
         custom_context['advanced_strategies'] = advanced_strategies
 
-    request.session['max_sudoku_number'] = max_sudoku_numbers[name]
+    try:
+        request.session['max_sudoku_number'] = max_sudoku_numbers[name]
+    except KeyError:
+        request.session['max_sudoku_number'] = 9
     request.session['sudoku_type'] = sudoku_type_mapper[name]
 
     return render(request, template, custom_context)
@@ -194,7 +224,7 @@ def get_hint(request):
     return HttpResponse('HI from hint')
 
 def check_solvability(request):
-    # TODO
+    # TODO make non candidate and keep canddiate version
     return HttpResponse('HI from solvability')
 
 def check_difficulty(request):
