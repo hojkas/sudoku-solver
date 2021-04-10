@@ -688,11 +688,14 @@ class StrategyApplier:
                             self.__report_json['strategy_applied'] = 'hidden_pair'
                             ids_str = self.get_multiple_bold_cell_pos_str(info_list[x]['cell_ids'])
                             num_str = get_bold_num_list([num_1, num_2])
-                            location_mapper = {'row': _('řádku'),
-                                               'col': _('sloupci'),
-                                               'sector': _('sektoru'),
-                                               'extra': _('TODO')}  # TODO
-                            self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
+                            location_mapper = {'row': _('v daném řádku'),
+                                               'col': _('v daném sloupci'),
+                                               'sector': _('v daném sektoru'),
+                                               'diagonal_a': _('na dané diagonále'),
+                                               'diagonal_b': _('na dané diagonále'),
+                                               'center': _('mezi středy čtverců')
+                                               }
+                            self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné ' +
                                     location_mapper[location] + ' kandidátní čísla ' + num_str + '(žlutě). Proto je v '
                                     'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                         return True
@@ -740,15 +743,17 @@ class StrategyApplier:
                                     # and should be highlighted
                                     self.report_add_highlight(cell_id, False, 'yellow', note_id=num)
                         location_mapper = {
-                            'col': _('sloupci'),
-                            'row': _('řádku'),
-                            'sector': _('sektoru'),
-                            'extra': _('TODO') #TODO
+                            'col': _('v jednom sloupci'),
+                            'row': _('v jednom řádku'),
+                            'sector': _('v jednom sektoru'),
+                            'diagonal_a': _('na jedné diagonále'),
+                            'diagonal_b': _('na jedné diagonále'),
+                            'center': _('ve středech čtverců')
                         }
                         self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází pouze ' +
                                                        str(len(group['notes'])) + ' stejná kandidátní čísla ' +
-                                                       num_list_str + ' (žlutě). Protože leží všechny tyto buňky v '
-                                                       + 'jednom ' + location_mapper[location] + ', je možno tato ' +
+                                                       num_list_str + ' (žlutě). Protože leží všechny tyto buňky '
+                                                       + location_mapper[location] + ', je možno tato ' +
                                                        'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
                     return True
         return False
@@ -788,11 +793,16 @@ class StrategyApplier:
                                 self.report_add_highlight(cell_id, False, 'yellow', n)
                     ids_str = self.get_multiple_bold_cell_pos_str(group_d['cell_ids'])
                     num_str = get_bold_num_list(group_d['notes'])
-                    location_mapper = {'row': _('řádku'), 'col': _('sloupci'), 'sector': _('sektoru'),
-                                       'extra': _('extra')} # TODO extra
-                    self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné v daném ' +
+                    location_mapper = {'row': _('v daném řádku'),
+                                       'col': _('v daném sloupci'),
+                                       'sector': _('v daném sektoru'),
+                                       'diagonal_a': _('na dané diagonále'),
+                                       'diagonal_b': _('na dané diagonále'),
+                                       'center': _('ve středech čtverců')
+                    }
+                    self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné ' +
                                     location_mapper[location] + ' kandidátní čísla ' + num_str + ' (žlutě). Proto je v'
-                                    'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
+                                    ' těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                 return True
         return False
 
