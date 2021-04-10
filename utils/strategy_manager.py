@@ -170,7 +170,6 @@ class StrategyApplier:
         self.__diagonal_b_ids = []
         self.__center_ids = []
 
-        self.__extras_ids = []  # TODO remove later when dependencies are all fixed
         self.__cell_id_mapping = {}
         self.__collect_report = collect_report
         self.__report_json = {

@@ -336,27 +336,6 @@ function apply_prepared_step() {
     }
 }
 
-// TODO probably not needed delete later
-function search_for_truly_empty_cells() {
-    let list_of_empty_ids = [];
-    for(let x = 0; x < max_sudoku_number; x++) {
-        for(let y = 0; y < max_sudoku_number; y++) {
-            let cell_id = x * max_sudoku_number + y;
-            if(!is_solved_visible(cell_id)) {
-                let non_empty = false;
-                for(let i = 1; i <= max_sudoku_number; i++) {
-                    if($('#note' + cell_id + '-' + i).text() !== '\xa0') {
-                        non_empty = true;
-                        break;
-                    }
-                }
-                if(!non_empty) list_of_empty_ids.push(cell_id);
-            }
-        }
-    }
-    return list_of_empty_ids;
-}
-
 function load_sudoku_from_list(sudoku) {
     if(sudoku.length === (max_sudoku_number * max_sudoku_number)) {
         for(let x = 0; x < max_sudoku_number; x++) {
