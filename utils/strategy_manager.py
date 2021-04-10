@@ -346,10 +346,19 @@ class StrategyApplier:
         collisions = {}
         for cell_id in range(self.__cell_id_limit):
             row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
+            # preparing extra id chunks from diagonals/centers cell is in
+            extra_ids = []
+            if self.__cell_id_mapping[cell_id]['diagonal_a']:
+                extra_ids += self.__diagonal_a_ids
+            if self.__cell_id_mapping[cell_id]['diagonal_b']:
+                extra_ids += self.__diagonal_b_ids
+            if self.__cell_id_mapping[cell_id]['center']:
+                extra_ids += self.__center_ids
             # for row
             if sudoku.cells[cell_id].is_solved():
                 # for each other id in cells row block/col block/sector
-                for cell_id_2 in (self.__row_ids[row_id] + self.__col_ids[col_id] + self.__sector_ids[sector_id]):
+                for cell_id_2 in (self.__row_ids[row_id] + self.__col_ids[col_id] + self.__sector_ids[sector_id]
+                 + extra_ids):
                     # excluding the current one
                     if cell_id == cell_id_2:
                         continue
