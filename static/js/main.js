@@ -87,6 +87,13 @@ $(document).ready(function()
             if (key === 8 || key === 46) {
                 on_delete_key_down();
             }
+            // TAB moves select onto next cell_id
+            else if (key === 9) {
+                let new_selected = parseInt(window.selected_cell_id) + 1;
+                if (new_selected === max_sudoku_number * max_sudoku_number) change_selected('0');
+                else change_selected(new_selected.toString());
+                event.preventDefault();
+            }
             //key arrow
             else if (key >= 37 && key <= 40) {
                 on_arrow_key_down(key);
