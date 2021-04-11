@@ -105,6 +105,17 @@ function load_test_sudoku(num) {
             null, null, null, null, null, 9, null, null, null,
             null, null, null, null, null, null, 7, null, null,
             6, 8, null, 5, 7, null, null, null, 2
+        ],
+        [
+            null, 8, null, null, 9, 4, null, null, 2,
+            null, null, null, null, 5, 6, null, null, null,
+            null, null, 4, null, null, null, null, 1, null,
+            null, null, null, null, null, 7, null, null, null,
+            null, null, null, 5, null, null, null, null, null,
+            null, 6, null, null, null, null, null, 8, 4,
+            null, null, null, null, 7, null, null, 9, 3,
+            8, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, 2, null, null, null
         ]];
 
     load_sudoku_from_list(sudoku[num]);

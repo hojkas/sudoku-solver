@@ -29,6 +29,17 @@ def collect_cell_candidates_info_list(sudoku, block_ids, limit=None):
     return res
 
 def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
+    """ Function collects information about candidate placement in block_ids and returns dictionary with them.
+    d = { "num": n --- numeric value of candidate
+          "cell_ids": [X1, X2] --- list of cell_ids where candidate is
+          "total": N --- total canddiate occurences
+        }
+
+    @param sudoku Sudoku board to search.
+    @param block_ids Ids of cells forming block to be searched.
+    @param limit If set, only candidates with total <= limit are returned
+    @return Dictionary with information about candidate occurences.
+    """
     prep_d = {}
     for n in range(1, sudoku.max_sudoku_number+1):
         prep_d[n] = {
@@ -373,6 +384,66 @@ class StrategyApplier:
                 s += key + ', '
             return s[:-2]
 
+    def get_ids_group_block_names(self, ids_list):
+        blocks = []
+        # are they all in one row?
+        row = -1
+        for cell_id in ids_list:
+            if row == -1:
+                row = int(cell_id/self.__max_sudoku_number)
+            else:
+                if row != int(cell_id/self.__max_sudoku_number):
+                    row = -2
+                    break
+        if row >= 0:
+            blocks.append('row')
+        # are they all in one column?
+        col = -1
+        for cell_id in ids_list:
+            if col == -1:
+                col = cell_id % self.__max_sudoku_number
+            else:
+                if col != (cell_id % self.__max_sudoku_number):
+                    col = -2
+                    break
+        if col >= 0:
+            blocks.append('col')
+        # are they in the same sector?
+        for one_sector_ids in self.__sector_ids:
+            in_same = True
+            for cell_id in ids_list:
+                if cell_id not in one_sector_ids:
+                    in_same = False
+                    break
+            if in_same:
+                blocks.append('sector')
+                break
+        # are they in diagonal?
+        in_same = True
+        for cell_id in ids_list:
+            if cell_id not in self.__diagonal_a_ids:
+                in_same = False
+                break
+        if in_same:
+            blocks.append('diagonal_a')
+        in_same = True
+        for cell_id in ids_list:
+            if cell_id not in self.__diagonal_b_ids:
+                in_same = False
+                break
+        if in_same:
+            blocks.append('diagonal_b')
+        # are they in centers?
+        in_same = True
+        for cell_id in ids_list:
+            if cell_id not in self.__center_ids:
+                in_same = False
+                break
+        if in_same:
+            blocks.append('center')
+
+        return blocks
+
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # check if sudoku is already solved
@@ -425,6 +496,9 @@ class StrategyApplier:
             return self.__report_json
 
         if self.hidden_triple(sudoku):
+            return self.__report_json
+
+        if self.intersection_removal(sudoku):
             return self.__report_json
 
         self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
@@ -757,7 +831,7 @@ class StrategyApplier:
                     return True
         return False
 
-    # HIDDEN TRIPLE/QUAD
+    # HIDDEN TRIPLE/QUAD - DONE
     def hidden_triple(self, sudoku):
         return self.__apply_for_each(sudoku, self.hidden_triple_on_one_block, 'block')
 
@@ -805,4 +879,27 @@ class StrategyApplier:
                 return True
         return False
 
+    # INTERSECTION REMOVAL
+    def intersection_removal(self, sudoku):
+        return self.__apply_for_each(sudoku, self.intersection_removal_on_one_block, 'block')
+
+    def intersection_removal_on_one_block(self, sudoku, ids_chunk, location):
+        candidate_info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk)
+        for candidate_info_dict in candidate_info_list:
+            candidates_forms = self.get_ids_group_block_names(candidate_info_dict['cell_ids'])
+            for block_type in candidates_forms:
+                if block_type == location:
+                    continue  # candidate group from one block will have no effect on the same block
+                # we have candidate which occurence intersects with another block and may change something there
+                changed_something = self.project_intersection_on_another_block(sudoku, block_type, candidate_info_dict)
+                if changed_something:
+                    if self.__collect_report:
+                        self.__report_json['success'] = True
+                        self.__report_json['strategy_applied'] = 'intersection_removal'
+                        for cell_id in candidate_info_dict['cell_ids']:
+                            self.report_add_highlight(cell_id, False, 'yellow', candidate_info_dict['num'])
+                    return True
+
+    def project_intersection_on_another_block(self, sudoku, block_type, candidate_occurence_info_dict):
+        return True
 
