@@ -226,7 +226,11 @@ class StrategyApplier:
                     self.__sector_ids.append(s)
 
         else:
-            print('NOT SUPPORTED YET')
+            # for not supported sudoku name
+            self.__report_json['success'] = False
+            self.__report_json['text'] = _('Tento typ sudoku nemá podporované hledání strategií.')
+            self.__dont_solve = True
+            return
 
         # creating extra ids blocks for diagonal + centers
         if sudoku_type_name in ["centers", "diagonal_centers"]:
@@ -446,6 +450,10 @@ class StrategyApplier:
 
     # ENTRY POINT
     def find_next_step(self, sudoku):
+        # if not supported, return immediately
+        if self.__dont_solve:
+            return self.__report_json
+
         # check if sudoku is already solved
         if sudoku.is_fully_solved():
             self.__report_json['success'] = False
@@ -879,7 +887,7 @@ class StrategyApplier:
                 return True
         return False
 
-    # INTERSECTION REMOVAL
+    # INTERSECTION REMOVAL - DONE
     def intersection_removal(self, sudoku):
         return self.__apply_for_each(sudoku, self.intersection_removal_on_one_block, 'block')
 

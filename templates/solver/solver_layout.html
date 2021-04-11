@@ -47,6 +47,12 @@
         let setting_sudoku_full_size = false;
     {% endif %}
 
+    if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
+    else $('#settings-shift-toggle-off').prop('checked', true);
+
+    if (setting_sudoku_full_size) $('#settings-sudoku-full-size-on').prop('checked', true);
+    else $('#settings-sudoku-full-size-off').prop('checked', true);
+
     const csrf_token = '{{ csrf_token }}';
     const sudoku_name = '{{ sudoku_name }}';
 </script>

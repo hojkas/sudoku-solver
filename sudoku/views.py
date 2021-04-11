@@ -46,7 +46,8 @@ basic_sudokus = {
 extra_rules = {
     'diagonal': _('Diagonální sudoku'),
     'centers': _('Sudoku se středy čtverců'),
-    'diagonal_centers': _('Diagonální sudoku se středy čtverců')
+    'diagonal_centers': _('Diagonální sudoku se středy čtverců'),
+    'jigsaw': 'Jigsaw'
 }
 math_sudokus = {
 
@@ -67,14 +68,16 @@ sudoku_template_mapper = {'sudoku4x4': 'classic_sudoku_grid',
                           'sudoku16x16': 'classic_sudoku_grid',
                           'diagonal': 'special_cells_sudoku_grid',
                           'centers': 'special_cells_sudoku_grid',
-                          'diagonal_centers': 'special_cells_sudoku_grid'}
+                          'diagonal_centers': 'special_cells_sudoku_grid',
+                          'jigsaw': 'jigsaw_sudoku_grid'}
 sudoku_type_mapper = {'sudoku4x4': 'classic',
                       'sudoku6x6': 'classic',
                       'sudoku9x9': 'classic',
                       'sudoku16x16': 'classic',
                       'diagonal': 'diagonal',
                       'centers': 'centers',
-                      'diagonal_centers': 'diagonal_centers'}
+                      'diagonal_centers': 'diagonal_centers',
+                      'jigsaw': 'jigsaw'}
 
 @register.filter
 def get_range(val):
@@ -165,6 +168,12 @@ def solver(request, name):
 
     custom_context = sudokus_context.copy()
     custom_context['sudoku_name'] = name
+    if name in basic_sudokus:
+        custom_context['sudoku_name_to_display'] = basic_sudokus[name]
+    elif name in extra_rules:
+        custom_context['sudoku_name_to_display'] = extra_rules[name]
+    elif name in math_sudokus:
+        custom_context['sudoku_name_to_display'] = math_sudokus[name]
 
     if name in max_sudoku_numbers.keys():
         custom_context['max_sudoku_number'] = max_sudoku_numbers[name]
@@ -184,11 +193,14 @@ def solver(request, name):
             'hidden_single': 'Hidden Single',
             'naked_pair': 'Naked Pair'
         }
-
     else:
         custom_context['easy_strategies'] = easy_strategies
         custom_context['medium_strategies'] = medium_strategies
         custom_context['advanced_strategies'] = advanced_strategies
+
+    if name == 'jigsaw':
+        jigsaw_sectors = request.session.get('jigsaw_sectors', None)
+        custom_context['jigsaw_sectors'] = jigsaw_sectors
 
     try:
         request.session['max_sudoku_number'] = max_sudoku_numbers[name]

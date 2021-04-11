@@ -35,14 +35,32 @@ let custom_highlight_color_mapping = {
     'transparent': 'transparent'
 }
 
+let custom_sector_to_color_mapping = {
+    0: '#ff4500',
+    1: '#ffd700',
+    2: '#7cfc00',
+    3: '#00ffff',
+    4: '#a020f0',
+    5: '#2f4f4f',
+    6: '#1e90ff',
+    7: '#ee1493',
+    8: '#ffdead'
+}
+
+let custom_color_to_sector_mapping = {
+    '#ff4500': 0,
+    '#ffd700': 1,
+    '#7cfc00': 2,
+    '#00ffff': 3,
+    '#a020f0': 4,
+    '#2f4f4f': 5,
+    '#1e90ff': 6,
+    '#ee1493': 7,
+    '#ffdead': 8
+}
+
 $(document).ready(function()
 {
-    if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
-    else $('#settings-shift-toggle-off').prop('checked', true);
-
-    if (setting_sudoku_full_size) $('#settings-sudoku-full-size-on').prop('checked', true);
-    else $('#settings-sudoku-full-size-off').prop('checked', true);
-
     // ==============================
     // registering handling functions
     // ==============================
