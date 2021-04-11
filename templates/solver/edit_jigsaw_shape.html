@@ -18,6 +18,55 @@
                         dojde k přesměrování zpět na řešení sudoku.</p>
                     {% endblocktrans %}
                 </div>
+
+                <table style="margin-left: auto; margin-right: auto">
+                    <tr>
+                        <td style="font-weight: bold">{% trans "Barva sektoru:" %}</td>
+                    {% for x in 9|get_range %}
+                        <td>
+                            <button id="sector_color_{{ x }}" class="my-generic-button
+                                {% if x == 0 %}
+                                selected
+                                {% else %}
+                                unselected
+                                {% endif %}
+                             color-pick-button">
+                                <div id="sector_color_div_{{ x }}" class="color-pick-div" style="background-color: darkslategrey;">&nbsp;</div>
+                            </button>
+                        </td>
+                    {% endfor %}
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold">{% trans "Počet buněk:" %}</td>
+                        {% for x in 9|get_range %}
+                            <td>
+                                <div id="sector_color_status_{{ x }}"
+                                     style="text-align: center; font-weight: bold; color: red">0</div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+
+                <table id="sudoku-table" class="sudoku-9x9-empty sudoku disable-select">
+                    <tr>
+                        <td></td>
+                      {% for x in 9|get_range %}
+                        <td class="outside-table-top">
+                            {{ x|add:1 }}
+                        </td>
+                      {% endfor %}
+                    </tr>
+                  {% for x in 9|get_range %}
+                      <tr>
+                      <td class="outside-table-left">{{ x|add:1 }}</td>
+                      {% for y in 9|get_range %}
+                          <td class="edit-jigsaw-shape-cell" id="cell-{{ x|mul:9|add:y }}">
+                            &nbsp;
+                          </td>
+                      {% endfor %}
+                      </tr>
+                  {% endfor %}
+                </table>
             </div>
         </div>
     </div>
