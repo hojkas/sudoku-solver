@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-block">
+                <div class="guide-title">{%  trans 'Editace sektorů sudoku Jigsaw' %}</div>
+                <div>
+                    {% blocktrans %}
+                        <p>Jigsaw sudoku musí obsahovat 9 sektorů. Každý sektor musí být složen z 9 buněk, které
+                            se navzájem dotýkají.</p>
+                        <p>Prázdná mřížka sudoku níže slouží k zadání tvaru sektorů. Pomocí tlačítek s barvou níže
+                        zvolíte barvu, klikem na políčko sudoku ji na buňku aplikujete. Buňky se stejnou barvou budou
+                        tvořit jeden sektor.</p>
+                        <p>Po stisku tlačítka "Potvrdit" budou sektory zkontrolovány a pokud budou zadány korektně,
+                        dojde k přesměrování zpět na řešení sudoku.</p>
+                    {% endblocktrans %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

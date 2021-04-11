@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import django.template.loader
 from django.template import TemplateDoesNotExist
 from django.template.defaultfilters import register
@@ -200,6 +200,8 @@ def solver(request, name):
 
     if name == 'jigsaw':
         jigsaw_sectors = request.session.get('jigsaw_sectors', None)
+        if jigsaw_sectors is None:
+            return redirect('/solver/edit_jigsaw_shape')
         custom_context['jigsaw_sectors'] = jigsaw_sectors
 
     try:
@@ -209,6 +211,9 @@ def solver(request, name):
     request.session['sudoku_type'] = sudoku_type_mapper[name]
 
     return render(request, template, custom_context)
+
+def edit_jigsaw_shape(request):
+    return render(request, 'solver/edit_jigsaw_shape.html')
 
 def update_setting(request):
     setting = request.POST.get('setting')

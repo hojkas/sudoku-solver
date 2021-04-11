@@ -1,32 +1,6 @@
 {% extends "solver/solver_div.html" %}
 {% load i18n %}
 
-{% block modals %}
-    {{ block.super }}
-
-    <!-- Modal strategyInfoModal -->
-    <div class="modal fade" id="editSectors" tabindex="-1" aria-labelledby="editSectorsLabel"
-         aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-                {% trans 'Zadání sektorů sudoku Jigsaw' %}
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            TODO
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-success" data-dismiss="modal">{% trans 'Uložit změny' %}</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Zrušit' %}</button>
-          </div>
-        </div>
-      </div>
-    </div>
-{% endblock %}
-
 {% block solver_block %}
     <div id="sudoku-wrapper" class="disable-select">
           <table id="sudoku-table" class="sudoku-9x9-empty sudoku">

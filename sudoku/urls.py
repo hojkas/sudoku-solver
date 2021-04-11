@@ -27,6 +27,7 @@ urlpatterns = [
     path('solver/check_solvability', views.check_solvability, name='check solvability'),
     path('solver/get_hint', views.get_hint, name='get hint'),
     path('solver/check_difficulty', views.check_difficulty, name='check difficulty'),
+    path('solver/edit_jigsaw_shape', views.edit_jigsaw_shape, name='edit jigsaw shape'),
     path('solver/<name>', views.solver, name='solver'),
     path('guides/', views.guides_index, name='guide index'),
     path('guides/<name>', views.detail, name='detail'),
