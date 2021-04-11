@@ -898,8 +898,74 @@ class StrategyApplier:
                         self.__report_json['strategy_applied'] = 'intersection_removal'
                         for cell_id in candidate_info_dict['cell_ids']:
                             self.report_add_highlight(cell_id, False, 'yellow', candidate_info_dict['num'])
+                        location_mapper = {
+                            'row': _('v řádku'),
+                            'col': _('v sloupci'),
+                            'sector': _('v sektoru'),
+                            'diagonal_a': _('na diagonále'),
+                            'diagonal_b': _('na diagonále'),
+                            'center': _('v středech čtverců')
+                        }
+                        location_mapper2 = {
+                            'row': _('v stejném řádku'),
+                            'col': _('v stejném sloupci'),
+                            'sector': _('v stejném sektoru'),
+                            'diagonal_a': _('na stejné diagonále'),
+                            'diagonal_b': _('na stejné diagonále'),
+                            'center': _('v středech čtverců')
+                        }
+                        location_mapper3 = {
+                            'row': _('v řádku'),
+                            'col': _('v sloupci'),
+                            'sector': _('v sektoru'),
+                            'diagonal_a': _('na diagonále'),
+                            'diagonal_b': _('na diagonále'),
+                            'center': _('v středech čtverců')
+                        }
+                        self.__report_json['text'] = _('Číslo <b>' + str(candidate_info_dict['num']) + '</b> se ' +
+                                                       location_mapper[location] + ' nachází pouze v buňkách ' +
+                                                       self.get_multiple_bold_cell_pos_str(candidate_info_dict['cell_ids']) +
+                                                       ' (žlutě). Kromě tohoto bloku avšak buňky leží také ' +
+                                                       location_mapper2[block_type] + '. Protože je jisté, že '
+                                                       'číslice bude na jedné ze žlutě označených pozic, nemůže ' +
+                                                       location_mapper3[block_type] +
+                                                       ' být na jiné pozici a můžeme tato kandidátní čísla (označená'
+                                                       ' červeně) odstranit.')
                     return True
 
     def project_intersection_on_another_block(self, sudoku, block_type, candidate_occurence_info_dict):
-        return True
+        # got pointing pair (info_dict) and block_type they could be pointing into
+        # 1) find out ids of the block (reverse mapping)
+        # 2) find out if there is candidate dict['num'] in between them
+        changed_something = False
+        block_ids = []
+        one_candidate_occurence = candidate_occurence_info_dict['cell_ids'][0]
+        # can map from any of them, at this point it's sure all of them are in this block
+        if block_type == 'row':
+            block_ids = self.__row_ids[self.__cell_id_mapping[one_candidate_occurence]['row_id']]
+        elif block_type == 'col':
+            block_ids = self.__col_ids[self.__cell_id_mapping[one_candidate_occurence]['col_id']]
+        elif block_type == 'sector':
+            block_ids = self.__sector_ids[self.__cell_id_mapping[one_candidate_occurence]['sector_id']]
+        elif block_type == 'diagonal_a':
+            block_ids = self.__diagonal_a_ids
+        elif block_type == 'diagonal_b':
+            block_ids = self.__diagonal_b_ids
+        elif block_type == 'center':
+            block_ids = self.__center_ids
+
+        for cell_id in block_ids:
+            if cell_id in candidate_occurence_info_dict['cell_ids']:
+                continue  # skipping the same cells
+            num = candidate_occurence_info_dict['num']
+            if num in sudoku.cells[cell_id].notes:
+                # found candidate this strategy WILL eliminate
+                if self.__collect_report:
+                    self.report_add_highlight(cell_id, False, 'red', num)
+                    self.report_add_candidate_to_remove(cell_id, num)
+                else:
+                    sudoku.cells[cell_id].notes.remove(num)
+                changed_something = True
+
+        return changed_something
 
