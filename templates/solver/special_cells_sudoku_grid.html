@@ -19,6 +19,7 @@
                             {% if sudoku_name == "diagonal" %} {{ x|is_diagonal:y }}
                             {% elif sudoku_name == "centers" %} {{ x|is_center:y }}
                             {% elif sudoku_name == "diagonal_centers" %} {{ x|is_diagonal_or_center:y }}
+                            {% elif sudoku_name == "hypersudoku" %} {{ x|is_hyper_cell:y }}
                             {% endif %}
                             " id="cell-{{ x|mul:max_sudoku_number|add:y }}">
                         <div class="sudoku-solved-num" id="solved{{ x|mul:max_sudoku_number|add:y }}">

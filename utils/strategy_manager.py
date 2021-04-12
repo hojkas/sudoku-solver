@@ -180,6 +180,7 @@ class StrategyApplier:
         self.__diagonal_a_ids = []
         self.__diagonal_b_ids = []
         self.__center_ids = []
+        self.__hyper_ids = []
         self.__dont_solve = False
 
         self.__cell_id_mapping = {}
@@ -202,7 +203,7 @@ class StrategyApplier:
             self.__col_ids.append(c)
             self.__row_ids.append(r)
 
-        if sudoku_type_name in ["classic", "diagonal", "centers", "diagonal_centers"]:
+        if sudoku_type_name in ["classic", "diagonal", "centers", "diagonal_centers", "hypersudoku"]:
             # creating sector ids for mentioned types
             if max_sudoku_number == 6:
                 sectors_width = 2
@@ -250,6 +251,15 @@ class StrategyApplier:
                 diagonal_b.append(x * 9 + (8 - x))
             self.__diagonal_a_ids = diagonal_a
             self.__diagonal_b_ids = diagonal_b
+
+        # creating hypersudoku centers
+        if sudoku_type_name == "hypersudoku":
+            self.__hyper_ids = [
+                [10, 11, 12, 19, 20, 21, 28, 29, 30],
+                [14, 15, 16, 23, 24, 25, 32, 33, 34],
+                [46, 47, 48, 55, 56, 57, 64, 65, 66],
+                [50, 51, 52, 59, 60, 61, 68, 69, 70]
+            ]
 
         # creating mapping for cells_id to row_ids, col_ids and sector_ids the cell is in
         # for quicker usage

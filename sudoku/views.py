@@ -47,7 +47,8 @@ extra_rules = {
     'diagonal': _('Diagonální sudoku'),
     'centers': _('Sudoku se středy čtverců'),
     'diagonal_centers': _('Diagonální sudoku se středy čtverců'),
-    'jigsaw': 'Jigsaw'
+    'jigsaw': 'Jigsaw',
+    'hypersudoku': 'Hypersudoku'
 }
 math_sudokus = {
 
@@ -69,7 +70,8 @@ sudoku_template_mapper = {'sudoku4x4': 'classic_sudoku_grid',
                           'diagonal': 'special_cells_sudoku_grid',
                           'centers': 'special_cells_sudoku_grid',
                           'diagonal_centers': 'special_cells_sudoku_grid',
-                          'jigsaw': 'jigsaw_sudoku_grid'}
+                          'jigsaw': 'jigsaw_sudoku_grid',
+                          'hypersudoku': 'special_cells_sudoku_grid'}
 sudoku_type_mapper = {'sudoku4x4': 'classic',
                       'sudoku6x6': 'classic',
                       'sudoku9x9': 'classic',
@@ -77,7 +79,8 @@ sudoku_type_mapper = {'sudoku4x4': 'classic',
                       'diagonal': 'diagonal',
                       'centers': 'centers',
                       'diagonal_centers': 'diagonal_centers',
-                      'jigsaw': 'jigsaw'}
+                      'jigsaw': 'jigsaw',
+                      'hypersudoku': 'hypersudoku'}
 
 @register.filter
 def get_range(val):
@@ -146,6 +149,12 @@ def is_diagonal_or_center(x, y):
 @register.filter
 def is_center(x, y):
     if x in [1, 4, 7] and y in [1, 4, 7]:
+        return "special-sudoku-cell"
+    return ""
+
+@register.filter
+def is_hyper_cell(x, y):
+    if x in [1, 2, 3, 5, 6, 7] and y in [1, 2, 3, 5, 6, 7]:
         return "special-sudoku-cell"
     return ""
 
