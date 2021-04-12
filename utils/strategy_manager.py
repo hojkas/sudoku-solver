@@ -164,7 +164,7 @@ def get_bold_num_list(num_list):
     return res
 
 class StrategyApplier:
-    def __init__(self, max_sudoku_number, sudoku_type_name, collect_report=True):
+    def __init__(self, max_sudoku_number, sudoku_type_name, collect_report=True, sector_ids=None):
         """ Inicialization of StrategyApplier creates number of variables derived from
         max_sudoku_number and sudoku_type_name that help to apply strategies more effectively
         without doing the same math operations repeatedly.
@@ -180,6 +180,7 @@ class StrategyApplier:
         self.__diagonal_a_ids = []
         self.__diagonal_b_ids = []
         self.__center_ids = []
+        self.__dont_solve = False
 
         self.__cell_id_mapping = {}
         self.__collect_report = collect_report
@@ -202,6 +203,7 @@ class StrategyApplier:
             self.__row_ids.append(r)
 
         if sudoku_type_name in ["classic", "diagonal", "centers", "diagonal_centers"]:
+            # creating sector ids for mentioned types
             if max_sudoku_number == 6:
                 sectors_width = 2
                 sectors_height = 3
@@ -224,7 +226,8 @@ class StrategyApplier:
                         for l in range(sectors_width):
                             s.append((starting_x + k) * max_sudoku_number + (starting_y + l))
                     self.__sector_ids.append(s)
-
+        elif sudoku_type_name == "jigsaw" and sector_ids is not None:
+            self.__sector_ids = sector_ids
         else:
             # for not supported sudoku name
             self.__report_json['success'] = False

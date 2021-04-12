@@ -135,6 +135,11 @@
 
     <div class="row" style="margin: 1rem 0 1rem 0;">
         <div class="col-md-12" style="text-align: center;">
+            {% if sudoku_name == 'jigsaw' %}
+                <a href="/solver/edit_jigsaw_shape">
+                <button class="simple-round-button">{% trans "Změnit rozložení sektorů" %}</button>
+                </a>
+            {% endif %}
             <div>
                 <b>{% trans 'Generátor sudoku' %}</b>
                 <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"

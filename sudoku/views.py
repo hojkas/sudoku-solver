@@ -12,7 +12,7 @@ from utils.strategy_manager import StrategyApplier
 from utils.sudoku_convertor import convert_js_json_to_sudoku_board
 
 # Variable that allows showing of extra controls such as custom highlights for
-developers_tools = True
+developers_tools = False
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
@@ -237,7 +237,14 @@ def update_setting(request):
 def get_next_step(request):
     sudoku_json = json.loads(request.POST.get('json'))
     sudoku = convert_js_json_to_sudoku_board(sudoku_json)
-    strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), request.session.get('sudoku_type'))
+
+    sudoku_type_name = request.session.get('sudoku_type')
+
+    if sudoku_type_name == "jigsaw":
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           sector_ids=request.session.get('jigsaw_sectors'))
+    else:
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name)
     result_json = strategy_applier.find_next_step(sudoku)
 
     return HttpResponse(json.dumps(result_json))
