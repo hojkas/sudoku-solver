@@ -81,9 +81,65 @@ function color_sector_on_cell(cell) {
 }
 
 function check_connected_sectors() {
-    for(let i = 0; i < 9; i++) check_connected_sector(i);
+    let sectors_ids = [];
+    for(let i = 0; i < 9; i++) sectors_ids.push([]);
+    for(let i = 0; i < 81; i++) sectors_ids[cell_sector[i]].push(i);
+    let is_correct = true;
+    sectors_ids.forEach(function(one_sector_ids) {
+        if(!(check_connected_sector(one_sector_ids))) is_correct = false;
+    });
+    return is_correct;
 }
 
-function check_connected_sector(sector_id) {
+function check_connected_sector(sector_ids) {
+    let current_cell = sector_ids[0];
+    let found_cells = crawl_from_cell(current_cell, sector_ids.slice(1));
+    let distinct_found_cells = [];
+    found_cells.forEach(function (num) {
+        if(!distinct_found_cells.includes(num)) distinct_found_cells.push(num);
+    })
+    return distinct_found_cells.length === 9;
+}
 
+function crawl_from_cell(current_cell, non_explored_ids) {
+    let found_cells = [current_cell];
+
+    let can_move_to = get_possible_moves(current_cell, non_explored_ids);
+
+    let new_nonexplored = non_explored_ids.filter(function(item) {
+       if(!(can_move_to.includes(item))) return item;
+    });
+
+    can_move_to.forEach(function(cell_move) {
+        found_cells = found_cells.concat(crawl_from_cell(cell_move, new_nonexplored));
+    });
+
+    return found_cells;
+}
+
+function get_possible_moves(current_cell, non_explored_ids) {
+    let can_move_to = [];
+
+    let up_cell = cell_in_direction(current_cell, 'up');
+    if (up_cell !== null) if(non_explored_ids.includes(up_cell)) can_move_to.push(up_cell);
+    let down_cell = cell_in_direction(current_cell, 'down');
+    if (down_cell !== null) if(non_explored_ids.includes(down_cell)) can_move_to.push(down_cell);
+    let right_cell = cell_in_direction(current_cell, 'right');
+    if (right_cell !== null) if(non_explored_ids.includes(right_cell)) can_move_to.push(right_cell);
+    let left_cell = cell_in_direction(current_cell, 'left');
+    if (left_cell !== null) if(non_explored_ids.includes(left_cell)) can_move_to.push(left_cell);
+
+    return can_move_to;
+}
+
+function cell_in_direction(cell_id, direction) {
+    let row = parseInt(cell_id/9);
+    let col = cell_id % 9;
+    if(direction === 'up') row--;
+    else if(direction === 'right') col++;
+    else if(direction === 'left') col--;
+    else if(direction === 'down') row++;
+
+    if(col >= 0 && col < 9 && row >= 0 && row < 9) return row * 9 + col;
+    else return null;
 }
