@@ -268,7 +268,8 @@ class StrategyApplier:
             self.__cell_id_mapping[cell_id] = {
                 "diagonal_a": False,
                 "diagonal_b": False,
-                "center": False
+                "center": False,
+                "hypersudoku": [False, False, False, False]
             }
             # going through row "chunks" (list of list of ids in row, one chunk = one row) to register
         # the mapping
