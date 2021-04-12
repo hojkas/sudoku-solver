@@ -172,6 +172,7 @@ class StrategyApplier:
             and rows and such.
         @param sudoku_type_name Type of sudoku to derive extra rule.
         """
+        self.__sudoku_type_name = sudoku_type_name
         self.__max_sudoku_number = max_sudoku_number
         self.__cell_id_limit = max_sudoku_number * max_sudoku_number
         self.__row_ids = []
@@ -296,6 +297,12 @@ class StrategyApplier:
             for center_id in self.__center_ids:
                 self.__cell_id_mapping[center_id]["center"] = True
 
+        #adding flag for hypersudoku cells
+        if sudoku_type_name == "hypersudoku":
+            for i in range(4):
+                for cell_id in self.__hyper_ids[i]:
+                    self.__cell_id_mapping[cell_id]["hypersudoku"][i] = True
+
     # HELP functions for report collection
     def report_add_highlight(self, cell_id, is_solved, color, note_id=None):
         self.__report_json['highlight'].append({
@@ -347,6 +354,8 @@ class StrategyApplier:
                 return True
             if self.__apply_for_each(sudoku, func_name, 'center', **kwargs):
                 return True
+            if self.__apply_for_each(sudoku, func_name, 'hypersudoku', **kwargs):
+                return True
         elif name_of_unit == 'row':
             for set_of_ids in self.__row_ids:
                 if func_name(sudoku, set_of_ids, 'row', **kwargs):
@@ -368,6 +377,10 @@ class StrategyApplier:
         elif name_of_unit == 'center':
             if func_name(sudoku, self.__center_ids, 'center', **kwargs):
                 return True
+        elif name_of_unit == 'hypersudoku':
+            for set_of_ids in self.__hyper_ids:
+                if func_name(sudoku, set_of_ids, 'hypersudoku', **kwargs):
+                    return True
         return False
 
     def has_obvious_mistakes(self, sudoku):
@@ -382,6 +395,9 @@ class StrategyApplier:
                 extra_ids += self.__diagonal_b_ids
             if self.__cell_id_mapping[cell_id]['center']:
                 extra_ids += self.__center_ids
+            for i in range(4):
+                if self.__cell_id_mapping[cell_id]['hypersudoku'][i]:
+                    extra_ids += self.__hyper_ids[i]
             # for row
             if sudoku.cells[cell_id].is_solved():
                 # for each other id in cells row block/col block/sector
