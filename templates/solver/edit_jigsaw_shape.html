@@ -2,6 +2,22 @@
 {% load i18n %}
 
 {% block content %}
+<script>
+    let cell_sector = [];
+    for(let i = 0; i < 81; i++) cell_sector.push(-1);
+    $(document).ready(function() {
+        for(let i = 0; i < 9; i++) {
+            $('#sector_color_div_' + i).css({'background-color': custom_sector_to_color_mapping[i]});
+        }
+    });
+    let cell_left_without_sector_msg = {% trans '"Chyba: Jedna nebo více buněk nemají přiřazeny sektor."' %};
+    let wrong_sector_count_msg = {% trans '"Chyba: Sektory nemají všechny přiřazeno 9 buněk."' %};
+    let sectors_cells_not_touching = {% blocktrans %}
+        '"Chyba: Buňky jednoho nebo více sektorů netvoří souvislou plochu. Buňky musí tvořit shluk, ve kterém se"' +
+            '"navzájem dotýkají stranami alespoň jedné další ze stejného sektoru."'
+        {% endblocktrans %};
+</script>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -12,8 +28,8 @@
                         <p>Jigsaw sudoku musí obsahovat 9 sektorů. Každý sektor musí být složen z 9 buněk, které
                             se navzájem dotýkají.</p>
                         <p>Prázdná mřížka sudoku níže slouží k zadání tvaru sektorů. Pomocí tlačítek s barvou níže
-                        zvolíte barvu, klikem na políčko sudoku ji na buňku aplikujete. Buňky se stejnou barvou budou
-                        tvořit jeden sektor.</p>
+                        zvolíte barvu, klikem nebo tahem myši nad políčkem sudoku ji na buňku aplikujete.
+                        Buňky se stejnou barvou budou tvořit jeden sektor.</p>
                         <p>Po stisku tlačítka "Potvrdit" budou sektory zkontrolovány a pokud budou zadány korektně,
                         dojde k přesměrování zpět na řešení sudoku.</p>
                     {% endblocktrans %}
@@ -30,7 +46,7 @@
                                 {% else %}
                                 unselected
                                 {% endif %}
-                             color-pick-button">
+                             color-pick-button sector_color_button">
                                 <div id="sector_color_div_{{ x }}" class="color-pick-div" style="background-color: darkslategrey;">&nbsp;</div>
                             </button>
                         </td>
@@ -40,7 +56,7 @@
                         <td style="font-weight: bold">{% trans "Počet buněk:" %}</td>
                         {% for x in 9|get_range %}
                             <td>
-                                <div id="sector_color_status_{{ x }}"
+                                <div id="sector_color_status_{{ x }}" title="-1"
                                      style="text-align: center; font-weight: bold; color: red">0</div>
                             </td>
                         {% endfor %}
@@ -67,6 +83,10 @@
                       </tr>
                   {% endfor %}
                 </table>
+
+                <div style="text-align: center">
+                    <button id="edit-jigsaw-submit" class="btn btn-primary">{% trans "Potvrdit nové rozmístění sektorů" %}</button>
+                </div>
             </div>
         </div>
     </div>
