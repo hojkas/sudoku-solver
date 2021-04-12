@@ -121,16 +121,20 @@
     color: black;
 }
 
-.sudoku-9x9-empty tr:nth-child(2)>td:nth-child(n+2) {
-    border-top: 3px solid black;
+.sudoku-jigsaw tr:nth-child(2)>td:nth-child(n+2) {
+    border-top: 4px solid black;
 }
 
-.sudoku-9x9-empty tr:nth-child(10)>td:nth-child(n+2) {
-    border-bottom: 3px solid black;
+.sudoku-jigsaw tr:nth-child(10)>td:nth-child(n+2) {
+    border-bottom: 4px solid black;
 }
 
-.sudoku-9x9-empty tr:nth-child(n+2)>td:nth-child(10) {
-    border-right: 3px solid black;
+.sudoku-jigsaw tr:nth-child(n+2)>td:nth-child(10) {
+    border-right: 4px solid black;
+}
+
+.sudoku-jigsaw tr:nth-child(n+2)>td:nth-child(2) {
+    border-left: 4px solid black;
 }
 
 .sudoku-controls {

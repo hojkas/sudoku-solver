@@ -4,11 +4,20 @@
 {% block content %}
 <script>
     let cell_sector = [];
+    const csrf_token = '{{ csrf_token }}';
     for(let i = 0; i < 81; i++) cell_sector.push(-1);
     $(document).ready(function() {
         for(let i = 0; i < 9; i++) {
             $('#sector_color_div_' + i).css({'background-color': custom_sector_to_color_mapping[i]});
         }
+        $(window).keydown(function (event) {
+            let key = event.keyCode;
+            if (key === 9) {
+                //tab
+                if (selected_sector === 8) change_sector_coloring(0);
+                else change_sector_coloring(selected_sector + 1);
+            }
+        });
     });
     let cell_left_without_sector_msg = {% trans '"Chyba: Jedna nebo více buněk nemají přiřazeny sektor."' %};
     let wrong_sector_count_msg = {% trans '"Chyba: Sektory nemají všechny přiřazeno 9 buněk."' %};
@@ -28,7 +37,8 @@
                         <p>Jigsaw sudoku musí obsahovat 9 sektorů. Každý sektor musí být složen z 9 buněk, které
                             se navzájem dotýkají.</p>
                         <p>Prázdná mřížka sudoku níže slouží k zadání tvaru sektorů. Pomocí tlačítek s barvou níže
-                        zvolíte barvu, klikem nebo tahem myši nad políčkem sudoku ji na buňku aplikujete.
+                        zvolíte barvu pro vybarvení sektoru. Změnit sektor lze stiskem jiného tlačítka nebo stiskem
+                        klávesy TAB. Klikem nebo tahem myši nad políčkem sudoku aplikujete na buňku barvu.
                         Buňky se stejnou barvou budou tvořit jeden sektor.</p>
                         <p>Po stisku tlačítka "Potvrdit" budou sektory zkontrolovány a pokud budou zadány korektně,
                         dojde k přesměrování zpět na řešení sudoku.</p>
@@ -85,8 +95,13 @@
                 </table>
 
                 <div style="text-align: center">
-                    <button id="edit-jigsaw-submit" class="btn btn-primary">{% trans "Potvrdit nové rozmístění sektorů" %}</button>
+                    <button id="edit-jigsaw-submit" class="btn btn-primary">
+                        <div id="submit-text">{% trans "Potvrdit nové rozmístění sektorů" %}</div>
+                        <div id="submit-loading" style="display: none;"><i class="fas fa-spinner fa-pulse"></i></div>
+                    </button>
                 </div>
+
+                <button onclick="sample_sectors()">Sample sectors</button> <!-- TODO delete and replace with sample sectors -->
             </div>
         </div>
     </div>

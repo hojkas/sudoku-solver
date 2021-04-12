@@ -121,3 +121,21 @@ async function check_solvability() {
         alert(response_string);
     });
 }
+
+async function submit_jigsaw_shape(sector_ids, cell_sectors) {
+    $.ajax({
+        url: '/solver/edit_jigsaw_shape',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            sector_ids: JSON.stringify(sector_ids),
+            cell_sectors: JSON.stringify(cell_sectors)
+        },
+        cache: false
+    }).done(function(response_string) {
+        hide_loading();
+        window.location.replace('/solver/jigsaw');
+    });
+}

@@ -24,10 +24,7 @@ $(document).mouseup(function () {
 
 $(document).ready(function() {
     $('.sector_color_button').on('click', function() {
-        let former_button_ref = $('#sector_color_' + selected_sector);
-        former_button_ref.css({'background-color': 'lightgrey', 'border-color': 'grey'});
-        $(this).css({'background-color': 'dodgerblue', 'border-color': 'black'});
-        selected_sector = parseInt($(this).attr('id').split('_')[2]);
+        change_sector_coloring(parseInt($(this).attr('id').split('_')[2]));
     });
 
     $('.edit-jigsaw-shape-cell').on('click', function() {
@@ -43,25 +40,46 @@ $(document).ready(function() {
     });
 
     $('#edit-jigsaw-submit').on('click', function() {
+        show_loading();
        for(let i = 0; i < 81; i++)
        {
            if(cell_sector[i] === -1) {
                alert(cell_left_without_sector_msg);
+               hide_loading();
                return;
            }
        }
        for(let i = 0; i < 9; i++) {
            if($('#sector_color_status_' + i).text() !== '9') {
                alert(wrong_sector_count_msg);
+               hide_loading();
                return;
            }
        }
-       if(!check_connected_sectors()) {
+
+       let sectors_ids = [];
+       for(let i = 0; i < 9; i++) sectors_ids.push([]);
+       for(let i = 0; i < 81; i++) sectors_ids[cell_sector[i]].push(i);
+
+       if(!check_connected_sectors(sectors_ids)) {
            alert(sectors_cells_not_touching);
        }
-       // TODO actually send it
+       else {
+           // cells are correct
+            submit_jigsaw_shape(sectors_ids, cell_sector);
+       }
     });
 });
+
+function show_loading() {
+    $('#submit-loading').show();
+    $('#submit-text').hide();
+}
+
+function hide_loading() {
+    $('#submit-loading').hide();
+    $('#submit-text').show();
+}
 
 function color_sector_on_cell(cell) {
     let cell_id = cell.attr('id').split('-')[1];
@@ -80,10 +98,7 @@ function color_sector_on_cell(cell) {
     else sector_count.css({'color': 'red'});
 }
 
-function check_connected_sectors() {
-    let sectors_ids = [];
-    for(let i = 0; i < 9; i++) sectors_ids.push([]);
-    for(let i = 0; i < 81; i++) sectors_ids[cell_sector[i]].push(i);
+function check_connected_sectors(sectors_ids) {
     let is_correct = true;
     sectors_ids.forEach(function(one_sector_ids) {
         if(!(check_connected_sector(one_sector_ids))) is_correct = false;
@@ -142,4 +157,53 @@ function cell_in_direction(cell_id, direction) {
 
     if(col >= 0 && col < 9 && row >= 0 && row < 9) return row * 9 + col;
     else return null;
+}
+
+function sample_sectors() {
+    for(let row = 0; row < 9; row++) {
+        change_sector_coloring(row);
+        for(let col = 0; col < 9; col++) color_sector_on_cell($('#cell-' + (row *9 + col)));
+    }
+}
+
+function change_sector_coloring(new_id) {
+    let new_button_ref = $('#sector_color_' + new_id);
+    let former_button_ref = $('#sector_color_' + selected_sector);
+    former_button_ref.css({'background-color': 'lightgrey', 'border-color': 'grey'});
+    new_button_ref.css({'background-color': 'dodgerblue', 'border-color': 'black'});
+    selected_sector = new_id;
+}
+
+function create_sectors_borders() {
+    for(let i = 0; i < 81; i++) create_cell_borders(i);
+}
+
+function create_cell_borders(cell_id) {
+    if(has_neighbour_down(cell_id)) {
+        let neighbour = cell_id + 9;
+        if(jigsaw_cell_sectors[neighbour] !== jigsaw_cell_sectors[cell_id]) add_border_down(cell_id);
+    }
+    if(has_neighbour_right(cell_id)) {
+        let neighbour = cell_id + 1;
+        if(jigsaw_cell_sectors[neighbour] !== jigsaw_cell_sectors[cell_id]) add_border_right(cell_id);
+    }
+}
+
+function has_neighbour_down(cell_id) {
+    let col = cell_id % max_sudoku_number;
+    let row = parseInt((cell_id - col)/max_sudoku_number);
+    return row !== (max_sudoku_number - 1);
+}
+
+function has_neighbour_right(cell_id) {
+    let col = cell_id % max_sudoku_number;
+    return col !== (max_sudoku_number - 1);
+}
+
+function add_border_down(cell_id) {
+    $('#cell-' + cell_id).css({'border-bottom': '4px solid black'});
+}
+
+function add_border_right(cell_id) {
+    $('#cell-' + cell_id).css({'border-right': '4px solid black'});
 }

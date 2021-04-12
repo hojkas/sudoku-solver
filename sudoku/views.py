@@ -200,9 +200,11 @@ def solver(request, name):
 
     if name == 'jigsaw':
         jigsaw_sectors = request.session.get('jigsaw_sectors', None)
-        if jigsaw_sectors is None:
+        jigsaw_cell_sectors = request.session.get('jigsaw_cell_sectors', None)
+        if jigsaw_sectors is None or jigsaw_cell_sectors is None:
             return redirect('/solver/edit_jigsaw_shape')
         custom_context['jigsaw_sectors'] = jigsaw_sectors
+        custom_context['jigsaw_cell_sectors'] = jigsaw_cell_sectors
 
     try:
         request.session['max_sudoku_number'] = max_sudoku_numbers[name]
@@ -213,7 +215,15 @@ def solver(request, name):
     return render(request, template, custom_context)
 
 def edit_jigsaw_shape(request):
-    return render(request, 'solver/edit_jigsaw_shape.html')
+    if request.method == 'POST':
+        sector_ids = json.loads(request.POST.get('sector_ids'))
+        cell_sectors = json.loads(request.POST.get('cell_sectors'))
+        request.session['jigsaw_sectors'] = sector_ids
+        request.session['jigsaw_cell_sectors'] = cell_sectors
+        return HttpResponse('ok')
+    else:
+        return render(request, 'solver/edit_jigsaw_shape.html')
+
 
 def update_setting(request):
     setting = request.POST.get('setting')

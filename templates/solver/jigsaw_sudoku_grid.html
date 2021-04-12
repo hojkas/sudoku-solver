@@ -2,8 +2,16 @@
 {% load i18n %}
 
 {% block solver_block %}
+    <script>
+        let jigsaw_sectors = {{ jigsaw_sectors }};
+        let jigsaw_cell_sectors = {{ jigsaw_cell_sectors }};
+        $(document).ready(function() {
+           create_sectors_borders();
+        });
+    </script>
+
     <div id="sudoku-wrapper" class="disable-select">
-          <table id="sudoku-table" class="sudoku-9x9-empty sudoku">
+          <table id="sudoku-table" class="sudoku-jigsaw sudoku">
                 <tr>
                     <td></td>
                   {% for x in max_sudoku_number|get_range %}
