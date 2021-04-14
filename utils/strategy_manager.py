@@ -475,6 +475,16 @@ class StrategyApplier:
                 break
         if in_same:
             blocks.append('center')
+        # are they in same hypersudoku sector?
+        for i in range(4):
+            in_same = True
+            for cell_id in ids_list:
+                if cell_id not in self.__hyper_ids[i]:
+                    in_same = False
+                    break
+            if in_same:
+                blocks.append('hypersudoku')
+                break
 
         return blocks
 
@@ -583,6 +593,9 @@ class StrategyApplier:
             extra_ids += self.__diagonal_b_ids
         if self.__cell_id_mapping[cell_id]['center']:
             extra_ids += self.__center_ids
+        for i in range(4):
+            if self.__cell_id_mapping[cell_id]['hypersudoku'][i]:
+                extra_ids += self.__hyper_ids[i]
 
         # for row
         if sudoku.cells[cell_id].is_solved():
@@ -681,7 +694,8 @@ class StrategyApplier:
                         'sector': _('v sektoru'),
                         'diagonal_a': _('na diagonále'),
                         'diagonal_b': _('na diagonále'),
-                        'center': _('v centrech čtverců')
+                        'center': _('v centrech čtverců'),
+                        'hypersudoku': _('v sektoru hypersudoku')
                     }
                     self.__report_json['text'] = _('V buňce ' + self.get_bold_cell_pos_str(cell_ids[0]) +
                            ' bude doplněno zeleně zvýrazněné kandidátní číslo, protože je to jediné možné '
@@ -733,6 +747,7 @@ class StrategyApplier:
                                     'col': _('tohoto sloupce'),
                                     'row': _('tohoto řádku'),
                                     'sector': _('tohoto sektoru'),
+                                    'hypersudoku': _('tohoto sektoru hypersudoku'),
                                     'diagonal_a': _('této diagonály'),
                                     'diagonal_b': _('této diagonály'),
                                     'center': _('středů čtverců')
@@ -802,6 +817,7 @@ class StrategyApplier:
                             location_mapper = {'row': _('v daném řádku'),
                                                'col': _('v daném sloupci'),
                                                'sector': _('v daném sektoru'),
+                                               'hypersudoku': _('v daném sektoru hypersudoku'),
                                                'diagonal_a': _('na dané diagonále'),
                                                'diagonal_b': _('na dané diagonále'),
                                                'center': _('mezi středy čtverců')
@@ -857,6 +873,7 @@ class StrategyApplier:
                             'col': _('v jednom sloupci'),
                             'row': _('v jednom řádku'),
                             'sector': _('v jednom sektoru'),
+                            'hypersudoku': _('v jednom sektoru hypersudoku'),
                             'diagonal_a': _('na jedné diagonále'),
                             'diagonal_b': _('na jedné diagonále'),
                             'center': _('ve středech čtverců')
@@ -907,6 +924,7 @@ class StrategyApplier:
                     location_mapper = {'row': _('v daném řádku'),
                                        'col': _('v daném sloupci'),
                                        'sector': _('v daném sektoru'),
+                                       'hypersudoku': _('v daném sektoru hypersudoku'),
                                        'diagonal_a': _('na dané diagonále'),
                                        'diagonal_b': _('na dané diagonále'),
                                        'center': _('ve středech čtverců')
@@ -940,6 +958,7 @@ class StrategyApplier:
                             'row': _('v řádku'),
                             'col': _('v sloupci'),
                             'sector': _('v sektoru'),
+                            'hypersudoku': _('v sektoru hypersudoku'),
                             'diagonal_a': _('na diagonále'),
                             'diagonal_b': _('na diagonále'),
                             'center': _('v středech čtverců')
@@ -948,6 +967,7 @@ class StrategyApplier:
                             'row': _('v stejném řádku'),
                             'col': _('v stejném sloupci'),
                             'sector': _('v stejném sektoru'),
+                            'hypersudoku': _('v stejném sektoru hypersudoku'),
                             'diagonal_a': _('na stejné diagonále'),
                             'diagonal_b': _('na stejné diagonále'),
                             'center': _('v středech čtverců')
@@ -956,6 +976,7 @@ class StrategyApplier:
                             'row': _('v řádku'),
                             'col': _('v sloupci'),
                             'sector': _('v sektoru'),
+                            'hypersudoku': _('v sektoru hypersudoku'),
                             'diagonal_a': _('na diagonále'),
                             'diagonal_b': _('na diagonále'),
                             'center': _('v středech čtverců')
@@ -991,6 +1012,10 @@ class StrategyApplier:
             block_ids = self.__diagonal_b_ids
         elif block_type == 'center':
             block_ids = self.__center_ids
+        elif block_type == 'hypersudoku':
+            for i in range(4):
+                if one_candidate_occurence in self.__hyper_ids[i]:
+                    block_ids = self.__hyper_ids[i]
 
         for cell_id in block_ids:
             if cell_id in candidate_occurence_info_dict['cell_ids']:
