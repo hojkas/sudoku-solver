@@ -37,6 +37,20 @@ class SudokuBoard:
             print('|')
         print(divider)
 
+    # tODO only test
+    def print_full_4(self):
+        divider = '#-----#-----#'
+        for x in range(self.max_sudoku_number):
+            if x % 2 == 0:
+                print(divider)
+            for y in range(self.max_sudoku_number):
+                if y % 2 == 0:
+                    print('| ', end='')
+                self.cells[x * self.max_sudoku_number + y].print_solved_cell()
+                print(' ', end='')
+            print('|')
+        print(divider)
+
     # TODO only test function
     def print_all_cells(self):
         for i in range(self.max_sudoku_number * self.max_sudoku_number):

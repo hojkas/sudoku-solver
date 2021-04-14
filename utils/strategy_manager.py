@@ -181,7 +181,7 @@ class StrategyApplier:
         self.__diagonal_a_ids = []
         self.__diagonal_b_ids = []
         self.__center_ids = []
-        self.__hyper_ids = []
+        self.__hyper_ids = [[], [], [], []]
         self.__dont_solve = False
 
         self.__cell_id_mapping = {}
