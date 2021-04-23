@@ -351,3 +351,41 @@ function load_sudoku_from_list(sudoku) {
         }
     }
 }
+
+function create_chain_line(from_cell, from_note, to_cell, to_note) {
+    let from_ref = $('#note' + from_cell + '-' + from_note);
+    let to_ref = $('#note' + to_cell + '-' + to_note);
+    let from_pos = from_ref.offset();
+    let to_pos = to_ref.offset();
+    let x1 = from_pos.left + from_ref.width()/2;
+    let y1 = from_pos.top + from_ref.height()/2;
+    let x2 = to_pos.left + to_ref.width()/2;
+    let y2 = to_pos.top + to_ref.height()/2;
+    create_line(x1, y1, x2, y2, custom_highlight_color_mapping['green']);
+}
+
+// function from user Mottie on Stack Overflow posted on 30 Nov 2015
+// (https://stackoverflow.com/questions/33988943/trying-to-use-jquery-to-draw-lines-over-table-data)
+function create_line(x1, y1, x2, y2, color)
+{
+    let length = Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) ),
+		angle = Math.atan2( y2 - y1, x2 - x1 ) * 180 / Math.PI;
+	return $( '<div>' )
+		.appendTo( $('#sudoku-wrapper') )
+        .addClass('chain-line')
+		.css({
+			position : 'absolute',
+            'background-color': color,
+			transform : 'rotate(' + angle + 'deg)'
+		})
+		.width( length )
+        .height ( 2 )
+		.offset({
+			left : x1,
+			top : y1
+		});
+}
+
+function remove_chain_lines() {
+    $('.chain-line').remove();
+}

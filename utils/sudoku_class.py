@@ -5,6 +5,12 @@ class SudokuBoard:
         for i in range(max_sudoku_number * max_sudoku_number):
             self.cells.append(SudokuCell(i, max_sudoku_number))
 
+    def copy(self):
+        new = SudokuBoard(self.max_sudoku_number)
+        for i in range(self.max_sudoku_number * self.max_sudoku_number):
+            new.cells[i] = self.cells[i].copy()
+        return new
+
     def fill_candidates_in_all_not_solved(self):
         for i in range(self.max_sudoku_number * self.max_sudoku_number):
             if not self.cells[i].is_solved():
@@ -22,6 +28,14 @@ class SudokuBoard:
                 if len(self.cells[i].notes) == 0:
                     return True
         return False
+
+    def clear_cell(self, cell_id):
+        self.cells[cell_id].notes = [x for x in range(1, self.max_sudoku_number+1)]
+        self.cells[cell_id].solved = None
+
+    def fill_cell(self, cell_id, number):
+        self.cells[cell_id].notes = []
+        self.cells[cell_id].solved = number
 
     # TODO only test function
     def print_full_sudoku(self):
@@ -63,6 +77,12 @@ class SudokuCell:
         self.notes = []
         self.max_sudoku_number = 9
         self.cell_id = cell_id
+
+    def copy(self):
+        new = SudokuCell(self.cell_id, self.max_sudoku_number)
+        new.solved = self.solved
+        new.notes = self.notes.copy()
+        return new
 
     def fill_in_solved(self, num):
         self.solved = num

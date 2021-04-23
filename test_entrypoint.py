@@ -5,7 +5,7 @@ from utils.generator import *
 
 import time
 
-generator = Generator(9, 'diagonal',
+generator = Generator(9, 'classic',
                       sector_ids=[
                           [0, 1, 2, 3, 4, 5, 6, 7, 8],
                           [9, 10, 11, 12, 13, 14, 15, 16, 17],
@@ -19,9 +19,14 @@ generator = Generator(9, 'diagonal',
 start_time = time.time()
 
 sudoku = generator.generate()
+for i in [30, 31, 32, 39, 40, 41, 48, 49, 50, 4, 13, 22, 58, 67, 76, 36, 37, 38, 42, 43, 44]:
+    sudoku.clear_cell(i)
+generator.create_sudoku(sudoku)
 
 end_time = time.time()
 
 sudoku.print_full_sudoku()
 print('TIME:', end_time - start_time)
+
+print(generator.is_solvable_by_logic(sudoku))
 

@@ -240,3 +240,7 @@
     height: 300px;
     zoom: 0.5;
 }
+
+.chain-line {
+    opacity: 0.5;
+}

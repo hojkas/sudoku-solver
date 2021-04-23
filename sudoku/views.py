@@ -12,7 +12,7 @@ from utils.strategy_manager import StrategyApplier
 from utils.sudoku_convertor import convert_js_json_to_sudoku_board
 
 # Variable that allows showing of extra controls such as custom highlights for
-developers_tools = False
+developers_tools = True
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {

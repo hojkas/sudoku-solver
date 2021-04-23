@@ -488,6 +488,10 @@ class StrategyApplier:
 
         return blocks
 
+    # BRUTE FORCE ENTRY POINT
+    def check_solvability(self):
+        pass  # TODO
+
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # if not supported, return immediately
@@ -496,64 +500,103 @@ class StrategyApplier:
 
         # check if sudoku is already solved
         if sudoku.is_fully_solved():
-            self.__report_json['success'] = False
-            self.__report_json['text'] = _('Sudoku už je vyřešené.')
-            return self.__report_json
+            if self.__collect_report:
+                self.__report_json['success'] = False
+                self.__report_json['text'] = _('Sudoku už je vyřešené.')
+                return self.__report_json
+            else:
+                return False
 
         # check if sudoku isn't obviously wrong
         collisions = self.has_obvious_mistakes(sudoku)
         if collisions is not None:
-            self.__report_json['success'] = False
-            self.__report_json['text'] = _('V sudoku se nachází vyplněná číslice v přímé kolizi. '
-                                           'Sudoku není vyřešitelné. Kolize na pozicích: ' + collisions)
-            return self.__report_json
+            if self.__collect_report:
+                self.__report_json['success'] = False
+                self.__report_json['text'] = _('V sudoku se nachází vyplněná číslice v přímé kolizi. '
+                                               'Sudoku není vyřešitelné. Kolize na pozicích: ' + collisions)
+                return self.__report_json
+            else:
+                return False
 
         # check if sudoku has truly empty cells, thus unsolvable
         if sudoku.has_unsolvable_cell():
-            self.__report_json['success'] = False
-            self.__report_json['text'] = _('Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
-                                           'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
-                                           'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
-                                           'políček všechna možná kandidátní čísla a zkusit najít krok znovu.')
-            return self.__report_json
+            if self.__collect_report:
+                self.__report_json['success'] = False
+                self.__report_json['text'] = _('Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
+                                               'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
+                                               'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
+                                               'políček všechna možná kandidátní čísla a zkusit najít krok znovu.')
+                return self.__report_json
+            else:
+                return False
 
         if self.remove_all_collisions(sudoku):
-            return self.__report_json
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
 
         if self.naked_single(sudoku):
-            return self.__report_json
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
 
         if self.hidden_single(sudoku):
-            return self.__report_json
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
 
         if self.naked_pair(sudoku):
-            return self.__report_json
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
 
         if self.__max_sudoku_number == 4:
-            # sudoku 4x4 doesn't benefit from more complex strategies, thus ending here
+            if self.__collect_report:
+                # sudoku 4x4 doesn't benefit from more complex strategies, thus ending here
+                self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
+                                               'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
+                                               'strategii, která by vedla k řešení.')
+                self.__report_json['success'] = False
+                return self.__report_json
+            else:
+                return False
+
+        if self.hidden_pair(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.naked_triple(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.hidden_triple(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.intersection_removal(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.__collect_report:
             self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
                                            'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
                                            'strategii, která by vedla k řešení.')
             self.__report_json['success'] = False
             return self.__report_json
-
-        if self.hidden_pair(sudoku):
-            return self.__report_json
-
-        if self.naked_triple(sudoku):
-            return self.__report_json
-
-        if self.hidden_triple(sudoku):
-            return self.__report_json
-
-        if self.intersection_removal(sudoku):
-            return self.__report_json
-
-        self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
-                                       'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
-                                       'strategii, která by vedla k řešení.')
-        self.__report_json['success'] = False
-        return self.__report_json
+        else:
+            return False
 
     # REMOVE COLLISIONS - DONE
     def remove_all_collisions(self, sudoku):

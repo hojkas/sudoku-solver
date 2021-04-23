@@ -20,7 +20,7 @@ class Generator:
                                  54, 55, 57, 58, 59, 61, 62, 63, 65, 66, 67, 68, 69, 71,
                                  73, 74, 75, 76, 77, 78, 79]
         else:
-            self.__cell_order = [x for x in range(max_sudoku_number*max_sudoku_number)]
+            self.__cell_order = [x for x in range(max_sudoku_number * max_sudoku_number)]
 
     def generate(self, difficulty='true_random'):
         sudoku = SudokuBoard(self.__max_sudoku_number)
@@ -56,6 +56,38 @@ class Generator:
             sudoku.cells[self.__cell_order[cell_order_id]].solved = None
 
         return found_solution
+
+    def create_sudoku(self, full_sudoku):
+        max_cell_id = self.__max_sudoku_number * self.__max_sudoku_number - 1
+        removed_numbers = []
+
+        while True:
+            to_delete = random.randrange(0, max_cell_id + 1)
+            # remove symetric numbers
+            if full_sudoku.cells[to_delete].is_solved():
+                removed_numbers.append((to_delete, full_sudoku.cells[to_delete].solved))
+                removed_numbers.append((max_cell_id - to_delete, full_sudoku.cells[max_cell_id - to_delete].solved))
+                full_sudoku.clear_cell(to_delete)
+                full_sudoku.clear_cell(max_cell_id - to_delete)
+            # test solvability
+            if not self.is_solvable_by_logic(full_sudoku):
+                # not solvable, needs to return two numbers and end
+                cell_to_fix1, num_to_fix1 = removed_numbers[-1]
+                cell_to_fix2, num_to_fix2 = removed_numbers[-2]
+                full_sudoku.fill_cell(cell_to_fix1, num_to_fix1)
+                full_sudoku.fill_cell(cell_to_fix2, num_to_fix2)
+                break
+
+    def is_solvable_by_logic(self, sudoku):
+        sudoku_copy = sudoku.copy()
+        while True:
+            if self.is_solved(sudoku_copy):
+                return True
+            res = self.__strategy_applier.find_next_step(sudoku_copy)
+            if not res:  # res False == no step could be applied
+                break
+
+        return False
 
     def is_solved(self, sudoku):
         return sudoku.is_fully_solved()
