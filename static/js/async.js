@@ -36,7 +36,14 @@ async function count_next_step() {
             window.number_to_be_solved = response_json['solve_number'];
             mark_successful_strategy(response_json['strategy_applied']);
             apply_highlight_from_list_of_dict(response_json['highlight']);
-            change_strategy_description(response_json['text']);
+            try {
+                let text = '[' + $('#' + response_json['strategy_applied']).text() + '] ' + response_json['text'];
+                change_strategy_description(text);
+            }
+            catch {
+                let text = response_json['text'];
+                change_strategy_description(text);
+            }
         }
         else {
             // strategy wasn't found!

@@ -134,19 +134,7 @@
                             <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0 }}"
                                id="icon-before-{{ strategy_ref }}"></i>
                             <a class="custom-list-item" href="/guides/{{ strategy_ref }}"
-                               target="_blank">{{ strategy_name }}</a>
-                        </div>
-                    {% endfor %}
-                <div class="custom-list-heading">{% trans 'Středně těžké strategie' %}</div>
-                    {% if not medium_strategies %}
-                        {% trans 'V této kategorii nemá sudoku žádné strategie.' %}
-                    {% endif %}
-                    {% for strategy_ref, strategy_name in medium_strategies.items %}
-                        <div>
-                            <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0|add_prev_strategies:easy_strategies }}"
-                               id="icon-before-{{ strategy_ref }}"></i>
-                            <a class="custom-list-item" href="/guides/{{ strategy_ref }}"
-                               target="_blank">{{ strategy_name }}</a>
+                               target="_blank" id="{{ strategy_ref }}">{{ strategy_name }}</a>
                         </div>
                     {% endfor %}
                 <div class="custom-list-heading">{% trans 'Pokročilé strategie' %}</div>
@@ -155,13 +143,12 @@
                     {% endif %}
                     {% for strategy_ref, strategy_name in advanced_strategies.items %}
                         <div>
-                            <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0|add_prev_strategies:easy_strategies|add_prev_strategies:medium_strategies }}"
+                            <i class="fas fa-minus strategy_list_icon strategy_list_icon_{{ forloop.counter0|add_prev_strategies:easy_strategies }}"
                                id="icon-before-{{ strategy_ref }}"></i>
                             <a class="custom-list-item" href="/guides/{{ strategy_ref }}"
-                               target="_blank">{{ strategy_name }}</a>
+                               target="_blank" id="{{ strategy_ref }}">{{ strategy_name }}</a>
                         </div>
                     {% endfor %}
-                <div style="margin-top: 1rem;">* {% trans 'Strategie specifická pro tento druh sudoku.' %}</div>
             </div>
 
             <button onclick="load_test_sudoku(0)">Load sudoku (singles)</button>

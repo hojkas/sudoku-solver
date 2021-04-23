@@ -21,18 +21,19 @@ easy_strategies = {
     'hidden_single': 'Hidden Single',
     'naked_pair': 'Naked Pair',
     'hidden_pair': 'Hidden Pair',
-    'naked_triple': 'Naked Triple/Quad',
-    'hidden_triple': 'Hidden Triple/Quad'
+    'naked_triple': 'Naked Triple+',
+    'hidden_triple': 'Hidden Triple+'
 }
-# TODO pro sudoku 16x16 musí jít hidden/naked až po 5-6-7-8čky ---- add in calling template
-medium_strategies = {
-    'intersection_removal': _('Intersection Removal')  # TODO not final name
-}
-advanced_strategies = {
 
+advanced_strategies = {
+    'intersection_removal': 'Intersection Removal',
+    'x-wing': 'X-Wing',
+    'y-wing': 'Y-Wing',
+    'swordfish': 'Swordfish',
+    'xy-chain': 'XY-Chain'
 }
+
 strategies_context = {'easy_strategies': easy_strategies,
-                      'medium_strategies': medium_strategies,
                       'advanced_strategies': advanced_strategies,
                       'developers_tools': developers_tools}
 
@@ -204,7 +205,6 @@ def solver(request, name):
         }
     else:
         custom_context['easy_strategies'] = easy_strategies
-        custom_context['medium_strategies'] = medium_strategies
         custom_context['advanced_strategies'] = advanced_strategies
 
     if name == 'jigsaw':

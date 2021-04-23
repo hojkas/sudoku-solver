@@ -62,7 +62,7 @@ def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
             res.append(value)
     return res
 
-def naked_triple_check_for_groups(cells_info_list):
+def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
     res = []
     len_of_list = len(cells_info_list)
     if len_of_list < 2:
@@ -99,9 +99,61 @@ def naked_triple_check_for_groups(cells_info_list):
                                          cells_info_list[k]['cell_id']],
                             'notes': list(group)
                         })
+
+    # searching for 5-8 for 16x16 sudoku
+    if is_hexa_sudoku:
+        for n1 in range(0, len_of_list):
+            for n2 in range(n1 + 1, len_of_list):
+                for n3 in range(n2 + 1, len_of_list):
+                    for n4 in range(n3 + 1, len_of_list):
+                        for n5 in range(n4 + 1, len_of_list):
+                            # check for five group
+                            nums = [cells_info_list[i]['notes'] for i in [n1, n2, n3, n4, n5]]
+                            group = is_group_of_same_numbers(nums)
+                            if group is not None:
+                                cell_ids = [cells_info_list[i]['cell_id'] for i in [n1, n2, n3, n4, n5]]
+                                res.append({
+                                    'cell_ids': cell_ids,
+                                    'notes': list(group)
+                                })
+                            # continue with 6th item
+                            for n6 in range(n5 + 1, len_of_list):
+                                #check for six group
+                                nums = [cells_info_list[i]['notes'] for i in [n1, n2, n3, n4, n5, n6]]
+                                group = is_group_of_same_numbers(nums)
+                                if group is not None:
+                                    cell_ids = [cells_info_list[i]['cell_id'] for i in [n1, n2, n3, n4, n5, n6]]
+                                    res.append({
+                                        'cell_ids': cell_ids,
+                                        'notes': list(group)
+                                    })
+                                # continue with 7th item
+                                for n7 in range(n6 + 1, len_of_list):
+                                    # check for seven group
+                                    nums = [cells_info_list[i]['notes'] for i in [n1, n2, n3, n4, n5, n6, n7]]
+                                    group = is_group_of_same_numbers(nums)
+                                    if group is not None:
+                                        cell_ids = [cells_info_list[i]['cell_id'] for i in [n1, n2, n3, n4, n5, n6, n7]]
+                                        res.append({
+                                            'cell_ids': cell_ids,
+                                            'notes': list(group)
+                                        })
+                                    # continue with 8th item
+                                    for n8 in range(n7 + 1, len_of_list):
+                                        # check for eight group
+                                        nums = [cells_info_list[i]['notes'] for i in [n1, n2, n3, n4, n5, n6, n7, n8]]
+                                        group = is_group_of_same_numbers(nums)
+                                        if group is not None:
+                                            cell_ids = [cells_info_list[i]['cell_id']
+                                                        for i in [n1, n2, n3, n4, n5, n6, n7, n8]]
+                                            res.append({
+                                                'cell_ids': cell_ids,
+                                                'notes': list(group)
+                                            })
+
     return res
 
-def hidden_triple_check_for_groups(candidate_info_list):
+def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
     """Finds groups of 3/4 hidden numbers in given info list.
     @param candidate_info_list List created by function collect_candidate_occurences_info_list.
     @return List of dictionary for each group found in format {"cell_ids": [list of group cell ids],
@@ -153,6 +205,47 @@ def hidden_triple_check_for_groups(candidate_info_list):
                                 candidate_info_list[k]['num']
                             ]
                         })
+
+    # searching for 5-8 for 16x16 sudoku
+    if is_hexa_sudoku:
+        for n1 in range(0, len_of_list):
+            for n2 in range(n1 + 1, len_of_list):
+                for n3 in range(n2 + 1, len_of_list):
+                    for n4 in range(n3 + 1, len_of_list):
+                        for n5 in range(n4 + 1, len_of_list):
+                            # check for five group
+                            cell_ids = [candidate_info_list[i]['cell_ids'] for i in [n1, n2, n3, n4, n5]]
+                            group = is_group_of_same_numbers(cell_ids)
+                            if group is not None:
+                                nums = [candidate_info_list[i]['num'] for i in [n1, n2, n3, n4, n5]]
+                                res.append({
+                                    'cell_ids': list(group),
+                                    'notes': nums
+                                })
+                            # continue with 6th item
+                            for n6 in range(n5 + 1, len_of_list):
+                                # check for six group
+                                cell_ids = [candidate_info_list[i]['cell_ids'] for i in [n1, n2, n3, n4, n5, n6]]
+                                group = is_group_of_same_numbers(cell_ids)
+                                if group is not None:
+                                    nums = [candidate_info_list[i]['num'] for i in [n1, n2, n3, n4, n5, n6]]
+                                    res.append({
+                                        'cell_ids': list(group),
+                                        'notes': nums
+                                    })
+                                # continue with 7th item
+                                for n7 in range(n6 + 1, len_of_list):
+                                    # check for seven group
+                                    cell_ids = [candidate_info_list[i]['cell_ids'] for i in [n1, n2, n3, n4, n5, n6, n7]]
+                                    group = is_group_of_same_numbers(cell_ids)
+                                    if group is not None:
+                                        nums = [candidate_info_list[i]['num'] for i in
+                                                [n1, n2, n3, n4, n5, n6, n7]]
+                                        res.append({
+                                            'cell_ids': list(group),
+                                            'notes': nums
+                                        })
+
     return res
 
 def get_bold_num_list(num_list):
@@ -876,8 +969,12 @@ class StrategyApplier:
         return self.__apply_for_each(sudoku, self.naked_triple_on_one_block, 'block')
 
     def naked_triple_on_one_block(self, sudoku, ids_chunk, location):
-        cells_info_list = collect_cell_candidates_info_list(sudoku, ids_chunk, limit=4)
-        found_groups = naked_triple_check_for_groups(cells_info_list)
+        if self.__max_sudoku_number == 16:
+            cells_info_list = collect_cell_candidates_info_list(sudoku, ids_chunk, limit=8)
+            found_groups = naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=True)
+        else:
+            cells_info_list = collect_cell_candidates_info_list(sudoku, ids_chunk, limit=4)
+            found_groups = naked_triple_check_for_groups(cells_info_list)
         if len(found_groups) != 0:
             # one or multiple groups were found, need to be checked if they have any effect
             for group in found_groups:
@@ -921,11 +1018,12 @@ class StrategyApplier:
                             'diagonal_b': _('na jedné diagonále'),
                             'center': _('ve středech čtverců')
                         }
-                        self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází pouze ' +
-                                                       str(len(group['notes'])) + ' stejná kandidátní čísla ' +
-                                                       num_list_str + ' (žlutě). Protože leží všechny tyto buňky '
-                                                       + location_mapper[location] + ', je možno tato ' +
-                                                       'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
+                        self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází '
+                                                     'stejná kandidátní čísla ' +
+                                                     num_list_str + ' (žlutě) a jejich počet je roven '
+                                                     'počtu buněk, které zabírají. Protože leží všechny tyto buňky '
+                                                     + location_mapper[location] + ', je možno tato ' +
+                                                     'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
                     return True
         return False
 
@@ -934,8 +1032,12 @@ class StrategyApplier:
         return self.__apply_for_each(sudoku, self.hidden_triple_on_one_block, 'block')
 
     def hidden_triple_on_one_block(self, sudoku, ids_chunk, location):
-        info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=4)
-        found_groups = hidden_triple_check_for_groups(info_list)
+        if self.__max_sudoku_number == 16:
+            info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=7)
+            found_groups = hidden_triple_check_for_groups(info_list, is_hexa_sudoku=True)
+        else:
+            info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=4)
+            found_groups = hidden_triple_check_for_groups(info_list)
         for group_d in found_groups:
             # have found hidden group of 3/4, now has to check if the group makes any change
             changed_something = False
