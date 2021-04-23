@@ -95,6 +95,24 @@ async function check_solvability() {
     });
 }
 
+async function get_brute_force_solution() {
+    let sudoku_json = collect_sudoku_json(); //already stringified
+    $.ajax({
+        url: '/solver/get_brute_force_solution',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": csrf_token
+        },
+        data: {
+            json: sudoku_json
+        },
+        cache: false
+    }).done(function(response_string) {
+        let response_json = JSON.parse(response_string);
+        load_sudoku_from_list(response_json);
+    });
+}
+
 async function submit_jigsaw_shape(sector_ids, cell_sectors) {
     $.ajax({
         url: '/solver/edit_jigsaw_shape',

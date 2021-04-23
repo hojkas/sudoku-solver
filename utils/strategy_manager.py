@@ -607,8 +607,27 @@ class StrategyApplier:
         return blocks
 
     # ENTRY POINT BRUTE FORCE
-    def solve_by_backtracking(self, sudoku):
-        pass
+    def solve_by_backtracking(self, sudoku, follow_notes=False):
+        non_solved_cells = []
+        for i in range(0, self.__cell_id_limit):
+            if not sudoku.cells[i].is_solved():
+                non_solved_cells.append(i)
+
+    def solve_next(self, sudoku, cell_id, non_solved_cells, follow_notes):
+        if follow_notes:
+            options = sudoku.cells[cell_id].notes.copy()
+        else:
+            options = self.get_options()
+
+        found_solution = False
+
+        for val in options:
+            sudoku.cells[cell_id].solved = val
+
+
+
+    def get_options(self):
+        return [x + 1 for x in range(self.__max_sudoku_number)]
 
     # ENTRY POINT
     def find_next_step(self, sudoku):

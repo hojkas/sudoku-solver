@@ -238,4 +238,8 @@ $(document).ready(function()
     $('#check-solvability').on('click', function() {
         check_solvability();
     });
+
+    $('#get_bruce_force_solution').on('click', function() {
+       get_brute_force_solution();
+    });
 });

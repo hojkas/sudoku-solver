@@ -25,6 +25,7 @@ urlpatterns = [
     path('solver/get_next_step', views.get_next_step, name='get next step'),
     path('solver/generate_sudoku', views.generate_sudoku, name='generate sudoku'),
     path('solver/check_solvability', views.check_solvability, name='check solvability'),
+    path('solver/get_brute_force_solution', views.get_brute_force_solution, name='get brute force solution'),
     path('solver/edit_jigsaw_shape', views.edit_jigsaw_shape, name='edit jigsaw shape'),
     path('solver/<name>', views.solver, name='solver'),
     path('guides/', views.guides_index, name='guide index'),

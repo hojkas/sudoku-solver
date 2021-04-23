@@ -306,6 +306,10 @@ def check_solvability(request):
 
     return HttpResponse(json.dumps(result_dict))
 
+def get_brute_force_solution(request):
+
+    return HttpResponse(json.dumps([x for x in range(81)]))
+
 # ====================================
 #           GUIDES VIEWS
 # ====================================
