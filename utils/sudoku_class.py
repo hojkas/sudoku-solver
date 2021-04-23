@@ -11,6 +11,13 @@ class SudokuBoard:
             new.cells[i] = self.cells[i].copy()
         return new
 
+    def restore_notes_copy(self):
+        new = SudokuBoard(self.max_sudoku_number)
+        for i in range(self.max_sudoku_number * self.max_sudoku_number):
+            if self.cells[i].solved is not None:
+                new.cells[i] = self.cells[i].copy()
+        return new
+
     def fill_candidates_in_all_not_solved(self):
         for i in range(self.max_sudoku_number * self.max_sudoku_number):
             if not self.cells[i].is_solved():

@@ -581,10 +581,6 @@ class StrategyApplier:
 
         return blocks
 
-    # BRUTE FORCE ENTRY POINT
-    def check_solvability(self):
-        pass  # TODO
-
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # if not supported, return immediately
@@ -677,6 +673,30 @@ class StrategyApplier:
                 return True
 
         if self.intersection_removal(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.x_wing(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.y_wing(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.swordfish(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                return True
+
+        if self.xy_chain(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
@@ -1176,4 +1196,21 @@ class StrategyApplier:
                 changed_something = True
 
         return changed_something
+
+    # X-WING TODO
+    def x_wing(self, sudoku):
+        return False
+
+    # Y-WING TODO
+    def y_wing(self, sudoku):
+        return False
+
+    # SWORDFISH TODO
+    def swordfish(self, sudoku):
+        return False
+
+    # XY-CHAIN TODO
+    def xy_chain(self, sudoku):
+        return False
+
 

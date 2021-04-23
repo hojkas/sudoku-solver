@@ -238,12 +238,4 @@ $(document).ready(function()
     $('#check-solvability').on('click', function() {
         check_solvability();
     });
-
-    $('#check-difficulty').on('click', function() {
-        check_difficulty();
-    });
-
-    $('#get-hint').on('click', function() {
-        get_hint();
-    });
 });

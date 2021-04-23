@@ -33,6 +33,21 @@ advanced_strategies = {
     'xy-chain': 'XY-Chain'
 }
 
+strategy_difficulty_order = {
+    'remove_collisions': 0,
+    'naked_single': 1,
+    'hidden_single': 2,
+    'naked_pair': 3,
+    'hidden_pair': 4,
+    'naked_triple': 5,
+    'hidden_triple': 6,
+    'intersection_removal': 7,
+    'x-wing': 8,
+    'y-wing': 9,
+    'swordfish': 10,
+    'xy-chain': 11
+}
+
 strategies_context = {'easy_strategies': easy_strategies,
                       'advanced_strategies': advanced_strategies,
                       'developers_tools': developers_tools}
@@ -262,17 +277,42 @@ def generate_sudoku(request):
     result_list = [1, 2, 3, None, None, None, None, None, None, 1, 2, 3, None, None, None, None]
     return HttpResponse(json.dumps({'success': True, 'sudoku': result_list}))
 
-def get_hint(request):
-    # TODO
-    return HttpResponse('HI from hint')
-
 def check_solvability(request):
-    # TODO make non candidate and keep canddiate version
-    return HttpResponse('HI from solvability')
+    sudoku_json = json.loads(request.POST.get('json'))
+    sudoku_for_part1 = convert_js_json_to_sudoku_board(sudoku_json)
 
-def check_difficulty(request):
-    # TODO
-    return HttpResponse('HI from difficulty')
+    # test if solved to avoid needless proccessing
+    if sudoku_for_part1.is_fully_solved():
+        return HttpResponse(json.dumps({'part1_result': _('Sudoku již vyřešeno, není co ověřovat.')}))
+
+    sudoku_for_part2 = sudoku_for_part1.copy()
+    sudoku_for_part3 = sudoku_for_part1.restore_notes_copy()
+    sudoku_type_name = request.session.get('sudoku_type')
+
+    result_dict = {}
+
+    # PART 1 test with current notes by logic
+    if sudoku_type_name == "jigsaw":
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           sector_ids=request.session.get('jigsaw_sectors'), collect_report=False)
+    else:
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           collect_report=False)
+
+    hardest_strategy = None
+    while True:
+        if sudoku_for_part1.is_fully_solved():
+            result_dict['part1_result'] = _('Logický postup dané sudoku dokázal vyřešit. Nejtěžší použitá strategie'
+                                            ' (podle pořadí uváděném na této stránce) byla "')
+            break
+        if not strategy_applier.find_next_step(sudoku_for_part1):
+            result_dict['part1_result'] = _('Logický postup na zadaném sudoku selhal.')
+            break
+
+    # PART 2 if not successful, test by brute force with current notes
+    # if not successful, test by brute force with restored notes
+    # TODO make non candidate and keep canddiate version
+    return HttpResponse(json.dumps(result_dict))
 
 # ====================================
 #           GUIDES VIEWS
