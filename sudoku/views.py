@@ -33,21 +33,6 @@ advanced_strategies = {
     'xy-chain': 'XY-Chain'
 }
 
-strategy_difficulty_order = {
-    'remove_collisions': 0,
-    'naked_single': 1,
-    'hidden_single': 2,
-    'naked_pair': 3,
-    'hidden_pair': 4,
-    'naked_triple': 5,
-    'hidden_triple': 6,
-    'intersection_removal': 7,
-    'x-wing': 8,
-    'y-wing': 9,
-    'swordfish': 10,
-    'xy-chain': 11
-}
-
 strategies_context = {'easy_strategies': easy_strategies,
                       'advanced_strategies': advanced_strategies,
                       'developers_tools': developers_tools}
@@ -298,20 +283,27 @@ def check_solvability(request):
     else:
         strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
                                            collect_report=False)
-
-    hardest_strategy = None
+    result_dict['part1_success'] = False
     while True:
         if sudoku_for_part1.is_fully_solved():
+            hardest_strategy = strategy_applier.get_hardest_strategy_applied()
+            if hardest_strategy in easy_strategies:
+                hardest_strategy = easy_strategies[hardest_strategy]
+            elif hardest_strategy in advanced_strategies:
+                hardest_strategy = advanced_strategies[hardest_strategy]
             result_dict['part1_result'] = _('Logický postup dané sudoku dokázal vyřešit. Nejtěžší použitá strategie'
-                                            ' (podle pořadí uváděném na této stránce) byla "')
+                                            ' (podle pořadí uváděném na této stránce) byla "' + hardest_strategy + '".')
+            result_dict['part1_success'] = True
             break
         if not strategy_applier.find_next_step(sudoku_for_part1):
             result_dict['part1_result'] = _('Logický postup na zadaném sudoku selhal.')
             break
 
     # PART 2 if not successful, test by brute force with current notes
-    # if not successful, test by brute force with restored notes
-    # TODO make non candidate and keep canddiate version
+    if not result_dict['part1_success']:
+        pass
+    # PART 3 if not successful, test by brute force with restored notes
+
     return HttpResponse(json.dumps(result_dict))
 
 # ====================================

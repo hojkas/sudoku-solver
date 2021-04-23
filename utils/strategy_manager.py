@@ -277,6 +277,22 @@ class StrategyApplier:
         self.__hyper_ids = [[], [], [], []]
         self.__dont_solve = False
 
+        self.__strategy_difficulty_order = {
+            'remove_collisions': 0,
+            'naked_single': 1,
+            'hidden_single': 2,
+            'naked_pair': 3,
+            'hidden_pair': 4,
+            'naked_triple': 5,
+            'hidden_triple': 6,
+            'intersection_removal': 7,
+            'x-wing': 8,
+            'y-wing': 9,
+            'swordfish': 10,
+            'xy-chain': 11
+        }
+        self.__hardest_strategy = None
+
         self.__cell_id_mapping = {}
         self.__collect_report = collect_report
         self.__report_json = {
@@ -432,6 +448,15 @@ class StrategyApplier:
             res += self.get_bold_cell_pos_str(cell_id)
         return res
 
+    def get_hardest_strategy_applied(self):
+        return self.__hardest_strategy
+
+    def add_strategy_applied(self, strategy_name):
+        if self.__hardest_strategy is None:
+            self.__hardest_strategy = strategy_name
+        elif self.__strategy_difficulty_order[strategy_name] > self.__strategy_difficulty_order[self.__hardest_strategy]:
+            self.__hardest_strategy = strategy_name
+
     # HELP function for functions
     def __apply_for_each(self, sudoku, func_name, name_of_unit, **kwargs):
         if name_of_unit == 'block':
@@ -581,6 +606,10 @@ class StrategyApplier:
 
         return blocks
 
+    # ENTRY POINT BRUTE FORCE
+    def solve_by_backtracking(self, sudoku):
+        pass
+
     # ENTRY POINT
     def find_next_step(self, sudoku):
         # if not supported, return immediately
@@ -623,24 +652,28 @@ class StrategyApplier:
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('remove_collisions')
                 return True
 
         if self.naked_single(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('naked_single')
                 return True
 
         if self.hidden_single(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('hidden_single')
                 return True
 
         if self.naked_pair(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('naked_pair')
                 return True
 
         if self.__max_sudoku_number == 4:
@@ -658,48 +691,56 @@ class StrategyApplier:
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('hidden_pair')
                 return True
 
         if self.naked_triple(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('naked_triple')
                 return True
 
         if self.hidden_triple(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('hidden_triple')
                 return True
 
         if self.intersection_removal(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('intersection_removal')
                 return True
 
         if self.x_wing(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('x-wing')
                 return True
 
         if self.y_wing(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('y-wing')
                 return True
 
         if self.swordfish(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('swordfish')
                 return True
 
         if self.xy_chain(sudoku):
             if self.__collect_report:
                 return self.__report_json
             else:
+                self.add_strategy_applied('xy-chain')
                 return True
 
         if self.__collect_report:
