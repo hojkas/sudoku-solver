@@ -352,6 +352,22 @@ function load_sudoku_from_list(sudoku) {
     }
 }
 
+function mark_chains(chain_list) {
+    chain_list.forEach(function(chain) {
+        let from_cell = chain['from_cell'], from_note = chain['from_note'], to_cell = chain['to_cell'],
+            to_note = chain['to_note'];
+        if (from_cell > to_cell) {
+            let temp = from_cell;
+            from_cell = to_cell;
+            to_cell = temp;
+            temp = from_note;
+            from_note = to_note;
+            to_note = temp;
+        }
+        create_chain_line(from_cell, from_note, to_cell, to_note);
+    });
+}
+
 function create_chain_line(from_cell, from_note, to_cell, to_note) {
     let from_ref = $('#note' + from_cell + '-' + from_note);
     let to_ref = $('#note' + to_cell + '-' + to_note);
@@ -361,12 +377,21 @@ function create_chain_line(from_cell, from_note, to_cell, to_note) {
     let y1 = from_pos.top + from_ref.height()/2;
     let x2 = to_pos.left + to_ref.width()/2;
     let y2 = to_pos.top + to_ref.height()/2;
-    create_line(x1, y1, x2, y2, custom_highlight_color_mapping['green']);
+
+    let from_col = from_cell % max_sudoku_number;
+    let to_col = to_cell % max_sudoku_number;
+
+    if(to_col < from_col) {
+        create_line(x1, y1, x2, y2, custom_highlight_color_mapping['green'], x2);
+    }
+    else {
+        create_line(x1, y1, x2, y2, custom_highlight_color_mapping['green'], x1);
+    }
 }
 
 // function from user Mottie on Stack Overflow posted on 30 Nov 2015
 // (https://stackoverflow.com/questions/33988943/trying-to-use-jquery-to-draw-lines-over-table-data)
-function create_line(x1, y1, x2, y2, color)
+function create_line(x1, y1, x2, y2, color, fixed_x1)
 {
     let length = Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) ),
 		angle = Math.atan2( y2 - y1, x2 - x1 ) * 180 / Math.PI;
@@ -379,9 +404,9 @@ function create_line(x1, y1, x2, y2, color)
 			transform : 'rotate(' + angle + 'deg)'
 		})
 		.width( length )
-        .height ( 2 )
+        .height ( 4 )
 		.offset({
-			left : x1,
+			left : fixed_x1,
 			top : y1
 		});
 }

@@ -204,6 +204,7 @@ $(document).ready(function()
         reset_strategy_icons();
         show_default_strategy_description();
         remove_all_custom_highlight();
+        remove_chain_lines();
         $('#next-step-default-button-wrapper').show().siblings('div').hide();
         window.candidates_to_be_deleted = null;
         window.number_to_be_solved = null;
@@ -213,6 +214,7 @@ $(document).ready(function()
         reset_strategy_icons();
         show_default_strategy_description();
         remove_all_custom_highlight();
+        remove_chain_lines();
         $('#next-step-default-button-wrapper').show().siblings('div').hide();
         window.candidates_to_be_deleted = null;
         window.number_to_be_solved = null;

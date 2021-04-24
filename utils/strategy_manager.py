@@ -317,7 +317,8 @@ class StrategyApplier:
             'highlight': [],
             'candidates_to_remove': [],
             'success': None,
-            'solve_number': None
+            'solve_number': None,
+            'chains': []
         }
 
         for x in range(max_sudoku_number):
@@ -448,6 +449,14 @@ class StrategyApplier:
             "cell_id": cell_id,
             "number": number
         }
+
+    def report_add_chain(self, from_cell, from_note, to_cell, to_note):
+        self.__report_json['chains'].append({
+            'from_cell': from_cell,
+            'from_note': from_note,
+            'to_cell': to_cell,
+            'to_note': to_note
+        })
 
     def get_cell_pos_str(self, cell_id):
         res = 'r' + str(int(cell_id / self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
@@ -628,7 +637,7 @@ class StrategyApplier:
         if (cell_id1 % self.__max_sudoku_number) == (cell_id2 % self.__max_sudoku_number):
             return True
         # rows?
-        if int(cell_id1 / self.__max_sudoku_number) == int(cell_id2 % self.__max_sudoku_number):
+        if int(cell_id1 / self.__max_sudoku_number) == int(cell_id2 / self.__max_sudoku_number):
             return True
         # sectors?
         for one_sector_ids in self.__sector_ids:
@@ -1450,8 +1459,68 @@ class StrategyApplier:
     # Y-WING TODO
     def y_wing(self, sudoku):
         chain_map = self.get_chain_mapping(sudoku)
+        already_tested = []
         for chain_id in chain_map.keys():
             possible_chains = self.get_possibly_y_wings_from_cell(sudoku, chain_map, chain_id)
+            for possible_chain in possible_chains:
+                if ((possible_chain['wing_a_id'], possible_chain['wing_b_id'], possible_chain['leftover'])
+                        in already_tested or (possible_chain['wing_b_id'], possible_chain['wing_a_id'],
+                                              possible_chain['leftover']) in already_tested):
+                    continue  # this combo was already tested
+                already_tested.append(((possible_chain['wing_a_id'], possible_chain['wing_b_id'],
+                                        possible_chain['leftover'])))
+
+                changed_something = False
+                for cell_id in range(0, self.__cell_id_limit):
+                    # for each cell in sudoku, check if it "sees" two ends is made
+                    if (cell_id == possible_chain['middle_cell_id'] or cell_id == possible_chain['wing_a_id'] or
+                        cell_id == possible_chain['wing_b_id']):
+                        continue  # skip check for cells that are part of the chain
+                    if sudoku.cells[cell_id].is_solved():
+                        continue  # skip for solved cells
+
+                    # check if cells sees both wings
+                    if (self.cells_in_same_block(cell_id, possible_chain['wing_a_id']) and
+                        self.cells_in_same_block(cell_id, possible_chain['wing_b_id'])):
+                        if possible_chain['leftover'] in sudoku.cells[cell_id].notes:
+                            # candidate can be removed!
+                            changed_something = True
+                            if self.__collect_report:
+                                self.report_add_highlight(cell_id, False, 'red', possible_chain['leftover'])
+                                self.report_add_candidate_to_remove(cell_id, possible_chain['leftover'])
+                            else:
+                                sudoku.cells[cell_id].notes.remove(possible_chain['leftover'])
+
+                if changed_something:
+                    # strategy success, note evertyhting and return True
+                    if self.__collect_report:
+                        self.__report_json['success'] = True
+                        self.__report_json['strategy_applied'] = 'y-wing'
+                        self.report_add_highlight(possible_chain['wing_a_id'], False, 'yellow',
+                                                  possible_chain['leftover'])
+                        self.report_add_highlight(possible_chain['wing_b_id'], False, 'yellow',
+                                                  possible_chain['leftover'])
+                        self.report_add_highlight(possible_chain['wing_a_id'], False, 'green',
+                                                  possible_chain['connection_a'])
+                        self.report_add_highlight(possible_chain['wing_b_id'], False, 'green',
+                                                  possible_chain['connection_b'])
+                        self.report_add_highlight(possible_chain['middle_cell_id'], False, 'green',
+                                                  possible_chain['connection_a'])
+                        self.report_add_highlight(possible_chain['middle_cell_id'], False, 'green',
+                                                  possible_chain['connection_b'])
+                        self.report_add_chain(possible_chain['wing_a_id'], possible_chain['connection_a'],
+                                              possible_chain['middle_cell_id'], possible_chain['connection_a'])
+                        self.report_add_chain(possible_chain['wing_b_id'], possible_chain['connection_b'],
+                                              possible_chain['middle_cell_id'], possible_chain['connection_b'])
+                        self.__report_json['text'] = _('Zeleně je zvýrazněno nalezené Y-Wing. Na jeho koncích se'
+                                                       'nachází <b>' + str(possible_chain['leftover']) + ' </b> '
+                                                       '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
+                                                       'kandidátní číslo' + str(possible_chain['leftover']) + ' ze '
+                                                       'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
+                                                       ' Y-Wing.')
+
+                    return True
+
         return False
 
     def get_chain_mapping(self, sudoku):

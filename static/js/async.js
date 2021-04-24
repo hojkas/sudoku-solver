@@ -39,6 +39,7 @@ async function count_next_step() {
             window.candidates_to_be_deleted = response_json['candidates_to_remove'];
             window.number_to_be_solved = response_json['solve_number'];
             mark_successful_strategy(response_json['strategy_applied']);
+            mark_chains(response_json['chains']);
             apply_highlight_from_list_of_dict(response_json['highlight']);
             try {
                 let text = '[' + $('#' + response_json['strategy_applied']).text() + '] ' + response_json['text'];
