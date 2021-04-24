@@ -88,7 +88,9 @@
                             <i class="fas fa-spinner fa-pulse"></i></div>
                     </button>
                     <button class="simple-round-button" id="check-solvability">
-                        {% trans "Otestovat řešitelnost a obtížnost" %}
+                        <div id="check-solvability-text">{% trans "Otestovat řešitelnost a obtížnost" %}</div>
+                        <div id="check-solvability-loading" style="display: none">
+                            <i class="fas fa-spinner fa-pulse"></i></div>
                     </button>
                 </div>
                 <div>
@@ -115,7 +117,7 @@
             </div>
             <div class="main-block">
                 <i class="fas fa-exclamation-triangle"></i>
-                {% trans "Experimentální funkce pro demonstrační účely, neoptimalizováno" %}
+                {% trans "Experimentální funkce pro demonstrační účely, neoptimalizováno." %}
                 <button class="simple-round-button" id="get-brute-force-solution">
                     <div id="get-brute-force-solution-text">
                     {% trans "Najít řešení pomocí algoritmu backtracking" %}

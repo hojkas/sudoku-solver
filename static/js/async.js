@@ -91,7 +91,10 @@ async function check_solvability() {
         },
         cache: false
     }).done(function(response_string) {
-        alert(response_string);
+        $('#check-solvability-text').show();
+        $('#check-solvability-loading').hide();
+        let response = JSON.parse(response_string);
+        alert(response['result']);
     });
 }
 

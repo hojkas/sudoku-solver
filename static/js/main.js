@@ -236,6 +236,8 @@ $(document).ready(function()
     });
 
     $('#check-solvability').on('click', function() {
+        $('#check-solvability-text').hide();
+        $('#check-solvability-loading').show();
         check_solvability();
     });
 

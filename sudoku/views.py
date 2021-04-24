@@ -268,7 +268,7 @@ def check_solvability(request):
 
     # test if solved to avoid needless proccessing
     if sudoku_for_part1.is_fully_solved():
-        return HttpResponse(json.dumps({'part1_result': _('Sudoku již vyřešeno, není co ověřovat.')}))
+        return HttpResponse(json.dumps({'result': _('Sudoku již vyřešeno, není co ověřovat.')}))
     sudoku_type_name = request.session.get('sudoku_type')
 
     result_dict = {}
@@ -280,7 +280,6 @@ def check_solvability(request):
     else:
         strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
                                            collect_report=False)
-    result_dict['success'] = False
     while True:
         if sudoku_for_part1.is_fully_solved():
             hardest_strategy = strategy_applier.get_hardest_strategy_applied()
@@ -290,7 +289,6 @@ def check_solvability(request):
                 hardest_strategy = advanced_strategies[hardest_strategy]
             result_dict['result'] = _('Logický postup dané sudoku dokázal vyřešit. Nejtěžší použitá strategie'
                                     ' (podle pořadí uváděném na této stránce) byla "' + hardest_strategy + '".')
-            result_dict['success'] = True
             break
         if not strategy_applier.find_next_step(sudoku_for_part1):
             result_dict['result'] = _('Logický postup na zadaném sudoku selhal.')
