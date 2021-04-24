@@ -24,3 +24,9 @@ def convert_js_json_to_sudoku_board(json):
         else:
             sboard.cells[cell['cell_id']].solved = cell['solved']
     return sboard
+
+def convert_sudoku_board_to_simple_array(sudoku_board):
+    sarray = []
+    for i in range(0, sudoku_board.max_sudoku_number * sudoku_board.max_sudoku_number):
+        sarray.append(sudoku_board.cells[i].solved)
+    return sarray

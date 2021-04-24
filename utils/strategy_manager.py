@@ -265,6 +265,7 @@ class StrategyApplier:
             and rows and such.
         @param sudoku_type_name Type of sudoku to derive extra rule.
         """
+        self.__cycles = 0
         self.__sudoku_type_name = sudoku_type_name
         self.__max_sudoku_number = max_sudoku_number
         self.__cell_id_limit = max_sudoku_number * max_sudoku_number
@@ -607,24 +608,59 @@ class StrategyApplier:
         return blocks
 
     # ENTRY POINT BRUTE FORCE
-    def solve_by_backtracking(self, sudoku, follow_notes=False):
+    def solve_by_backtracking(self, sudoku, follow_notes=False, fill_in_first_solution=False, maximum_cycles=10000):
+        self.__cycles = 0
         non_solved_cells = []
         for i in range(0, self.__cell_id_limit):
             if not sudoku.cells[i].is_solved():
                 non_solved_cells.append(i)
 
-    def solve_next(self, sudoku, cell_id, non_solved_cells, follow_notes):
+        non_solved_cells = sorted(non_solved_cells, key=lambda x: len(sudoku.cells[x].notes))
+        first_solution = {}
+        num_solutions = self.solve_next(sudoku, non_solved_cells[0], non_solved_cells[1:], follow_notes,
+                                        first_solution, maximum_cycles)
+
+        if fill_in_first_solution:
+            for key, item in first_solution.items():
+                sudoku.cells[key].solved = item
+
+        return num_solutions
+
+    def solve_next(self, sudoku, cell_id, non_solved_cells, follow_notes, first_solution, maximum_cycles):
         if follow_notes:
             options = sudoku.cells[cell_id].notes.copy()
         else:
             options = self.get_options()
 
-        found_solution = False
+        found_solutions = 0
 
         for val in options:
+            self.__cycles += 1
+            if self.__cycles >= maximum_cycles:
+                return -1
+
             sudoku.cells[cell_id].solved = val
 
+            if self.has_obvious_mistakes(sudoku):
+                continue
 
+            if len(non_solved_cells) != 0:
+                solutions = self.solve_next(sudoku, non_solved_cells[0], non_solved_cells[1:], follow_notes,
+                                                   first_solution, maximum_cycles)
+                if solutions == -1:
+                    return -1
+                else:
+                    found_solutions += solutions
+            else:
+                found_solutions += 1
+
+            if found_solutions == 1:
+                first_solution[cell_id] = val
+
+        # remove number when returning to allow next check
+        sudoku.cells[cell_id].solved = None
+
+        return found_solutions
 
     def get_options(self):
         return [x + 1 for x in range(self.__max_sudoku_number)]

@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 import json
 
 from utils.strategy_manager import StrategyApplier
-from utils.sudoku_convertor import convert_js_json_to_sudoku_board
+from utils.sudoku_convertor import convert_js_json_to_sudoku_board, convert_sudoku_board_to_simple_array
 
 # Variable that allows showing of extra controls such as custom highlights for
 developers_tools = True
@@ -269,9 +269,6 @@ def check_solvability(request):
     # test if solved to avoid needless proccessing
     if sudoku_for_part1.is_fully_solved():
         return HttpResponse(json.dumps({'part1_result': _('Sudoku již vyřešeno, není co ověřovat.')}))
-
-    sudoku_for_part2 = sudoku_for_part1.copy()
-    sudoku_for_part3 = sudoku_for_part1.restore_notes_copy()
     sudoku_type_name = request.session.get('sudoku_type')
 
     result_dict = {}
@@ -283,7 +280,7 @@ def check_solvability(request):
     else:
         strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
                                            collect_report=False)
-    result_dict['part1_success'] = False
+    result_dict['success'] = False
     while True:
         if sudoku_for_part1.is_fully_solved():
             hardest_strategy = strategy_applier.get_hardest_strategy_applied()
@@ -291,24 +288,82 @@ def check_solvability(request):
                 hardest_strategy = easy_strategies[hardest_strategy]
             elif hardest_strategy in advanced_strategies:
                 hardest_strategy = advanced_strategies[hardest_strategy]
-            result_dict['part1_result'] = _('Logický postup dané sudoku dokázal vyřešit. Nejtěžší použitá strategie'
-                                            ' (podle pořadí uváděném na této stránce) byla "' + hardest_strategy + '".')
-            result_dict['part1_success'] = True
+            result_dict['result'] = _('Logický postup dané sudoku dokázal vyřešit. Nejtěžší použitá strategie'
+                                    ' (podle pořadí uváděném na této stránce) byla "' + hardest_strategy + '".')
+            result_dict['success'] = True
             break
         if not strategy_applier.find_next_step(sudoku_for_part1):
-            result_dict['part1_result'] = _('Logický postup na zadaném sudoku selhal.')
+            result_dict['result'] = _('Logický postup na zadaném sudoku selhal.')
             break
-
-    # PART 2 if not successful, test by brute force with current notes
-    if not result_dict['part1_success']:
-        pass
-    # PART 3 if not successful, test by brute force with restored notes
 
     return HttpResponse(json.dumps(result_dict))
 
 def get_brute_force_solution(request):
+    sudoku_json = json.loads(request.POST.get('json'))
+    sudoku = convert_js_json_to_sudoku_board(sudoku_json)
 
-    return HttpResponse(json.dumps([x for x in range(81)]))
+    sudoku_type_name = request.session.get('sudoku_type')
+    if sudoku_type_name == "jigsaw":
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           sector_ids=request.session.get('jigsaw_sectors'), collect_report=False)
+    else:
+        strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           collect_report=False)
+
+    if sudoku.is_fully_solved():
+        response = {
+            'success': False,
+            'text': _('Sudoku již vyřešeno.')
+        }
+    else:
+        num_solutions = strategy_applier.solve_by_backtracking(sudoku, True, True)
+        if num_solutions == -1:
+            response = {
+                'success': False,
+                'text': _('Timeout. Tato funkce je experimentální a pouze pro demonstraci řešení sudoku počítačem'
+                          'vs uživatelem, avšak tato práce se na tento postup nezaměřuje. Pro řešení složitějšího '
+                          'řešení sudoku by bylo třeba funkci optimalizovat.')
+            }
+        elif num_solutions == 1:
+            response = {
+                'sudoku': convert_sudoku_board_to_simple_array(sudoku),
+                'success': True
+            }
+        elif num_solutions == 0:
+            no_notes_solutions = strategy_applier.solve_by_backtracking(sudoku, False)
+            if num_solutions == -1:
+                response = {
+                    'success': False,
+                    'text': _('Timeout. Tato funkce je experimentální a pouze pro demonstraci řešení sudoku počítačem'
+                              'vs uživatelem, avšak tato práce se na tento postup nezaměřuje. Pro řešení složitějšího '
+                              'řešení sudoku by bylo třeba funkci optimalizovat.')
+                }
+            elif no_notes_solutions == 1:
+                response = {
+                    'success': False,
+                    'text': _('Zadané sudoku nemá žádné řešení (pokud program respektoval zadaná kandidátní čísla jako '
+                              'jediná možná čísla na doplnění). Při vyplnění všech nevyřešených buněk všemi možnými '
+                              'kandidátními čísly program našel pro sudoku právě jedno řešení. Pro jeho zobrazení '
+                              'vyplňte buňky všemi kandidátními čísly a opakujte akci.')
+                }
+            elif no_notes_solutions == 0:
+                response = {
+                    'success': False,
+                    'text': _('Zadané sudoku nemá žádné řešení.')
+                }
+            else:
+                response = {
+                    'success': False,
+                    'text': _('Zadané sudoku nemá žádné řešení (pokud program respektoval zadaná kandidátní čísla jako '
+                              'jediná možná čísla na doplnění). Při vyplnění všech nevyřešených buněk všemi možnými '
+                              'kandidátními čísly program našel pro sudoku ' + str(no_notes_solutions) + ' řešení.')
+                }
+        else:
+            response = {
+                'success': False,
+                'text': _('Sudoku má ' + str(num_solutions) + ' řešení.')
+            }
+    return HttpResponse(json.dumps(response))
 
 # ====================================
 #           GUIDES VIEWS

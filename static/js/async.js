@@ -108,8 +108,11 @@ async function get_brute_force_solution() {
         },
         cache: false
     }).done(function(response_string) {
+        $('#get-brute-force-solution-loading').hide();
+        $('#get-brute-force-solution-text').show();
         let response_json = JSON.parse(response_string);
-        load_sudoku_from_list(response_json);
+        if (response_json['success']) load_sudoku_from_list(response_json['sudoku']);
+        else alert(response_json['text']);
     });
 }
 

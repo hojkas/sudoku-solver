@@ -239,7 +239,9 @@ $(document).ready(function()
         check_solvability();
     });
 
-    $('#get_bruce_force_solution').on('click', function() {
-       get_brute_force_solution();
+    $('#get-brute-force-solution').on('click', function() {
+        $('#get-brute-force-solution-loading').show();
+        $('#get-brute-force-solution-text').hide();
+        get_brute_force_solution();
     });
 });
