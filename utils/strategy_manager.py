@@ -1334,8 +1334,8 @@ class StrategyApplier:
                             'col': _('v těchto dvou sloupcích')
                         }
                         location_mapper2 = {
-                            'row': _('v jejich řádcích'),
-                            'col': _('v jejich sloupcích')
+                            'col': _('v jejich řádcích'),
+                            'row': _('v jejich sloupcích')
                         }
                         self.__report_json['text'] = _('Žlutě označené buňky ' +
                                                        self.get_multiple_bold_cell_pos_str(one_group['cell_ids']) +
@@ -1386,7 +1386,13 @@ class StrategyApplier:
                         group = is_group_of_same_numbers([block_occurence[block_id_1][1], block_occurence[block_id_2][1],
                                                           block_occurence[block_id_3][1]])
                         if group is not None:
-                            test = True
+                            found_groups.append({
+                                'num': num,
+                                'location': location,
+                                'cell_ids': block_occurence[block_id_1][0] + block_occurence[block_id_2][0]
+                                            + block_occurence[block_id_3][0],
+                                'effect_location_ids': list(group)
+                            })
 
         return found_groups
 
@@ -1394,8 +1400,59 @@ class StrategyApplier:
     def y_wing(self, sudoku):
         return False
 
-    # SWORDFISH TODO
+    # SWORDFISH - DONE
     def swordfish(self, sudoku):
+        found_groups = []
+        for num in range(1, sudoku.max_sudoku_number + 1):
+            found_groups += self.collect_one_number_for_x_wing(sudoku, self.__col_ids, 3, 'col', num)
+            found_groups += self.collect_one_number_for_x_wing(sudoku, self.__row_ids, 3, 'row', num)
+
+        if len(found_groups) != 0:
+            # found some groups fro x-wing, now only need to determine whether they make a change
+            for one_group in found_groups:
+                changed_something = False
+                for effect_location_id in one_group['effect_location_ids']:
+                    if one_group['location'] == 'row':
+                        effect_block = self.__col_ids[effect_location_id]
+                    else:
+                        effect_block = self.__row_ids[effect_location_id]
+                    # test each cell in location for canddiates to remove
+                    for cell_id in effect_block:
+                        if cell_id in one_group['cell_ids']:
+                            continue  # skip those that are part of a strategy
+                        if one_group['num'] in sudoku.cells[cell_id].notes:
+                            # found canddiate to remove
+                            changed_something = True
+                            if self.__collect_report:
+                                self.report_add_highlight(cell_id, False, 'red', one_group['num'])
+                                self.report_add_candidate_to_remove(cell_id, one_group['num'])
+                            else:
+                                sudoku.cells[cell_id].notes.remove(one_group['num'])
+
+                # here after checking all effects of one group
+                if changed_something:
+                    if self.__collect_report:
+                        self.__report_json['success'] = True
+                        self.__report_json['strategy_applied'] = 'swordfish'
+                        for cell_id in one_group['cell_ids']:
+                            self.report_add_highlight(cell_id, False, 'yellow', one_group['num'])
+                        location_mapper1 = {
+                            'row': _('v těchto třech řádcích'),
+                            'col': _('v těchto třech sloupcích')
+                        }
+                        location_mapper2 = {
+                            'col': _('v jejich řádcích'),
+                            'row': _('v jejich sloupcích')
+                        }
+                        self.__report_json['text'] = _('Žlutě označené buňky ' +
+                                                       self.get_multiple_bold_cell_pos_str(one_group['cell_ids']) +
+                                                       ' obsahují jediné výskyty <b>' + str(one_group['num']) + '</b> '
+                                                       + location_mapper1[one_group['location']] + '. Je proto '
+                                                       'jisté, že ' + str(one_group['num']) + ' bude na třech z těchto '
+                                                       'pozic a nemůže být nikde jinde ' +
+                                                       location_mapper2[one_group['location']] + ' (červeně).')
+                    return True
+
         return False
 
     # XY-CHAIN TODO
