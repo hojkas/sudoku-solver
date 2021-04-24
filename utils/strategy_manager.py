@@ -1,11 +1,13 @@
 from utils.sudoku_class import *
 from django.utils.translation import gettext as _
 
+
 def fill_with_candidates(sudoku):
     """ Function fills non-solved cells with all possible candidate numbers
     @param sudoku Current state of sudoku upon which the operation is executed.
     """
     sudoku.fill_candidates_in_all_not_solved()
+
 
 def is_group_of_same_numbers(lists):
     s = set()
@@ -14,6 +16,7 @@ def is_group_of_same_numbers(lists):
     if len(s) <= len(lists):
         return s
     return None
+
 
 def collect_cell_candidates_info_list(sudoku, block_ids, limit=None):
     res = []
@@ -28,6 +31,7 @@ def collect_cell_candidates_info_list(sudoku, block_ids, limit=None):
                     'notes': sudoku.cells[cell_id].notes})
     return res
 
+
 def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
     """ Function collects information about candidate placement in block_ids and returns dictionary with them.
     d = { "num": n --- numeric value of candidate
@@ -41,7 +45,7 @@ def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
     @return Dictionary with information about candidate occurences.
     """
     prep_d = {}
-    for n in range(1, sudoku.max_sudoku_number+1):
+    for n in range(1, sudoku.max_sudoku_number + 1):
         prep_d[n] = {
             "num": n,
             "cell_ids": [],
@@ -62,6 +66,7 @@ def collect_candidate_occurences_info_list(sudoku, block_ids, limit=None):
             res.append(value)
     return res
 
+
 def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
     res = []
     len_of_list = len(cells_info_list)
@@ -69,8 +74,8 @@ def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
         return []  # there can be no triple/quad if there is only 2- unsolved left
     # searching for groups consisting of 3 cells of max 3 same candidates
     for x in range(0, len_of_list):
-        for y in range(x+1, len_of_list):
-            for z in range(y+1, len_of_list):
+        for y in range(x + 1, len_of_list):
+            for z in range(y + 1, len_of_list):
                 group = is_group_of_same_numbers([cells_info_list[x]['notes'],
                                                   cells_info_list[y]['notes'],
                                                   cells_info_list[z]['notes']])
@@ -84,9 +89,9 @@ def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
 
     # searching for groups consisting of 4 cells of max 4 same candidates
     for x in range(0, len_of_list):
-        for y in range(x+1, len_of_list):
-            for z in range(y+1, len_of_list):
-                for k in range(z+1, len_of_list):
+        for y in range(x + 1, len_of_list):
+            for z in range(y + 1, len_of_list):
+                for k in range(z + 1, len_of_list):
                     group = is_group_of_same_numbers([cells_info_list[x]['notes'],
                                                       cells_info_list[y]['notes'],
                                                       cells_info_list[z]['notes'],
@@ -118,7 +123,7 @@ def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
                                 })
                             # continue with 6th item
                             for n6 in range(n5 + 1, len_of_list):
-                                #check for six group
+                                # check for six group
                                 nums = [cells_info_list[i]['notes'] for i in [n1, n2, n3, n4, n5, n6]]
                                 group = is_group_of_same_numbers(nums)
                                 if group is not None:
@@ -153,6 +158,7 @@ def naked_triple_check_for_groups(cells_info_list, is_hexa_sudoku=False):
 
     return res
 
+
 def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
     """Finds groups of 3/4 hidden numbers in given info list.
     @param candidate_info_list List created by function collect_candidate_occurences_info_list.
@@ -165,8 +171,8 @@ def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
 
     # searching numbers to find group of 3
     for x in range(0, len_of_list):
-        for y in range(x+1, len_of_list):
-            for z in range(y+1, len_of_list):
+        for y in range(x + 1, len_of_list):
+            for z in range(y + 1, len_of_list):
                 # test if cell ids of these numbers form group of max 3
                 group = is_group_of_same_numbers([
                     candidate_info_list[x]['cell_ids'],
@@ -185,9 +191,9 @@ def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
 
     # searching for group of 4
     for x in range(0, len_of_list):
-        for y in range(x+1, len_of_list):
-            for z in range(y+1, len_of_list):
-                for k in range(z+1, len_of_list):
+        for y in range(x + 1, len_of_list):
+            for z in range(y + 1, len_of_list):
+                for k in range(z + 1, len_of_list):
                     # test if cell ids of these numbers form group of max 4
                     group = is_group_of_same_numbers([
                         candidate_info_list[x]['cell_ids'],
@@ -236,7 +242,8 @@ def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
                                 # continue with 7th item
                                 for n7 in range(n6 + 1, len_of_list):
                                     # check for seven group
-                                    cell_ids = [candidate_info_list[i]['cell_ids'] for i in [n1, n2, n3, n4, n5, n6, n7]]
+                                    cell_ids = [candidate_info_list[i]['cell_ids'] for i in
+                                                [n1, n2, n3, n4, n5, n6, n7]]
                                     group = is_group_of_same_numbers(cell_ids)
                                     if group is not None:
                                         nums = [candidate_info_list[i]['num'] for i in
@@ -248,6 +255,7 @@ def hidden_triple_check_for_groups(candidate_info_list, is_hexa_sudoku=False):
 
     return res
 
+
 def get_bold_num_list(num_list):
     res = ""
     for num in num_list:
@@ -255,6 +263,13 @@ def get_bold_num_list(num_list):
             res += ', '
         res += '<b>' + str(num) + '</b>'
     return res
+
+
+def select_the_other_note_on_two_note_cell(sudoku, cell_id, note):
+    if note == sudoku.cells[cell_id].notes[0]:
+        return sudoku.cells[cell_id].notes[1]
+    return sudoku.cells[cell_id].notes[0]
+
 
 class StrategyApplier:
     def __init__(self, max_sudoku_number, sudoku_type_name, collect_report=True, sector_ids=None):
@@ -407,7 +422,7 @@ class StrategyApplier:
             for center_id in self.__center_ids:
                 self.__cell_id_mapping[center_id]["center"] = True
 
-        #adding flag for hypersudoku cells
+        # adding flag for hypersudoku cells
         if sudoku_type_name == "hypersudoku":
             for i in range(4):
                 for cell_id in self.__hyper_ids[i]:
@@ -435,7 +450,7 @@ class StrategyApplier:
         }
 
     def get_cell_pos_str(self, cell_id):
-        res = 'r' + str(int(cell_id/self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
+        res = 'r' + str(int(cell_id / self.__max_sudoku_number) + 1) + 'c' + str(cell_id % self.__max_sudoku_number + 1)
         return res
 
     def get_bold_cell_pos_str(self, cell_id):
@@ -455,7 +470,8 @@ class StrategyApplier:
     def add_strategy_applied(self, strategy_name):
         if self.__hardest_strategy is None:
             self.__hardest_strategy = strategy_name
-        elif self.__strategy_difficulty_order[strategy_name] > self.__strategy_difficulty_order[self.__hardest_strategy]:
+        elif self.__strategy_difficulty_order[strategy_name] > self.__strategy_difficulty_order[
+            self.__hardest_strategy]:
             self.__hardest_strategy = strategy_name
 
     # HELP function for functions
@@ -521,7 +537,7 @@ class StrategyApplier:
             if sudoku.cells[cell_id].is_solved():
                 # for each other id in cells row block/col block/sector
                 for cell_id_2 in (self.__row_ids[row_id] + self.__col_ids[col_id] + self.__sector_ids[sector_id]
-                 + extra_ids):
+                                  + extra_ids):
                     # excluding the current one
                     if cell_id == cell_id_2:
                         continue
@@ -543,9 +559,9 @@ class StrategyApplier:
         row = -1
         for cell_id in ids_list:
             if row == -1:
-                row = int(cell_id/self.__max_sudoku_number)
+                row = int(cell_id / self.__max_sudoku_number)
             else:
-                if row != int(cell_id/self.__max_sudoku_number):
+                if row != int(cell_id / self.__max_sudoku_number):
                     row = -2
                     break
         if row >= 0:
@@ -607,6 +623,32 @@ class StrategyApplier:
 
         return blocks
 
+    def cells_in_same_block(self, cell_id1, cell_id2):
+        # cols?
+        if (cell_id1 % self.__max_sudoku_number) == (cell_id2 % self.__max_sudoku_number):
+            return True
+        # rows?
+        if int(cell_id1 / self.__max_sudoku_number) == int(cell_id2 % self.__max_sudoku_number):
+            return True
+        # sectors?
+        for one_sector_ids in self.__sector_ids:
+            if cell_id1 in one_sector_ids and cell_id2 in one_sector_ids:
+                return True
+        # diagonals?
+        if cell_id1 in self.__diagonal_a_ids and cell_id2 in self.__diagonal_a_ids:
+            return True
+        if cell_id1 in self.__diagonal_b_ids and cell_id2 in self.__diagonal_b_ids:
+            return True
+        # centers?
+        if cell_id1 in self.__center_ids and cell_id2 in self.__center_ids:
+            return True
+        # hypersudoku?
+        for i in range(4):
+            if cell_id1 in self.__hyper_ids[i] and cell_id2 in self.__hyper_ids[i]:
+                return True
+        # they are not
+        return False
+
     # ENTRY POINT BRUTE FORCE
     def solve_by_backtracking(self, sudoku, follow_notes=False, fill_in_first_solution=False, maximum_cycles=10000):
         self.__cycles = 0
@@ -646,7 +688,7 @@ class StrategyApplier:
 
             if len(non_solved_cells) != 0:
                 solutions = self.solve_next(sudoku, non_solved_cells[0], non_solved_cells[1:], follow_notes,
-                                                   first_solution, maximum_cycles)
+                                            first_solution, maximum_cycles)
                 if solutions == -1:
                     return -1
                 else:
@@ -695,10 +737,11 @@ class StrategyApplier:
         if sudoku.has_unsolvable_cell():
             if self.__collect_report:
                 self.__report_json['success'] = False
-                self.__report_json['text'] = _('Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
-                                               'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
-                                               'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
-                                               'políček všechna možná kandidátní čísla a zkusit najít krok znovu.')
+                self.__report_json['text'] = _(
+                    'Sudoku obsahuje alespoň jedno políčko, které není vyřešeno ani neobsahuje '
+                    'žádná možná kandidátní čísla. Takové sudoku není vyřešitelné. Pokud to '
+                    'není výsledek aplikací strategií programem, zkuste doplnit do prázdných '
+                    'políček všechna možná kandidátní čísla a zkusit najít krok znovu.')
                 return self.__report_json
             else:
                 return False
@@ -734,9 +777,10 @@ class StrategyApplier:
         if self.__max_sudoku_number == 4:
             if self.__collect_report:
                 # sudoku 4x4 doesn't benefit from more complex strategies, thus ending here
-                self.__report_json['text'] = _('Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
-                                               'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
-                                               'strategii, která by vedla k řešení.')
+                self.__report_json['text'] = _(
+                    'Sudoku Helper nebyl schopen najít další logický krok. Toto může znamenat, '
+                    'že řešení neexistuje, nebo pouze že tento nástroj neumí tak složitou '
+                    'strategii, která by vedla k řešení.')
                 self.__report_json['success'] = False
                 return self.__report_json
             else:
@@ -853,7 +897,8 @@ class StrategyApplier:
         if sudoku.cells[cell_id].is_solved():
             num = sudoku.cells[cell_id].solved
             # for each other id in cells row block/col block/sector
-            for cell_id_2 in (self.__row_ids[row_id]+self.__col_ids[col_id]+self.__sector_ids[sector_id]+extra_ids):
+            for cell_id_2 in (
+                    self.__row_ids[row_id] + self.__col_ids[col_id] + self.__sector_ids[sector_id] + extra_ids):
                 # excluding the current one
                 if cell_id == cell_id_2:
                     continue
@@ -950,8 +995,8 @@ class StrategyApplier:
                         'hypersudoku': _('v sektoru hypersudoku')
                     }
                     self.__report_json['text'] = _('V buňce ' + self.get_bold_cell_pos_str(cell_ids[0]) +
-                           ' bude doplněno zeleně zvýrazněné kandidátní číslo, protože je to jediné možné '
-                           'umístění číslice ' + location_map[location] + '.')
+                                                   ' bude doplněno zeleně zvýrazněné kandidátní číslo, protože je to jediné možné '
+                                                   'umístění číslice ' + location_map[location] + '.')
                 else:
                     sudoku.cells[cell_ids[0]].fill_in_solved(number)
                 return True
@@ -1033,7 +1078,7 @@ class StrategyApplier:
         info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk, limit=2)
         info_list_len = len(info_list)
         for x in range(0, info_list_len):
-            for y in range(x+1, info_list_len):
+            for y in range(x + 1, info_list_len):
                 # for each two candidates in block with only two occurences
                 if info_list[x]['cell_ids'] == info_list[y]['cell_ids'] and len(info_list[x]['cell_ids']) == 2:
                     # found hidden pair, but it may not make change
@@ -1075,8 +1120,9 @@ class StrategyApplier:
                                                'center': _('mezi středy čtverců')
                                                }
                             self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné ' +
-                                    location_mapper[location] + ' kandidátní čísla ' + num_str + '(žlutě). Proto je v '
-                                    'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
+                                                           location_mapper[
+                                                               location] + ' kandidátní čísla ' + num_str + '(žlutě). Proto je v '
+                                                                                                            'těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                         return True
         return False
 
@@ -1135,11 +1181,11 @@ class StrategyApplier:
                             'center': _('ve středech čtverců')
                         }
                         self.__report_json['text'] = _('V buňkách ' + cell_pos_str + ' se nachází '
-                                                     'stejná kandidátní čísla ' +
-                                                     num_list_str + ' (žlutě) a jejich počet je roven '
-                                                     'počtu buněk, které zabírají. Protože leží všechny tyto buňky '
-                                                     + location_mapper[location] + ', je možno tato ' +
-                                                     'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
+                                                                                     'stejná kandidátní čísla ' +
+                                                       num_list_str + ' (žlutě) a jejich počet je roven '
+                                                                      'počtu buněk, které zabírají. Protože leží všechny tyto buňky '
+                                                       + location_mapper[location] + ', je možno tato ' +
+                                                       'kandidátní čísla z ostatních buňek bloku odstranit (červeně).')
                     return True
         return False
 
@@ -1189,10 +1235,11 @@ class StrategyApplier:
                                        'diagonal_a': _('na dané diagonále'),
                                        'diagonal_b': _('na dané diagonále'),
                                        'center': _('ve středech čtverců')
-                    }
+                                       }
                     self.__report_json['text'] = _('Buňky ' + ids_str + ' obsahují jako jediné ' +
-                                    location_mapper[location] + ' kandidátní čísla ' + num_str + ' (žlutě). Proto je v'
-                                    ' těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
+                                                   location_mapper[
+                                                       location] + ' kandidátní čísla ' + num_str + ' (žlutě). Proto je v'
+                                                                                                    ' těchto buňkách možné odstranit všechna ostatní kandidátní čísla (červeně).')
                 return True
         return False
 
@@ -1244,10 +1291,11 @@ class StrategyApplier:
                         }
                         self.__report_json['text'] = _('Číslo <b>' + str(candidate_info_dict['num']) + '</b> se ' +
                                                        location_mapper[location] + ' nachází pouze v buňkách ' +
-                                                       self.get_multiple_bold_cell_pos_str(candidate_info_dict['cell_ids']) +
+                                                       self.get_multiple_bold_cell_pos_str(
+                                                           candidate_info_dict['cell_ids']) +
                                                        ' (žlutě). Kromě tohoto bloku avšak buňky leží také ' +
                                                        location_mapper2[block_type] + '. Protože je jisté, že '
-                                                       'číslice bude na jedné ze žlutě označených pozic, nemůže ' +
+                                                                                      'číslice bude na jedné ze žlutě označených pozic, nemůže ' +
                                                        location_mapper3[block_type] +
                                                        ' být na jiné pozici a můžeme tato kandidátní čísla (označená'
                                                        ' červeně) odstranit.')
@@ -1340,9 +1388,11 @@ class StrategyApplier:
                         self.__report_json['text'] = _('Žlutě označené buňky ' +
                                                        self.get_multiple_bold_cell_pos_str(one_group['cell_ids']) +
                                                        ' obsahují jediné výskyty <b>' + str(one_group['num']) + '</b> '
-                                                       ' ' + location_mapper1[one_group['location']] + '. Je proto '
-                                                       'jisté, že ' + str(one_group['num']) + ' bude na dvou z těchto '
-                                                       'pozic a nemůže být nikde jinde ' +
+                                                                                                                ' ' +
+                                                       location_mapper1[one_group['location']] + '. Je proto '
+                                                                                                 'jisté, že ' + str(
+                            one_group['num']) + ' bude na dvou z těchto '
+                                                'pozic a nemůže být nikde jinde ' +
                                                        location_mapper2[one_group['location']] + ' (červeně).')
                     return True
 
@@ -1383,8 +1433,9 @@ class StrategyApplier:
                 # cross compare 3 if limit is 3
                 if limit == 3:
                     for block_id_3 in range(block_id_2 + 1, len(block_occurence)):
-                        group = is_group_of_same_numbers([block_occurence[block_id_1][1], block_occurence[block_id_2][1],
-                                                          block_occurence[block_id_3][1]])
+                        group = is_group_of_same_numbers(
+                            [block_occurence[block_id_1][1], block_occurence[block_id_2][1],
+                             block_occurence[block_id_3][1]])
                         if group is not None:
                             found_groups.append({
                                 'num': num,
@@ -1398,7 +1449,68 @@ class StrategyApplier:
 
     # Y-WING TODO
     def y_wing(self, sudoku):
+        chain_map = self.get_chain_mapping(sudoku)
+        for chain_id in chain_map.keys():
+            possible_chains = self.get_possibly_y_wings_from_cell(sudoku, chain_map, chain_id)
         return False
+
+    def get_chain_mapping(self, sudoku):
+        chain_map = {}
+        for cell_id in range(0, self.__cell_id_limit):
+            if not sudoku.cells[cell_id].is_solved() and len(sudoku.cells[cell_id].notes) == 2:
+                row_id, col_id, sector_id = self.get_row_col_sector_id_of_cell(cell_id)
+                extra_ids = []
+                if self.__cell_id_mapping[cell_id]['diagonal_a']:
+                    extra_ids += self.__diagonal_a_ids
+                if self.__cell_id_mapping[cell_id]['diagonal_b']:
+                    extra_ids += self.__diagonal_b_ids
+                if self.__cell_id_mapping[cell_id]['center']:
+                    extra_ids += self.__center_ids
+                for i in range(4):
+                    if self.__cell_id_mapping[cell_id]['hypersudoku'][i]:
+                        extra_ids += self.__hyper_ids[i]
+                for cell_id_2 in (self.__row_ids[row_id] + self.__col_ids[col_id] +
+                                  self.__sector_ids[sector_id] + extra_ids):
+                    if (sudoku.cells[cell_id_2].is_solved() or len(sudoku.cells[cell_id_2].notes) != 2
+                            or cell_id_2 == cell_id):
+                        continue  # skip solved cells and cells with more than 2 candidates and cells with same id
+
+                    if cell_id not in chain_map:
+                        chain_map[cell_id] = []
+                    if cell_id_2 not in chain_map[cell_id]:
+                        chain_map[cell_id].append(cell_id_2)
+
+        return chain_map
+
+    def get_possibly_y_wings_from_cell(self, sudoku, chain_map, cell_id):
+        possible_chains = []
+        for possible_way_id in chain_map[cell_id]:
+            # for each cell with 2 candidates it is in one block with
+            connected_by = []
+            for num in sudoku.cells[cell_id].notes:
+                if num in sudoku.cells[possible_way_id].notes:
+                    connected_by.append(num)  # checks if the cells share number
+
+            for num in connected_by:
+                end_a_leftover = select_the_other_note_on_two_note_cell(sudoku, cell_id, num)
+                # for possible connection to possible_way_id checks for another link
+                for possible_end_id in chain_map[possible_way_id]:
+                    if possible_end_id == cell_id:
+                        continue  # skip self
+                    connection = select_the_other_note_on_two_note_cell(sudoku, possible_way_id, num)
+                    if connection in sudoku.cells[possible_end_id].notes:
+                        # at this point, it is clear
+                        end_b_leftover = select_the_other_note_on_two_note_cell(sudoku, possible_end_id, connection)
+                        if end_a_leftover == end_b_leftover:
+                            possible_chains.append({
+                                'middle_cell_id': possible_way_id,
+                                'wing_a_id': cell_id,
+                                'wing_b_id': possible_end_id,
+                                'connection_a': num,
+                                'connection_b': connection,
+                                'leftover': end_a_leftover
+                            })
+        return possible_chains
 
     # SWORDFISH - DONE
     def swordfish(self, sudoku):
@@ -1448,8 +1560,9 @@ class StrategyApplier:
                                                        self.get_multiple_bold_cell_pos_str(one_group['cell_ids']) +
                                                        ' obsahují jediné výskyty <b>' + str(one_group['num']) + '</b> '
                                                        + location_mapper1[one_group['location']] + '. Je proto '
-                                                       'jisté, že ' + str(one_group['num']) + ' bude na třech z těchto '
-                                                       'pozic a nemůže být nikde jinde ' +
+                                                                                                   'jisté, že ' + str(
+                            one_group['num']) + ' bude na třech z těchto '
+                                                'pozic a nemůže být nikde jinde ' +
                                                        location_mapper2[one_group['location']] + ' (červeně).')
                     return True
 
@@ -1458,5 +1571,3 @@ class StrategyApplier:
     # XY-CHAIN TODO
     def xy_chain(self, sudoku):
         return False
-
-
