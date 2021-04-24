@@ -188,9 +188,10 @@ $(document).ready(function()
     });
 
     $('#generate_sudoku').on('click', function() {
+        let chosen_sudoku = $('generate_difficulty').val();
         $('#generate_sudoku_alt').show();
         $('#generate_sudoku').hide();
-        generate_sudoku($('generate_difficulty').val());
+        generate_sudoku(chosen_sudoku);
     });
 
     $('#get-next-step').on('click', function() {

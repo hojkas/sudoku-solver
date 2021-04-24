@@ -10,6 +10,7 @@ import json
 
 from utils.strategy_manager import StrategyApplier
 from utils.sudoku_convertor import convert_js_json_to_sudoku_board, convert_sudoku_board_to_simple_array
+from utils.generator import Generator
 
 # Variable that allows showing of extra controls such as custom highlights for
 developers_tools = True
@@ -259,8 +260,16 @@ def get_next_step(request):
     return HttpResponse(json.dumps(result_json))
 
 def generate_sudoku(request):
-    result_list = [1, 2, 3, None, None, None, None, None, None, 1, 2, 3, None, None, None, None]
-    return HttpResponse(json.dumps({'success': True, 'sudoku': result_list}))
+    sudoku_type_name = request.session.get('sudoku_name')
+    if sudoku_type_name == "jigsaw":
+        generator = Generator(request.session.get('max_sudoku_number'), sudoku_type_name,
+                                           sector_ids=request.session.get('jigsaw_sectors'))
+    else:
+        generator = Generator(request.session.get('max_sudoku_number'), sudoku_type_name)
+    sudoku = generator.generate()
+    generator.create_sudoku(sudoku)
+    array_sudoku = convert_sudoku_board_to_simple_array(sudoku)
+    return HttpResponse(json.dumps({'success': True, 'sudoku': array_sudoku}))
 
 def check_solvability(request):
     sudoku_json = json.loads(request.POST.get('json'))

@@ -19,8 +19,6 @@ generator = Generator(9, 'classic',
 start_time = time.time()
 
 sudoku = generator.generate()
-for i in [30, 31, 32, 39, 40, 41, 48, 49, 50, 4, 13, 22, 58, 67, 76, 36, 37, 38, 42, 43, 44]:
-    sudoku.clear_cell(i)
 generator.create_sudoku(sudoku)
 
 end_time = time.time()

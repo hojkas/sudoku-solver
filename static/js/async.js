@@ -66,7 +66,12 @@ async function generate_sudoku(difficulty) {
             difficulty: difficulty,
             sudoku_name: sudoku_name
         },
-        cache: false
+        cache: false,
+        error: function (xhr, err) {
+            alert("error: " + xhr.status);
+            $('#generate_sudoku').show();
+            $('#generate_sudoku_alt').hide();
+        }
     }).done(function(response_string) {
         let response_json = JSON.parse(response_string);
         if(response_json['success']) {
@@ -118,6 +123,7 @@ async function get_brute_force_solution() {
         let response_json = JSON.parse(response_string);
         if (response_json['success']) load_sudoku_from_list(response_json['sudoku']);
         else alert(response_json['text']);
+        // TODO is broken
     });
 }
 
