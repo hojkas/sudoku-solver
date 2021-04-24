@@ -26,10 +26,14 @@ async function count_next_step() {
         data: {
             json: sudoku_json
         },
-        cache: false
-    }).done(function(response_string) {
+        cache: false,
+        error: function (xhr, err) {
+            alert("error: " + xhr.status);
+            $('#next-step-default-button-wrapper').show().siblings('div').hide();
+        }
+    }).done(function (response_string) {
         let response_json = JSON.parse(response_string);
-        if(response_json['success']) {
+        if (response_json['success']) {
             // strategy was found
             $('#next-step-next-action-wrapper').show().siblings('div').hide();
             window.candidates_to_be_deleted = response_json['candidates_to_remove'];
@@ -39,13 +43,11 @@ async function count_next_step() {
             try {
                 let text = '[' + $('#' + response_json['strategy_applied']).text() + '] ' + response_json['text'];
                 change_strategy_description(text);
-            }
-            catch {
+            } catch {
                 let text = response_json['text'];
                 change_strategy_description(text);
             }
-        }
-        else {
+        } else {
             // strategy wasn't found!
             $('#next-step-default-button-wrapper').show().siblings('div').hide();
             alert(response_json['text']);
