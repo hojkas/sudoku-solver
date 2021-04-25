@@ -1456,7 +1456,7 @@ class StrategyApplier:
 
         return found_groups
 
-    # Y-WING TODO
+    # Y-WING DONE
     def y_wing(self, sudoku):
         chain_map = self.get_chain_mapping(sudoku)
         already_tested = []
@@ -1474,14 +1474,14 @@ class StrategyApplier:
                 for cell_id in range(0, self.__cell_id_limit):
                     # for each cell in sudoku, check if it "sees" two ends is made
                     if (cell_id == possible_chain['middle_cell_id'] or cell_id == possible_chain['wing_a_id'] or
-                        cell_id == possible_chain['wing_b_id']):
+                            cell_id == possible_chain['wing_b_id']):
                         continue  # skip check for cells that are part of the chain
                     if sudoku.cells[cell_id].is_solved():
                         continue  # skip for solved cells
 
                     # check if cells sees both wings
                     if (self.cells_in_same_block(cell_id, possible_chain['wing_a_id']) and
-                        self.cells_in_same_block(cell_id, possible_chain['wing_b_id'])):
+                            self.cells_in_same_block(cell_id, possible_chain['wing_b_id'])):
                         if possible_chain['leftover'] in sudoku.cells[cell_id].notes:
                             # candidate can be removed!
                             changed_something = True
@@ -1639,4 +1639,103 @@ class StrategyApplier:
 
     # XY-CHAIN TODO
     def xy_chain(self, sudoku):
+        chain_map = self.get_chain_mapping(sudoku)
+        already_tested = []
+        for chain_id in chain_map.keys():
+            possible_chains = self.get_possible_chains(sudoku, chain_map, chain_id)
+            for possible_chain in possible_chains:
+                # for each possible chain - chain of 3+ cells that end with same candidate, but may not eliminate
+                # anything
+                if ((possible_chain['chain_ids'][0], possible_chain['chain_ids'][-1], possible_chain['leftover'])
+                    in already_tested or (possible_chain['chain_ids'][-1], possible_chain['chain_ids'][0],
+                                          possible_chain['leftover']) in already_tested):
+                    continue  # this combo was already tested
+
+                already_tested.append((possible_chain['chain_ids'][0], possible_chain['chain_ids'][-1],
+                                       possible_chain['leftover']))
+
+                changed_something = False
+                for cell_id in range(0, self.__cell_id_limit):
+                    # for each cell in sudoku, check if it "sees" two ends
+                    if cell_id in possible_chain['chain_ids']:
+                        continue  # skip cells that form the strategy
+                    if sudoku.cells[cell_id].is_solved():
+                        continue  # skip solved
+
+                    # check if it "sees" two ends
+                    if (self.cells_in_same_block(cell_id, possible_chain['chain_ids'][0]) and
+                            self.cells_in_same_block(cell_id, possible_chain['chain_ids'][-1])):
+                        if possible_chain['leftover'] in sudoku.cells[cell_id].notes:
+                            # canddiate can be removed
+                            changed_something = True
+                            if self.__collect_report:
+                                self.report_add_highlight(cell_id, False, 'red', possible_chain['leftover'])
+                                self.report_add_candidate_to_remove(cell_id, possible_chain['leftover'])
+                            else:
+                                sudoku.cells[cell_id].remove(possible_chain['leftover'])
+
+                if changed_something:
+                    # strategy success, note everything and return True
+                    if self.__collect_report:
+                        self.__report_json['success'] = True
+                        self.__report_json['strategy_applied'] = 'xy-chain'
+                        for i, connection in enumerate(possible_chain['connections']):
+                            self.report_add_highlight(possible_chain['chain_ids'][i], False, 'green', connection)
+                            self.report_add_highlight(possible_chain['chain_ids'][i+1], False, 'green', connection)
+                            self.report_add_chain(possible_chain['chain_ids'][i], connection,
+                                                  possible_chain['chain_ids'][i+1], connection)
+                        self.report_add_highlight(possible_chain['chain_ids'][0], False, 'yellow',
+                                                  possible_chain['leftover'])
+                        self.report_add_highlight(possible_chain['chain_ids'][-1], False, 'yellow',
+                                                  possible_chain['leftover'])
+                        self.__report_json['text'] = _('Zeleně je zvýrazněn nalezený XY-Chain. Na jeho koncích se'
+                                                       'nachází <b>' + str(possible_chain['leftover']) + ' </b> '
+                                                       '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
+                                                       'kandidátní číslo' + str(possible_chain['leftover']) + ' ze '
+                                                       'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
+                                                       ' XY-Chain.')
+                    return True
+
         return False
+
+    def get_possible_chains(self, sudoku, chain_map, cell_id):
+        possible_chains = []
+
+        for possible_way_id in chain_map[cell_id]:
+            # for each cell with 2 candidates it is in one block with
+            connected_by = []
+            for num in sudoku.cells[cell_id].notes:
+                if num in sudoku.cells[possible_way_id].notes:
+                    connected_by.append(num)  # checks if the cells share number
+
+            for num in connected_by:
+                chain_in_making = {
+                    'chain_ids': [cell_id, possible_way_id],
+                    'connections': [num],
+                    'leftover': select_the_other_note_on_two_note_cell(sudoku, cell_id, num)
+                }
+
+                possible_chains += self.chain_search(sudoku, chain_map, possible_way_id, chain_in_making)
+
+        return possible_chains
+
+    def chain_search(self, sudoku, chain_map, cell_id, chain_in_making):
+        possible_chains = []
+        new_connection = select_the_other_note_on_two_note_cell(sudoku, cell_id, chain_in_making['connections'][-1])
+        # check if this chain is closed off and is at least 4 in lenght
+        # (2 is naked pair, 3 is y-wing, both aready tested)
+        if new_connection == chain_in_making['leftover'] and len(chain_in_making['chain_ids']) > 3:
+            possible_chains.append(chain_in_making)
+
+        for possible_way_id in chain_map[cell_id]:
+            # check if not already part of it
+            if possible_way_id in chain_in_making['chain_ids']:
+                continue
+
+            if new_connection in sudoku.cells[possible_way_id].notes:
+                new_chain_in_making = chain_in_making.copy()
+                new_chain_in_making['chain_ids'].append(possible_way_id)
+                new_chain_in_making['connections'].append(new_connection)
+                possible_chains += self.chain_search(sudoku, chain_map, possible_way_id, new_chain_in_making)
+
+        return possible_chains
