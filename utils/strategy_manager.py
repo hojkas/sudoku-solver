@@ -824,6 +824,13 @@ class StrategyApplier:
                 self.add_strategy_applied('intersection_removal')
                 return True
 
+        if self.special_intersection_removal(sudoku):
+            if self.__collect_report:
+                return self.__report_json
+            else:
+                self.add_strategy_applied('intersection_removal')
+                return True
+
         if self.x_wing(sudoku):
             if self.__collect_report:
                 return self.__report_json
@@ -1351,6 +1358,79 @@ class StrategyApplier:
 
         return changed_something
 
+    # SPECIAL INTERSECTION REMOVAL
+    def special_intersection_removal(self, sudoku):
+        if self.__sudoku_type_name == 'diagonal' or self.__sudoku_type_name == 'diagonal_centers':
+            if self.__apply_for_each(sudoku, self.special_intersection_removal_on_one_block, 'diagonal_a'):
+                return True
+        if self.__sudoku_type_name == 'diagonal' or self.__sudoku_type_name == 'diagonal_centers':
+            if self.__apply_for_each(sudoku, self.special_intersection_removal_on_one_block, 'diagonal_b'):
+                return True
+        if self.__sudoku_type_name == 'centers' or self.__sudoku_type_name == 'diagonal_centers':
+            if self.__apply_for_each(sudoku, self.special_intersection_removal_on_one_block, 'center'):
+                return True
+        if self.__sudoku_type_name == 'jigsaw':
+            if self.__apply_for_each(sudoku, self.special_intersection_removal_on_one_block, 'sector'):
+                return True
+
+    def special_intersection_removal_on_one_block(self, sudoku, ids_chunk, location):
+        candidate_info_list = collect_candidate_occurences_info_list(sudoku, ids_chunk)
+        if location == 'diagonal_a':
+            pass
+        for candidate_info_dict in candidate_info_list:
+            changed_something = False
+            found_cells = []
+            # for one number within this block
+            for cell_id in range(0, self.__cell_id_limit):
+                # for each cell in sudoku that is not from this block (ids_chunk),
+                # is not solved and does contain the num
+                if cell_id in ids_chunk:
+                    continue
+                if sudoku.cells[cell_id].is_solved():
+                    continue
+                if candidate_info_dict['num'] not in sudoku.cells[cell_id].notes:
+                    continue
+
+                sees_all = True
+                for cell_to_see in candidate_info_dict['cell_ids']:
+                    # to apply strategy, cell needs to see each cell in "cell_ids"
+                    if not self.cells_in_same_block(cell_id, cell_to_see):
+                        sees_all = False
+                        break
+
+                if sees_all:
+                    # strategy can be applied
+                    changed_something = True
+                    if self.__collect_report:
+                        found_cells.append(cell_id)
+                        self.report_add_highlight(cell_id, False, 'red', candidate_info_dict['num'])
+                        self.report_add_candidate_to_remove(cell_id, candidate_info_dict['num'])
+                    else:
+                        sudoku.celsl[cell_id].notes.remove(candidate_info_dict['num'])
+
+            if changed_something:
+                if self.__collect_report:
+                    self.__report_json['success'] = True
+                    self.__report_json['strategy_applied'] = 'intersection_removal'
+                    for cell_id_in_block in candidate_info_dict['cell_ids']:
+                        self.report_add_highlight(cell_id_in_block, False, 'yellow', candidate_info_dict['num'])
+                    location_mapper = {
+                        'diagonal_a': _('na diagonále'),
+                        'diagonal_b': _('na diagonále'),
+                        'centers': _('ve středech čtverců'),
+                        'sector': _('v sektoru')
+                    }
+                    self.__report_json['text'] = _('Číslo <b>' + str(candidate_info_dict['num']) + '</b> se ' +
+                                                   location_mapper[location] + ' nachází pouze v buňkách ' +
+                                                   self.get_multiple_bold_cell_pos_str(candidate_info_dict['cell_ids'])
+                                                   + ' (žlutě). ' + self.get_multiple_bold_cell_pos_str(found_cells) +
+                                                   ' sdílí s každou z nich blok a proto odtud můžeme odstranit '
+                                                   'kandidátní číslo ' + str(candidate_info_dict['num']) +
+                                                   ' (červeně).')
+                return True
+
+        return False
+
     # X-WING DONE
     def x_wing(self, sudoku):
         found_groups = []
@@ -1515,10 +1595,11 @@ class StrategyApplier:
                                               possible_chain['middle_cell_id'], possible_chain['connection_b'])
                         self.__report_json['text'] = _('Zeleně je zvýrazněno nalezené Y-Wing. Na jeho koncích se'
                                                        'nachází <b>' + str(possible_chain['leftover']) + ' </b> '
-                                                       '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
-                                                       'kandidátní číslo' + str(possible_chain['leftover']) + ' ze '
-                                                       'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
-                                                       ' Y-Wing.')
+                                                                                                         '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
+                                                                                                         'kandidátní číslo' + str(
+                            possible_chain['leftover']) + ' ze '
+                                                          'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
+                                                          ' Y-Wing.')
 
                     return True
 
@@ -1648,8 +1729,8 @@ class StrategyApplier:
                 # for each possible chain - chain of 3+ cells that end with same candidate, but may not eliminate
                 # anything
                 if ((possible_chain['chain_ids'][0], possible_chain['chain_ids'][-1], possible_chain['leftover'])
-                    in already_tested or (possible_chain['chain_ids'][-1], possible_chain['chain_ids'][0],
-                                          possible_chain['leftover']) in already_tested):
+                        in already_tested or (possible_chain['chain_ids'][-1], possible_chain['chain_ids'][0],
+                                              possible_chain['leftover']) in already_tested):
                     continue  # this combo was already tested
 
                 already_tested.append((possible_chain['chain_ids'][0], possible_chain['chain_ids'][-1],
@@ -1682,19 +1763,20 @@ class StrategyApplier:
                         self.__report_json['strategy_applied'] = 'xy-chain'
                         for i, connection in enumerate(possible_chain['connections']):
                             self.report_add_highlight(possible_chain['chain_ids'][i], False, 'green', connection)
-                            self.report_add_highlight(possible_chain['chain_ids'][i+1], False, 'green', connection)
+                            self.report_add_highlight(possible_chain['chain_ids'][i + 1], False, 'green', connection)
                             self.report_add_chain(possible_chain['chain_ids'][i], connection,
-                                                  possible_chain['chain_ids'][i+1], connection)
+                                                  possible_chain['chain_ids'][i + 1], connection)
                         self.report_add_highlight(possible_chain['chain_ids'][0], False, 'yellow',
                                                   possible_chain['leftover'])
                         self.report_add_highlight(possible_chain['chain_ids'][-1], False, 'yellow',
                                                   possible_chain['leftover'])
                         self.__report_json['text'] = _('Zeleně je zvýrazněn nalezený XY-Chain. Na jeho koncích se'
                                                        'nachází <b>' + str(possible_chain['leftover']) + ' </b> '
-                                                       '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
-                                                       'kandidátní číslo' + str(possible_chain['leftover']) + ' ze '
-                                                       'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
-                                                       ' XY-Chain.')
+                                                                                                         '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
+                                                                                                         'kandidátní číslo' + str(
+                            possible_chain['leftover']) + ' ze '
+                                                          'všech pozic (červeně), které sdílí libovolný blok s oběma konci'
+                                                          ' XY-Chain.')
                     return True
 
         return False
