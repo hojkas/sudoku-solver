@@ -243,10 +243,4 @@ $(document).ready(function()
         $('#check-solvability-loading').show();
         check_solvability();
     });
-
-    $('#get-brute-force-solution').on('click', function() {
-        $('#get-brute-force-solution-loading').show();
-        $('#get-brute-force-solution-text').hide();
-        get_brute_force_solution();
-    });
 });
