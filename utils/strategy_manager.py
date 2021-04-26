@@ -1,5 +1,6 @@
 from utils.sudoku_class import *
 from django.utils.translation import gettext as _
+import copy
 
 
 def fill_with_candidates(sudoku):
@@ -679,7 +680,7 @@ class StrategyApplier:
 
     def solve_next(self, sudoku, cell_id, non_solved_cells, follow_notes, first_solution, maximum_cycles):
         if follow_notes:
-            options = sudoku.cells[cell_id].notes.copy()
+            options = copy.deepcopy(sudoku.cells[cell_id].notes)
         else:
             options = self.get_options()
 
@@ -1637,7 +1638,7 @@ class StrategyApplier:
 
         return False
 
-    # XY-CHAIN TODO
+    # XY-CHAIN DONE
     def xy_chain(self, sudoku):
         chain_map = self.get_chain_mapping(sudoku)
         already_tested = []
@@ -1733,7 +1734,7 @@ class StrategyApplier:
                 continue
 
             if new_connection in sudoku.cells[possible_way_id].notes:
-                new_chain_in_making = chain_in_making.copy()
+                new_chain_in_making = copy.deepcopy(chain_in_making)
                 new_chain_in_making['chain_ids'].append(possible_way_id)
                 new_chain_in_making['connections'].append(new_connection)
                 possible_chains += self.chain_search(sudoku, chain_map, possible_way_id, new_chain_in_making)
