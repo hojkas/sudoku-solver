@@ -222,6 +222,12 @@ def solver(request, name):
         request.session['max_sudoku_number'] = 9
     request.session['sudoku_type'] = sudoku_type_mapper[name]
 
+    load_from = request.GET.get('load_from', None)
+    cells = request.GET.get('cells', None)
+    if cells is not None and load_from is not None:
+        custom_context['load_sudoku'] = load_from
+        custom_context['cells'] = cells
+
     return render(request, template, custom_context)
 
 def edit_jigsaw_shape(request):

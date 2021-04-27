@@ -153,4 +153,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    {% if load_sudoku %}
+        {% if load_sudoku == 'dictionary' %}
+            load_sudoku_from_dictionary({{ cells }});
+        {% elif load_sudoku == 'string' %}
+            let wrong_lenght_error_msg = {% trans '"Parametr cells má špatnou délku pro daný typ sudoku. Očekáváno vs předáno: "' %}
+            load_sudoku_from_string('{{ cells }}');
+        {% endif %}
+    {% endif %}
+</script>
 {% endblock %}

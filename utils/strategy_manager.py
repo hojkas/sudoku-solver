@@ -13,6 +13,8 @@ def fill_with_candidates(sudoku):
 def is_group_of_same_numbers(lists):
     s = set()
     for l in lists:
+        if not l:
+            return None
         s = s.union(set(l))
     if len(s) <= len(lists):
         return s

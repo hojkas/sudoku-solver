@@ -75,43 +75,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal generatorInfo -->
-    <div class="modal fade" id="generatorInfoModal" tabindex="-1" aria-labelledby="generatorInfoModal" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-                {% trans 'Generátor sudoku' %}
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              {% blocktrans %}
-                  Aplikace po stisknutí tlačítka "Vygenerovat" vygeneruje právě otevřený typ sudoku.
-                  Obtížnost sudoku vychází z obtížnosti potřebných strategií pro jeho vyřešení (ne z počtu vyplněných
-                  čísel).<br>
-                  <br>
-                  <b>Obtížnosti:</b>
-                  <ul>
-                    <li><em>Velmi snadné</em>: Nejtěžší možná použitá strategie je Hidden Single.</li>
-                    <li><em>Snadné</em>: Nejtěžší možná použitá strategie je Hidden Triple/Quad.</li>
-                    <li><em>Středně těžké</em>: Nejtěžší možná použitá strategie je TODO.</li> <!-- TODO -->
-                    <li><em>Těžké</em>: Může vyžadovat využití libovolné ze všech popsaných strategií.</li>
-                    <li><em>Náhodné (řešitelné logickou cestou)</em>: Obtížnost je náhodná, avšak je ověřeno, že
-                        strategie zde popsané povedou k řešení.</li>
-                    <li><em>Náhodné (nezaručena řešitelnost logickou cestou)</em>: Náhodně vygenerované sudoku,
-                        které má pořád pouze jedno řešení, avšak není ověřeno, že je vyřešitelné pouze použitím zde
-                        popsaných strategií.</li>
-                  </ul>
-              {% endblocktrans %}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Zavřít' %}</button>
-          </div>
-        </div>
-      </div>
-    </div>
 {% endblock %}
 
 {% block solver_div %}
@@ -141,23 +104,31 @@
                 </a>
             {% endif %}
             <div>
-                <b>{% trans 'Generátor sudoku' %}</b>
-                <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
-                        data-bs-target="#generatorInfoModal"></i>
+                <b>{% trans 'Nahrát sudoku' %}</b>
+                <i class="fas fa-exclamation-triangle"></i>
+                UNDER CONSTRUCTION
+                <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
             </div>
             <div>
                 <select id="generate_difficulty" name="difficulty">
-                    <option value="easiest">{% trans "Velmi snadné" %}</option>
-                    <option value="easy">{% trans "Snadné" %}</option>
-                    {% if sudoku_name != 'sudoku4x4' %}
-                    <option value="medium">{% trans "Středně těžké" %}</option>
-                    <option value="advanced">{% trans "Těžké" %}</option>
+                    {% if sudoku_name == 'sudoku9x9' %}
+                        <option value="easy">{% trans "Snadné" %}</option>
+                    {% else %}
+
                     {% endif %}
-                    <option value="random-solvable">{% trans "Náhodné (řešitelné logickou cestou)" %}</option>
-                    <option value="random">{% trans "Náhodné (nezaručena řešitelnost logickou cestou)" %}</option>
+                    <!--
+                        <option value="easiest">{% trans "Velmi snadné" %}</option>
+                        <option value="easy">{% trans "Snadné" %}</option>
+                        {% if sudoku_name != 'sudoku4x4' %}
+                        <option value="medium">{% trans "Středně těžké" %}</option>
+                        <option value="advanced">{% trans "Těžké" %}</option>
+                        {% endif %}
+                        <option value="random-solvable">{% trans "Náhodné (řešitelné logickou cestou)" %}</option>
+                        <option value="random">{% trans "Náhodné (nezaručena řešitelnost logickou cestou)" %}</option>
+                    -->
                 </select>
                 <button id="generate_sudoku" class="simple-round-button"
-                        title="{{ sudoku_name }}">{% trans "Vygenerovat" %}</button>
+                        title="{{ sudoku_name }}">{% trans "Nahrát" %}</button>
                 <button id="generate_sudoku_alt" class="simple-round-button" style="display: none">
                     <i class="fas fa-spinner fa-pulse"></i></button>
                 <button id="clear_sudoku" class="simple-round-button">{% trans "Vymazat celé sudoku" %}</button>

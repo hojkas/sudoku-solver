@@ -414,3 +414,33 @@ function create_line(x1, y1, x2, y2, color, fixed_x1)
 function remove_chain_lines() {
     $('.chain-line').remove();
 }
+
+function load_sudoku_from_dictionary(sudoku_dict) {
+    for(let key in sudoku_dict) {
+        let to_fill = sudoku_dict[key];
+        if(typeof(to_fill) == 'number') {
+            fill_cell_with_number(key, to_fill);
+        }
+        else {
+            for(let note in to_fill) {
+                snap_visibility_to_notes(key);
+                const target_note = $('#note' + key + '-' + to_fill[note]);
+                add_number_to_div(target_note, to_fill[note]);
+            }
+        }
+    }
+}
+
+function load_sudoku_from_string(sudoku_string) {
+    if(sudoku_string.length !== max_sudoku_number * max_sudoku_number) {
+        alert(wrong_lenght_error_msg + ' ' + (max_sudoku_number * max_sudoku_number) + ' vs ' + sudoku_string.length);
+    }
+    else {
+        for(let i in sudoku_string) {
+            let value_to_fill = hexa_to_number_mapping[sudoku_string[i]];
+            if(value_to_fill !== undefined) {
+                if(value_to_fill <= max_sudoku_number) fill_cell_with_number(i, value_to_fill);
+            }
+        }
+    }
+}
