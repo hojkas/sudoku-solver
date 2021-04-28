@@ -13,7 +13,7 @@ from utils.sudoku_convertor import convert_js_json_to_sudoku_board, convert_sudo
 from utils.generator import Generator
 
 # Variable that allows showing of extra controls such as custom highlights for
-developers_tools = True
+developers_tools = False
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
