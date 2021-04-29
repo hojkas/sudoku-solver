@@ -204,7 +204,7 @@ def solver(request, name):
     # retrieving settings from session
     setting_shift_is_toggle = request.session.get('setting_shift_is_toggle', True)
     setting_sudoku_full_size = request.session.get('setting_sudoku_full_size', False)
-    setting_show_keyboard = request.session.get('setting_show_keyboard', False)
+    setting_show_keyboard = request.session.get('setting_show_keyboard', True)
 
     custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
     custom_context['setting_sudoku_full_size'] = setting_sudoku_full_size
