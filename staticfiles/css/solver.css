@@ -1,0 +1,246 @@
+.sudoku {
+    margin: 0 auto 0.5rem auto;
+}
+
+.sudoku tr:nth-child(2)>td:nth-child(n+2) {
+    border-top:solid 3px black;
+}
+
+.sudoku tr:nth-child(1)>td {
+    margin: 0.5rem auto 0 auto;
+    color:grey;
+    text-align: center;
+}
+
+.sudoku tr:nth-child(1) {
+    height: 1rem;
+}
+
+.sudoku tr:nth-child(1)>td:nth-child(n+2) {
+    width: 3rem;
+}
+
+.sudoku-top td:nth-child(1) {
+    width: 1.5rem;
+}
+
+.sudoku tr {
+    height: 3rem;
+}
+
+.sudoku tr:nth-child(n+2)>td:nth-child(n+2) {
+    width: 3rem;
+    border: solid 1px black;
+    text-align: center;
+    place-items: center;
+}
+
+.sudoku tr:nth-child(n+2)>td:nth-child(1) {
+    width: 1.5em;
+    text-align: right;
+    padding-right: 0.5rem;
+    border-right: solid 3px black;
+    color: grey;
+}
+
+.sudoku-cell {
+
+}
+
+.special-sudoku-cell {
+    background-color: #bde6ff;
+}
+
+.sudoku-solved-num {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: none;
+    width: 100%;
+}
+
+.sudoku-candidate-grid {
+    color: #080808;
+    width: 100%;
+    height: 100%;
+    line-height: 0.9rem;
+}
+
+.sudoku-candidate-grid span {
+    width: 10px;
+    display: inline-block;
+}
+
+.sudoku-9x9 tr:nth-child(3n+1)>td:nth-child(n+2) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-9x9 tr:nth-child(n+2)>td:nth-child(3n+1) {
+    border-right: solid 3px black;
+}
+
+.sudoku-4x4 tr:nth-child(2n+1)>td:nth-child(n+2) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-4x4 tr:nth-child(n+2)>td:nth-child(2n+1) {
+    border-right: solid 3px black;
+}
+
+.sudoku-6x6 tr:nth-child(3n+1)>td:nth-child(n+2) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-6x6 tr:nth-child(n+2)>td:nth-child(2n+1) {
+    border-right: solid 3px black;
+}
+
+.sudoku-16x16 tr {
+
+}
+
+.sudoku-16x16 td {
+
+}
+
+.sudoku-16x16 tr:nth-child(4n+1)>td:nth-child(n+2) {
+    border-bottom: solid 3px black;
+}
+
+.sudoku-16x16 tr:nth-child(n+2)>td:nth-child(4n+1) {
+    border-right: solid 3px black;
+}
+
+.sudoku-16x16 .sudoku-solved-num {
+    font-size: 1.5rem;
+}
+
+.sudoku-16x16 .sudoku-candidate-grid {
+    line-height: 0.7rem;
+    letter-spacing: 0;
+    font-size: 0.7rem;
+    color: black;
+}
+
+.sudoku-jigsaw tr:nth-child(2)>td:nth-child(n+2) {
+    border-top: 4px solid black;
+}
+
+.sudoku-jigsaw tr:nth-child(10)>td:nth-child(n+2) {
+    border-bottom: 4px solid black;
+}
+
+.sudoku-jigsaw tr:nth-child(n+2)>td:nth-child(10) {
+    border-right: 4px solid black;
+}
+
+.sudoku-jigsaw tr:nth-child(n+2)>td:nth-child(2) {
+    border-left: 4px solid black;
+}
+
+.sudoku-controls {
+    margin: 1rem auto 1rem auto;
+}
+
+.sudoku-controls-button {
+    border-radius: 5px;
+    width: 3rem;
+    height: 3rem;
+    color: grey;
+    background-color: lightskyblue;
+    border-color: grey;
+    margin-top: 3px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.selected {
+    color: black;
+    background-color: dodgerblue;
+    border-color: black;
+}
+
+.unselected {
+    color: grey;
+    background-color: lightgrey;
+    border-color: grey;
+}
+
+.settings-div {
+    margin: 1rem 0 1rem 0;
+}
+
+.simple-round-button {
+    border-radius: 5px;
+    margin: 0.2rem 0 0.2rem 0;
+    background-color: lightgrey;
+}
+
+.next-step {
+    background-color: lightskyblue;
+    width: 100%;
+}
+
+.next-step-approve {
+    background-color: lightgreen;
+    width: 49%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#next-step-next-action-wrapper {
+    text-align: center;
+}
+
+#next-step-default-button-wrapper {
+    text-align: center;
+}
+
+.next-step-cancel {
+    background-color: lightcoral;
+    width: 49%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.my-generic-button {
+    border-radius: 5px;
+    height: 2rem;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+.color-pick-button {
+    width: 2rem;
+    text-align: center;
+    padding: 0;
+}
+
+.color-pick-div {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.strategy_explanation_div {
+    border-radius: 5px;
+    background-color: lightgrey;
+    padding: 5px;
+}
+
+.settings-layout-options-div {
+    text-align: center;
+    width: 300px;
+    margin: 0 auto 0 auto;
+}
+
+.settings-layout-options-div-inner {
+    background-color: dodgerblue;
+    border: solid 2px grey;
+    height: 300px;
+    zoom: 0.5;
+}
+
+.chain-line {
+    opacity: 0.5;
+}
