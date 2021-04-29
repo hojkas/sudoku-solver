@@ -35,23 +35,46 @@
         const developers_tools = false;
     {% endif %}
 
-    {% if setting_shift_is_toggle %}
-        let setting_shift_is_toggle = true;
-    {% else %}
-        let setting_shift_is_toggle = false;
-    {% endif %}
-
     {% if setting_sudoku_full_size %}
         let setting_sudoku_full_size = true;
     {% else %}
         let setting_sudoku_full_size = false;
     {% endif %}
 
+    {% if setting_show_keyboard %}
+        let setting_show_keyboard = true;
+    {% else %}
+        let setting_show_keyboard = false;
+    {% endif %}
+
+    {% if setting_shift_is_toggle %}
+        let setting_shift_is_toggle = true;
+    {% else %}
+        let setting_shift_is_toggle = false;
+    {% endif %}
+
+    let show_keyboard = false;
+
     if (setting_shift_is_toggle) $('#settings-shift-toggle-on').prop('checked', true);
     else $('#settings-shift-toggle-off').prop('checked', true);
 
     if (setting_sudoku_full_size) $('#settings-sudoku-full-size-on').prop('checked', true);
     else $('#settings-sudoku-full-size-off').prop('checked', true);
+
+    if (setting_show_keyboard) $('#settings_show_keyboard_on').prop('checked', true);
+    else $('#settings_show_keyboard_off').prop('checked', true);
+
+    if(window.mobileCheck()) {
+        // override of things if mobile
+        setting_shift_is_toggle = true;
+        setting_show_keyboard = true;
+        $('#settings-shift-toggle-on').prop('checked', true);
+        $('#settings-shift-toggle-off').attr('disabled', true);
+        $('#settings-shift-toggle-off').prop('checked', false);
+        $('#settings_show_keyboard_on').prop('checked', true);
+        $('#settings_show_keyboard_off').attr('disabled', true);
+        $('#settings_show_keyboard_off').prop('checked', false);
+    }
 
     const csrf_token = '{{ csrf_token }}';
     const sudoku_name = '{{ sudoku_name }}';
@@ -165,3 +188,36 @@
     {% endif %}
 </script>
 {% endblock %}
+
+{% block footer %}
+    <footer class="footer-block" id="keyboard_footer" {% if not setting_show_keyboard %}style="display:none;"{% endif %}>
+        <div class="container">
+            <div class="shorten-like-cols">
+                <div id="hide_keyboard_div" class="keyboard">
+                    <button class="my-generic-button" id="show_keyboard_button">
+                        <i class="fas fa-keyboard"></i> <i class="fas fa-angle-up"></i>
+                    </button>
+                </div>
+                <div id="show_keyboard_div" style="display: none;">
+                    <div class="keyboard">
+                        <button class="my-generic-button" id="hide_keyboard_button">
+                           <i class="fas fa-keyboard"></i> <i class="fas fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <div class="keyboard">
+                        <div>
+                            {% for x in max_sudoku_number|get_range %}
+                                <button class="sudoku-controls-button unselected keyboard-button" id="keyboard-{{ x|add:1 }}">
+                                    {{ x|add:1 }}
+                                </button>
+                                {% if x|add:1|break_for_keyboard:max_sudoku_number %} <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+

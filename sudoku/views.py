@@ -97,6 +97,18 @@ def mul(a, b):
     return a * b
 
 @register.filter
+def break_for_keyboard(a, max_sudoku_num):
+    if max_sudoku_num == 4:
+        div = 2
+    elif max_sudoku_num == 6:
+        div = 2
+    elif max_sudoku_num == 16:
+        div = 4
+    else:
+        div = 3
+    return (a % div) == 0
+
+@register.filter
 def get_note_x(max_sudoku_num):
     if max_sudoku_num == 4:
         return 2
@@ -192,9 +204,11 @@ def solver(request, name):
     # retrieving settings from session
     setting_shift_is_toggle = request.session.get('setting_shift_is_toggle', True)
     setting_sudoku_full_size = request.session.get('setting_sudoku_full_size', False)
+    setting_show_keyboard = request.session.get('setting_show_keyboard', False)
 
     custom_context['setting_shift_is_toggle'] = setting_shift_is_toggle
     custom_context['setting_sudoku_full_size'] = setting_sudoku_full_size
+    custom_context['setting_show_keyboard'] = setting_show_keyboard
 
     if name == 'sudoku4x4':
         # creating custom strategies from 4x4 sudoku
@@ -244,7 +258,8 @@ def edit_jigsaw_shape(request):
 def update_setting(request):
     setting = request.POST.get('setting')
     value = request.POST.get('value')
-    if setting == 'setting_shift_is_toggle' or setting == 'setting_sudoku_full_size':
+    if (setting == 'setting_shift_is_toggle' or setting == 'setting_sudoku_full_size'
+            or setting == 'setting_show_keyboard'):
         request.session[setting] = (value.lower() == 'true')
     return HttpResponse('ok')
 

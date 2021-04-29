@@ -37,10 +37,10 @@ body::-webkit-scrollbar {
 .footer-block {
     background-color: white;
     box-shadow: 0 0 5px black;
-    position: absolute;
+    position: fixed; /* absolute for making it stick at the bottom of page */
     bottom: 0;
+    padding: 10px 0 10px 0;
     width: 100%;
-    height: 2rem;
     white-space: nowrap;
 }
 
@@ -94,4 +94,8 @@ body::-webkit-scrollbar {
     width: 15px;
     text-align: center;
     color: grey;
+}
+
+.keyboard {
+    text-align: center;
 }

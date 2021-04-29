@@ -44,10 +44,7 @@
                     <a class="navbar-site-name" href="/">
                         Sudoku Helper
                     </a>
-                    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="main-navigation">
+                    <div id="main-navigation">
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link" href="/solver">
@@ -75,7 +72,7 @@
             {% endblock %}
 
         </main>
-
+        <!--
         <footer class="footer-block text-muted">
             <div class="container d-flex" style="flex-direction: column">
                 <div class="shorten-like-cols">
@@ -83,6 +80,8 @@
                 </div>
             </div>
         </footer>
+        -->
+        {% block footer %}{% endblock %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"

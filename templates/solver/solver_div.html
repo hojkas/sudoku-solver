@@ -15,7 +15,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            TODO
+            TODO <!-- TODO -->
+            {% blocktrans %}
+                Pro mobilní zařízení jsou některá nastavení omezena.
+            {% endblocktrans %}
+              <hr>
+              <div class="settings-div">
+                  <b>{% trans "Zobrazení klávesnice pro doplnění čísel:" %}</b>
+                  <form>
+                      <input type="radio" id="settings_show_keyboard_off"/>
+                      {% trans "Vypnuto" %}<br>
+                      <input type="radio" id="settings_show_keyboard_on"/>
+                      {% trans "Zapnuto" %}<br>
+                  </form>
+              </div>
+              <hr>
               <div class="settings-div">
                   <b>{% trans "Role klávesy Shift:" %}</b>
                   <form>
@@ -23,8 +37,11 @@
                       {% trans "Stisknutí shift přepínáná mezi zadáváním poznámky a vyplněním čísla." %}
                       <br>
                       <input type="radio" id="settings-shift-toggle-off"/>
-                      {% trans "S podrženým shiftem je číslo vyplněno, bez podržení je vložena poznámka." %}
+                      {% blocktrans %}
+                        S podrženým shiftem je číslo vyplněno, bez podržení je vložena poznámka.
+                      {% endblocktrans %}
                   </form>
+                    <br>
                   {% blocktrans %}
                       (V režimu vyplnění při podrženém shiftu tlačítka <i class="fas fa-pen-nib"></i>/
                       <i class="fas fa-pencil-alt"></i> pouze ukazují stav stisku klávesy a nelze přes ně přepínat režim

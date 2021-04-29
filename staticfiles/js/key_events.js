@@ -33,7 +33,8 @@ function on_arrow_key_down(key) {
 
 function on_number_input(key, shiftIsPressed) {
     let num;
-    if(key <= 57) num = key - 48; //for nums 1-9
+    if(key <= 9) num = key; //for nums 1-9 that are already in
+    else if(key <= 57) num = key - 48; //for nums 1-9
     else num = key - 55; //for hexa
     //if shift is toggle in settings, note/solve is filled in decided by window.fill_in_solved bool
     if(setting_shift_is_toggle && window.fill_in_solved) fill_number(num);
