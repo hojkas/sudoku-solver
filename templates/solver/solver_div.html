@@ -154,20 +154,6 @@
     </div>
 
     <div class="row" style="margin: 1rem 0 1rem 0;">
-        <div class="col-md-4" style="text-align: center;">
-            <div><b>
-                {% trans "Mód zadávání" %}
-            </b></div>
-            <div>
-                <button id="controls_fill_solved" class="sudoku-controls-button unselected">
-                    <i class="fas fa-pen-nib"></i>
-                </button>
-                <button id="controls_fill_notes" class="sudoku-controls-button selected">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
-            </div>
-        </div>
-
         <div class="col-md-8">
             <div>
                 <b>{% trans "Podbarvení čísel" %}</b>
@@ -180,6 +166,19 @@
                 {% endfor %}
                 <button id="highlight_number_-1" class="sudoku-controls-button selected highlight-button">
                     <i class="fas fa-ban"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-4" style="text-align: center;">
+            <div><b>
+                {% trans "Mód zadávání" %}
+            </b></div>
+            <div>
+                <button id="controls_fill_solved" class="sudoku-controls-button unselected">
+                    <i class="fas fa-pen-nib"></i>
+                </button>
+                <button id="controls_fill_notes" class="sudoku-controls-button selected">
+                    <i class="fas fa-pencil-alt"></i>
                 </button>
             </div>
         </div>
