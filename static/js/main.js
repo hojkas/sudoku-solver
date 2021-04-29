@@ -164,7 +164,7 @@ $(document).ready(function()
     $('#settings_show_keyboard_off').change(function() {
         if ($(this).is(':checked')) {
             $('#settings_show_keyboard_on').prop('checked', false);
-            update_setting('setting_show_keyboard', true);
+            update_setting('setting_show_keyboard', false);
             $('#keyboard_footer').hide();
         }
     });
