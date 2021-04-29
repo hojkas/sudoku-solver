@@ -64,7 +64,7 @@
     if (setting_show_keyboard) $('#settings_show_keyboard_on').prop('checked', true);
     else $('#settings_show_keyboard_off').prop('checked', true);
 
-    if(window.mobileCheck()) {
+    if(/*window.mobileCheck()*/false) {
         // override of things if mobile
         setting_shift_is_toggle = true;
         setting_show_keyboard = true;
