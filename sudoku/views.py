@@ -221,26 +221,35 @@ def solver(request, name):
     else:
         custom_context['easy_strategies'] = easy_strategies
         custom_context['advanced_strategies'] = advanced_strategies
-
-    if name == 'jigsaw':
-        jigsaw_sectors = request.session.get('jigsaw_sectors', None)
-        jigsaw_cell_sectors = request.session.get('jigsaw_cell_sectors', None)
-        if jigsaw_sectors is None or jigsaw_cell_sectors is None:
-            return redirect('/solver/edit_jigsaw_shape')
-        custom_context['jigsaw_sectors'] = jigsaw_sectors
-        custom_context['jigsaw_cell_sectors'] = jigsaw_cell_sectors
-
     try:
         request.session['max_sudoku_number'] = max_sudoku_numbers[name]
     except KeyError:
         request.session['max_sudoku_number'] = 9
     request.session['sudoku_type'] = sudoku_type_mapper[name]
 
+    dont_check_jigsaw_sectors = False
+
     load_from = request.GET.get('load_from', None)
     cells = request.GET.get('cells', None)
     if cells is not None and load_from is not None:
+        if name == 'jigsaw':
+            jigsaw_sectors = request.GET.get('jigsaw_sectors', None)
+            jigsaw_cell_sectors = request.GET.get('jigsaw_cell_sectors', None)
+            custom_context['jigsaw_sectors'] = jigsaw_sectors
+            custom_context['jigsaw_cell_sectors'] = jigsaw_cell_sectors
+            request.session['jigsaw_sectors'] = json.loads(jigsaw_sectors)
+            request.session['jigsaw_cell_sectors'] = json.loads(jigsaw_cell_sectors)
+            dont_check_jigsaw_sectors = True
         custom_context['load_sudoku'] = load_from
         custom_context['cells'] = cells
+
+    if name == 'jigsaw' and not dont_check_jigsaw_sectors:
+        jigsaw_sectors = request.session.get('jigsaw_sectors', None)
+        jigsaw_cell_sectors = request.session.get('jigsaw_cell_sectors', None)
+        if jigsaw_sectors is None or jigsaw_cell_sectors is None:
+            return redirect('/solver/edit_jigsaw_shape')
+        custom_context['jigsaw_sectors'] = jigsaw_sectors
+        custom_context['jigsaw_cell_sectors'] = jigsaw_cell_sectors
 
     return render(request, template, custom_context)
 
@@ -321,7 +330,8 @@ def check_solvability(request):
                                     ' (podle pořadí uváděném na této stránce) byla "' + hardest_strategy + '".')
             break
         if not strategy_applier.find_next_step(sudoku_for_part1):
-            result_dict['result'] = _('Logický postup na zadaném sudoku selhal.')
+            result_dict['result'] = _('Logický postup na zadaném sudoku selhal. Doplnili jste možná kandidáty do '
+                                      'prázdných buněk před stiskem tlačítka?')
             break
 
     return HttpResponse(json.dumps(result_dict))

@@ -276,6 +276,16 @@ $(document).ready(function()
         let num = $(this).attr('id').split('-')[1];
         on_number_input(num);
     });
+
+    $('#sudoku9x9-expand-links').on('click', function() {
+       $('#sudoku9x9-collapsed-links-div').hide();
+       $('#sudoku9x9-expanded-links-div').show();
+    });
+
+    $('#sudoku9x9-hide-links').on('click', function() {
+       $('#sudoku9x9-collapsed-links-div').show();
+       $('#sudoku9x9-expanded-links-div').hide();
+    });
 });
 
 // function from user Michael Zaporozhets on StackOverflow, answered on 8.7.2012
