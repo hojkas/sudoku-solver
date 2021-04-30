@@ -667,15 +667,6 @@ class StrategyApplier:
         if self.__dont_solve:
             return self.__report_json
 
-        # check if sudoku is already solved
-        if sudoku.is_fully_solved():
-            if self.__collect_report:
-                self.__report_json['success'] = False
-                self.__report_json['text'] = _('Sudoku už je vyřešené.')
-                return self.__report_json
-            else:
-                return False
-
         # check if sudoku isn't obviously wrong
         collisions = self.has_obvious_mistakes(sudoku)
         if collisions is not None:
@@ -683,6 +674,15 @@ class StrategyApplier:
                 self.__report_json['success'] = False
                 self.__report_json['text'] = _('V sudoku se nachází vyplněná číslice v přímé kolizi. '
                                                'Sudoku není vyřešitelné. Kolize na pozicích: ' + collisions)
+                return self.__report_json
+            else:
+                return False
+
+        # check if sudoku is already solved
+        if sudoku.is_fully_solved():
+            if self.__collect_report:
+                self.__report_json['success'] = False
+                self.__report_json['text'] = _('Sudoku už je vyřešené.')
                 return self.__report_json
             else:
                 return False

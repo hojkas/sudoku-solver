@@ -103,7 +103,128 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+              <div class="custom-list-heading">{% trans "Pravidla sudoku" %}</div>
+                  <div>
+                    {% trans "Cílem je doplnit do mřížky čísla 1 až" %}
+                    {% if sudoku_name == "sudoku4x4" %}4
+                    {% elif sudoku_name == "sudoku6x6" %}6
+                    {% elif sudoku_name == "sudoku16x16" %}
+                        {% trans "9 a písmena A až G (zastupující hodnoty 10 až 16 pro snazší zápis)" %}
+                    {% else %}9
+                    {% endif %}
+                    {% trans "tak, aby se každá z nich v každém bloku nacházela právě jednou." %}
+                  </div>
+                  <div>
+                    {% blocktrans %}
+                    Blok je pro tento typ sudoku:
+                    <ul>
+                    <li>každý řádek</li>
+                    <li>každý sloupec</li>
+                    <li>každý sektor (celky buněk oddělené tlustší čárou)</li>
+                    {% endblocktrans %}
+                    {% if sudoku_name == "diagonal" or sudoku_name == "diagonal_centers" %}
+                        <li>{% trans "obě modře podbarvené diagonály" %}</li>
+                    {% elif sudoku_name == "centers" or sudoku_name == "diagonal_centers"%}
+                        <li>{% trans 'modře podbarvené středy sektorů ("čtverců")' %}</li>
+                    {% elif sudoku_name == "hypersudoku" %}
+                        <li>{% trans "4 sektory navíc (modře podbarvené)" %}</li>
+                    {% endif %}
+                    </ul>
+                  </div>
+              <div class="custom-list-heading">{% trans "Ovládání nástroje" %}</div>
+              <div>
+                  <div>
+                      <b>{% trans "Vyplňování sudoku" %}</b>
+                    {% blocktrans %}
+                        <p>
+                        Pro vyplnění čísla do buňky musí buňka být nejrpve označena. Označit ji lze kliknutím.
+                        Je-li už některá buňka označena, lze se na mřížce také pohybovat pomocí kláves kurzorových
+                        šipek, které posunou označenou buňku daným směrem, nebo pomocí tabulátoru, který označí
+                        buňku napravo od označené nebo první buňku v dalším řádku, pokud narazí na konec řádku.
+                        </p>
 
+                        <p>
+                        Číslici lze vyplnit několika způsoby. Stiskem klávesy odpovídající číslu na horní řadě
+                        číslic, na numerické klávesnici nebo stiskem odpovídajícího tlačítka na digitální
+                        klávesnici programu, pokud je zapnuta. (Klávesnice je na mobilních zařízení vždy k
+                        dispozici, jinde je vypnuta a lze zapnout v Nastavení.)
+                    {% endblocktrans %}
+                    {% if sudoku_name == "sudoku16x16" %}
+                        {% trans "Písmena lze vyplnit stiskem jejich kláves nebo pomocí klávesnice programu." %}
+                    {% endif %}
+                      </p>
+
+                    {% blocktrans %}
+                        <p>
+                        Pokud je "Mód zadávání" v režimu <i class="fas fa-pencil-alt"></i>, stisk číslice ji do buňky
+                        doplní jako poznámku. Pokud je v režimu <i class="fas fa-pen-nib"></i>, stisk číslice ji do
+                        buňky vyplní jako vyřešenou číslici. Mezi režimy lze přepínat stiskem jejich tlačítek nebo
+                        stiskem klávesy Shift.
+                        </p>
+                        <p>
+                        (Při zobrazení na počítači lze v Nastavení změnit způsob přepínání módu zadávání na alternativní
+                        režim, při kterém se číslice vyplní vždy pouze jako poznámka pokud není stisknut Shift,
+                        a jako vyřešené číslo pokud stisknut je.)
+                        </p>
+                        <p>
+                        Stiskem Delete nebo Backspace se vymaže právě označená buňka.
+                        </p>
+                  {% endblocktrans %}
+                    {% if sudoku_name == "jigsaw" %}
+                        <p>
+                            {% trans 'Kliknutím na tlačítko "Změnit rozložení sektorů" lze změnit rozvržení jigsaw sektorů.' %}
+                        </p>
+                    {% endif %}
+                  </div>
+                  <div>
+                      <b>{% trans "Pomoc při řešení sudoku" %}</b>
+                      {% blocktrans %}
+                          <p>
+                          V pravé části stránky (nebo pod sudoku při zobrazení na malých obrazovkách nebo při přepnutí
+                          zobrazení v nastavení) se nachází sekce pro pomoc při řešení.
+                          </p>
+                          <p>
+                          Tlačítko "Automatické doplnění kandidátů" doplní do nevyřešených buňěk v sudoku všechna
+                          možná kandidátní čísla jako poznámky.
+                          </p>
+                          <p>
+                          Po stisku tlačítka "Otestovat řešitelnost a obtížnost" zkusí nástroj nad právě vyplněným
+                          stavem sudoku provést logické kroky k vyřešení. Oznámí, zda byl schopen najít řešení
+                          pomocí strategií uvedených v seznamu aplikovatelných strategií, a pokud ano, jaká byla
+                          nejtěžší strategie, kterou k tomu musel použít. Čím níže tato strategie na seznamu je,
+                          tím obtížnější sudoku pravděpodobně je.
+                          </p>
+                          <p>
+                          Tlačítko "Najít další krok" slouží k nalezení dalšího logického kroku. Program v aktuálně
+                          zadaném sudoku pokusí najít nejlehčí strategii, která by vedla k eliminaci některé z poznámek
+                          nebo k doplnění čísla. Tuto funkci lze také použít pro kontrolu vyřešeného sudoku, protože
+                          nad vyplněným sudoku provede kontrolu, jestli nejsou některé vyplněné buňky v kolizi.
+                          </p>
+                          <p>
+                          Pokud se našel další logický krok, použitá strategie je zvýrazněna v seznamu a barevně ukázána
+                          v sudoku. Pod sudoku se objeví vysvětlení jejího použití. Pro více informací o strategii si
+                          lze otevřít její stránku kliknutím na její název v seznamu. (Stránka se otevře v novém okně,
+                          aby se nevymazal postup na sudoku.)
+                          </p>
+                          <p><i class="fas fa-exclamation-triangle"></i> Pro otestování řešitelnosti a obtížnosti i pro
+                          nalezení dalšího kroku je potřeba mít v každém políčku sudoku vyplněná možná kandidátní čísla.
+                          Prázdné buňky bez poznámek pro nástroj znamenají, že pro buňku neexistuje žádné číslo k
+                          doplnění a tedy sudoku je neřešitelné.
+                          </p>
+                      {% endblocktrans %}
+                  </div>
+                  <p>
+                      <i class="fas fa-exclamation-triangle"></i>
+                      {% blocktrans %}Pozor, sudoku není ukládáno. Při obnovení stránky ztratíte postup!
+                      {% endblocktrans %}
+                  </p>
+                  <p>
+                      {% blocktrans %}
+                      Toto informační okno lze vždy otevřít kliknutím na <i class="fas fa-info-circle"></i>
+                          vedle názvu sudoku.
+                      {% endblocktrans %}
+                  </p>
+              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Zavřít' %}</button>
@@ -153,14 +274,19 @@
             </div>
             <div>
                 {% if sudoku_name == 'sudoku9x9' %}
+                    <div>
+                        <a href="/solver/sudoku9x9?load_from=string&cells=...........71.82...3672948.791486325328...146.542.379...58419.....975.......6....">
+                            {% trans "Sudoku srdce z úvodní stránky" %}
+                        </a>
+                    </div>
                     <div id="sudoku9x9-collapsed-links-div">
                         <button id="sudoku9x9-expand-links" class="simple-round-button">
-                            {% trans "Zobrazit ukázky sudoku k nahrání" %} <i class="fas fa-eye"></i>
+                            {% trans "Zobrazit další ukázky sudoku k nahrání" %} <i class="fas fa-eye"></i>
                         </button>
                     </div>
                     <div id="sudoku9x9-expanded-links-div" style="display:none;">
                         <button id="sudoku9x9-hide-links" class="simple-round-button">
-                            {% trans "Skrýt ukázky sudoku" %} <i class="fas fa-eye-slash"></i>
+                            {% trans "Skrýt další ukázky sudoku" %} <i class="fas fa-eye-slash"></i>
                         </button>
                         <div style="text-align: left;">
                             {% trans "Ukázky sudoku s uvedenou nejtěžší strategií pro vyřešení" %}
