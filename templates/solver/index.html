@@ -1,41 +1,12 @@
 {% extends "solver/solver_layout.html" %}
 {% load i18n %}
 
-{% block modals %}
-    {{ block.super }}
-
-    <!-- Modal sudokuInfoModal -->
-    <div class="modal fade" id="sudokuInfoModal" tabindex="-1" aria-labelledby="sudokuInfoModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-                {% trans 'Typ sudoku' %}
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            TODO popis co typy znamenají a že vyběrem se na ně přesune.
-            <i class="fas fa-exclamation-triangle"></i>
-            UNDER CONSTRUCTION
-            <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Zavřít' %}</button>
-          </div>
-        </div>
-      </div>
-    </div>
-{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-4">
             <div class="main-block">
                 <div class="custom-list-class">
                     {% trans 'Typ sudoku' %}
-                    <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
-                       data-bs-target="#sudokuInfoModal"></i>
                 </div>
             </div>
             <div class="main-block">
@@ -67,10 +38,60 @@
         </div>
         <div class="col-md-8">
             <div class="main-block">
-                TODO nějaký obecný popis sudoku, jak ho řešit, a link na klaské pro rychlý start
-                <i class="fas fa-exclamation-triangle"></i>
-                UNDER CONSTRUCTION
-                <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+                <div class="custom-list-class">TEXT</div>
+                {% blocktrans %}
+                    <p>
+                        Kliknutím na sudoku v seznamu se dostanete na aplikaci pro řešení konkrétního typu sudoku.
+                        Klasické sudoku, se kterým se můžete nejčastěji setkat, je <a href="/solver/sudoku9x9">
+                        Sudoku 9x9</a>.
+                    </p>
+                    <p>
+                        <b>Popis typů sudoku:</b> (podrobnější popis se nachází na stránce daného typu sudoku)
+                        <ul>
+                            <li>
+                                <em>Sudoku 9x9:</em> Původní verze sudoku. Mřížku tvoří 9x9 buněk. Obsahuje 9 sektorů
+                                o velikosti 3x3 buňky. V každém sloupci, řádku a sektoru se musí každá z číslic 1-9
+                                vyskytovat právě jednou.
+                            </li>
+                            <li>
+                                <em>Sudoku 4x4:</em> Mřížku tvoří 4x4 buněk. Obsahuje 4 sektory o velikosti 2x2.
+                                V každém sloupci, řádku a sektoru se musí každá z číslic 1-4 vyskytovat právě jednou.
+                            </li>
+                            <li>
+                                <em>Sudoku 6x6:</em> Mřížku tvoří 6x6 buněk. Obsahuje 6 sektorů o velikosti 2x3.
+                                V každém sloupci, řádku a sektoru se musí každá z číslic 1-6 vyskytovat právě jednou.
+                            </li>
+                            <li>
+                                <em>Sudoku 16x16:</em> Mřížku tvoří 16x16 buněk. Obsahuje 16 sektorů o velikosti 4x4.
+                                V každém sloupci, řádku a sektoru se musí každý z 16 symbolů vyskytovat právě jednou.
+                                Jako symboly se používají číslice 1-9 a písmena A-G.
+                            </li>
+                            <li>
+                                <em>Diagonální sudoku:</em> Vychází ze Sudoku 9x9. Obsahuje navíc dvě diagonály, ve
+                                kterých se musí každá z číslic 1-9 vyskytovat právě jednou.
+                            </li>
+                            <li>
+                                <em>Sudoku se středy čtverců:</em> Vychází ze Sudoku 9x9. Má navíc označeny buňky
+                                tvořící středy sektorů, ve kterých se musí každá z číslic 1-9 vyskytovat právě jednou.
+                            </li>
+                            <li>
+                                <em>Diagonální sudoku se středy čtverců:</em> Vychází ze Sudoku 9x9. Zároveň obsahuje
+                                diagonály a středy čtverců, ve kterých se musí každá z číslic 1-9 vyskytovat právě
+                                jednou.
+                            </li>
+                            <li>
+                                <em>Jigsaw:</em> Vychází ze Sudoku 9x9. Na rozdíl od něj nemá pravidelné čtvercové
+                                sektory. Jeho sektory jsou tvořeny libovolně tvarovanými celky o 9 buňkách, ve kterých
+                                platí umístění číslic 1-9 právě jednou. Tvar sektorů si lze libovolně nastavit.
+                            </li>
+                            <li>
+                                <em>Hypersudoku:</em> Vychází ze Sudoku 9x9. Kromě klasických sektorů obsahuje
+                                další 4 graficky zvýrazněné sektory překrývající se s těmi obyčejnými a musí v nich
+                                být také umístěny číslice 1-9 právě jednou.
+                            </li>
+                        </ul>
+                    </p>
+                {% endblocktrans %}
             </div>
         </div>
     </div>

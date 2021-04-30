@@ -251,6 +251,11 @@ def solver(request, name):
         custom_context['jigsaw_sectors'] = jigsaw_sectors
         custom_context['jigsaw_cell_sectors'] = jigsaw_cell_sectors
 
+    seen_name = 'seen_' + name
+    seen_this = request.session.get(seen_name, False)
+    request.session[seen_name] = True
+    custom_context['seen_this'] = seen_this
+
     return render(request, template, custom_context)
 
 def edit_jigsaw_shape(request):
