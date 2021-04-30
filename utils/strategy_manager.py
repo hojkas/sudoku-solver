@@ -1698,7 +1698,7 @@ class StrategyApplier:
                                 self.report_add_highlight(cell_id, False, 'red', possible_chain['leftover'])
                                 self.report_add_candidate_to_remove(cell_id, possible_chain['leftover'])
                             else:
-                                sudoku.cells[cell_id].remove(possible_chain['leftover'])
+                                sudoku.cells[cell_id].notes.remove(int(possible_chain['leftover']))
 
                 if changed_something:
                     # strategy success, note everything and return True
