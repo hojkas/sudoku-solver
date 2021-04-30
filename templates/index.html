@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block content %}
     <div class="row">
@@ -24,6 +25,10 @@
                     netradičních forem hry SUDOKU".
                     </p>
                 {% endblocktrans %}
+                <p style="text-align: center">
+                    <img src="{% static "img/sudoku_heart.png" %}" style="width: 30%;">
+                    <div style="text-align: center">{% trans "Vytvořeno s láskou pro sudoku." %}</div>
+                </p>
             </div>
         </div>
     </div>
