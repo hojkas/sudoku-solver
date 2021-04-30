@@ -97,7 +97,12 @@ async function check_solvability() {
         data: {
             json: sudoku_json
         },
-        cache: false
+        cache: false,
+        error: function (xhr, err) {
+            alert("error: " + xhr.status);
+            $('#check-solvability-text').show();
+            $('#check-solvability-loading').hide();
+        }
     }).done(function(response_string) {
         $('#check-solvability-text').show();
         $('#check-solvability-loading').hide();
