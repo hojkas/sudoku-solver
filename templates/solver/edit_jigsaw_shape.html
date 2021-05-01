@@ -43,6 +43,9 @@
                         <p>Po stisku tlačítka "Potvrdit" budou sektory zkontrolovány a pokud jsou zadány korektně,
                         dojde k přesměrování zpět na řešení sudoku.</p>
                     {% endblocktrans %}
+                    <button onclick="sample_sectors()" class="simple-round-button">
+                        {% trans "Ukázka jednoho možného rozložení sektorů" %}
+                    </button>
                 </div>
 
                 <table style="margin-left: auto; margin-right: auto">
@@ -95,13 +98,11 @@
                 </table>
 
                 <div style="text-align: center">
-                    <button id="edit-jigsaw-submit" class="btn btn-primary">
+                    <button id="edit-jigsaw-submit" class="simple-round-button">
                         <div id="submit-text">{% trans "Potvrdit nové rozmístění sektorů" %}</div>
                         <div id="submit-loading" style="display: none;"><i class="fas fa-spinner fa-pulse"></i></div>
                     </button>
                 </div>
-
-                <button onclick="sample_sectors()">Sample sectors</button> <!-- TODO delete and replace with sample sectors -->
             </div>
         </div>
     </div>

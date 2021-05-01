@@ -160,9 +160,22 @@ function cell_in_direction(cell_id, direction) {
 }
 
 function sample_sectors() {
-    for(let row = 0; row < 9; row++) {
-        change_sector_coloring(row);
-        for(let col = 0; col < 9; col++) color_sector_on_cell($('#cell-' + (row *9 + col)));
+    let sample = [
+        [0,1,2,3,9,10,11,18,19],
+        [4,5,6,12,13,14,20,21,22],
+        [7,8,15,16,17,23,24,25,26],
+        [27,28,29,30,36,37,38,45,46],
+        [31,32,33,39,40,41,47,48,49],
+        [34,35,42,43,44,50,51,52,53],
+        [54,55,56,57,63,64,65,72,73],
+        [58,59,60,66,67,68,74,75,76],
+        [61,62,69,70,71,77,78,79,80]
+    ]
+    for(let sample_id in sample) {
+        change_sector_coloring(sample_id);
+        for(let i in sample[sample_id]) {
+            color_sector_on_cell($('#cell-' + sample[sample_id][i]));
+        }
     }
 }
 
@@ -171,7 +184,7 @@ function change_sector_coloring(new_id) {
     let former_button_ref = $('#sector_color_' + selected_sector);
     former_button_ref.css({'background-color': 'lightgrey', 'border-color': 'grey'});
     new_button_ref.css({'background-color': 'dodgerblue', 'border-color': 'black'});
-    selected_sector = new_id;
+    selected_sector = parseInt(new_id);
 }
 
 function create_sectors_borders() {
