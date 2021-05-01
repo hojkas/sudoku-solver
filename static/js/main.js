@@ -158,6 +158,7 @@ $(document).ready(function()
             $('#settings_show_keyboard_off').prop('checked', false);
             update_setting('setting_show_keyboard', true);
             $('#keyboard_footer').show();
+            $('#compensate-for-keyboard').css({'height': $('#keyboard_footer').height()});
         }
     });
 
@@ -166,6 +167,7 @@ $(document).ready(function()
             $('#settings_show_keyboard_on').prop('checked', false);
             update_setting('setting_show_keyboard', false);
             $('#keyboard_footer').hide();
+            $('#compensate-for-keyboard').css({'height': $('#keyboard_footer').height()});
         }
     });
 
@@ -265,11 +267,13 @@ $(document).ready(function()
     $('#hide_keyboard_button').on('click', function() {
        $('#hide_keyboard_div').show();
        $('#show_keyboard_div').hide();
+       $('#compensate-for-keyboard').css({'height': $('#keyboard_footer').height()});
     });
 
     $('#show_keyboard_button').on('click', function() {
        $('#hide_keyboard_div').hide();
        $('#show_keyboard_div').show();
+       $('#compensate-for-keyboard').css({'height': $('#keyboard_footer').height()});
     });
 
     $('.keyboard-button').on('click', function() {
