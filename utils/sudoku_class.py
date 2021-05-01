@@ -44,7 +44,7 @@ class SudokuBoard:
         self.cells[cell_id].notes = []
         self.cells[cell_id].solved = number
 
-    # TODO only test function
+    # only test function
     def print_full_sudoku(self):
         divider = '#-------#-------#-------#'
         for x in range(self.max_sudoku_number):
@@ -58,7 +58,7 @@ class SudokuBoard:
             print('|')
         print(divider)
 
-    # tODO only test
+    # only test
     def print_full_4(self):
         divider = '#-----#-----#'
         for x in range(self.max_sudoku_number):
@@ -72,7 +72,7 @@ class SudokuBoard:
             print('|')
         print(divider)
 
-    # TODO only test function
+    # only test function
     def print_all_cells(self):
         for i in range(self.max_sudoku_number * self.max_sudoku_number):
             self.cells[i].print_full_cell()
@@ -121,7 +121,7 @@ class SudokuCell:
     def count_candidates(self):
         return len(self.notes)
 
-    # TODO only test function
+    # only test function
     def print_full_cell(self):
         print('(', self.cell_id, ') ', end='', sep='')
         if self.solved:
@@ -132,7 +132,7 @@ class SudokuCell:
                 print(val, end=' ')
             print(']')
 
-    # TODO only test function
+    # only test function
     def print_solved_cell(self):
         if self.solved:
             print(self.solved, end='')
