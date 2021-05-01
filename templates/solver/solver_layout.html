@@ -1,30 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block modals %}
-    {{ block.super }}
-
-    <!-- Modal strategyInfoModal -->
-    <div class="modal fade" id="strategyInfoModal" tabindex="-1" aria-labelledby="strategyInfoModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-                {% trans 'Aplikovatelné strategie' %}
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            TODO
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Zavřít' %}</button>
-          </div>
-        </div>
-      </div>
-    </div>
-{% endblock %}
-
 {% block content %}
 <script>
     const max_sudoku_number = {{ max_sudoku_number }};
@@ -142,8 +118,6 @@
             <div class="main-block">
                 <div class="custom-list-class">
                     {% trans 'Aplikovatelné strategie' %}
-                    <i type="button" class="fas fa-info-circle" data-bs-toggle="modal"
-                       data-bs-target="#strategyInfoModal"></i>
                 </div>
             </div>
             <div class="main-block">
