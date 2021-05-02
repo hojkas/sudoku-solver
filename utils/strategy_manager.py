@@ -1537,7 +1537,7 @@ class StrategyApplier:
                                               possible_chain['middle_cell_id'], possible_chain['connection_a'])
                         self.report_add_chain(possible_chain['wing_b_id'], possible_chain['connection_b'],
                                               possible_chain['middle_cell_id'], possible_chain['connection_b'])
-                        self.__report_json['text'] = _('Zeleně je zvýrazněno nalezené Y-Wing. Na jeho koncích se'
+                        self.__report_json['text'] = _('Zeleně je zvýrazněno nalezené Y-Wing. Na jeho koncích se '
                                                        'nachází <b>' + str(possible_chain['leftover']) + ' </b> '
                                                                                                          '(žlutě) a na jedné z těchto pozic musí být. Lze odstranit '
                                                                                                          'kandidátní číslo' + str(
