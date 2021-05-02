@@ -310,20 +310,27 @@ def check_solvability(request):
     sudoku_json = json.loads(request.POST.get('json'))
     sudoku_for_part1 = convert_js_json_to_sudoku_board(sudoku_json)
 
-    # test if solved to avoid needless proccessing
-    if sudoku_for_part1.is_fully_solved():
-        return HttpResponse(json.dumps({'result': _('Sudoku již vyřešeno, není co ověřovat.')}))
     sudoku_type_name = request.session.get('sudoku_type')
 
-    result_dict = {}
-
-    # PART 1 test with current notes by logic
     if sudoku_type_name == "jigsaw":
         strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
                                            sector_ids=request.session.get('jigsaw_sectors'), collect_report=False)
     else:
         strategy_applier = StrategyApplier(request.session.get('max_sudoku_number'), sudoku_type_name,
                                            collect_report=False)
+
+    # test for collisions from user
+    collisions = strategy_applier.has_obvious_mistakes(sudoku_for_part1)
+    if collisions is not None:
+        return HttpResponse(json.dumps({'result': _('V sudoku se nachází vyplněná číslice v přímé kolizi. '
+                                           'Sudoku není vyřešitelné. Kolize na pozicích: ' + collisions)}))
+    # test if solved to avoid needless proccessing
+    if sudoku_for_part1.is_fully_solved():
+        return HttpResponse(json.dumps({'result': _('Sudoku již vyřešeno, není co ověřovat.')}))
+
+
+    result_dict = {}
+
     while True:
         if sudoku_for_part1.is_fully_solved():
             hardest_strategy = strategy_applier.get_hardest_strategy_applied()
