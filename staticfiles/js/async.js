@@ -1,3 +1,7 @@
+// ====================================
+// Author: Iveta Strnadová (xstrna14)
+// ====================================
+
 async function update_setting(name_of_setting, value) {
     $.ajax({
         url: '/solver/update_setting',

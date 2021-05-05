@@ -1,3 +1,7 @@
+// ====================================
+// Author: Iveta Strnadová (xstrna14)
+// ====================================
+
 window.custom_highlight_red = []
 window.custom_highlight_green = []
 window.custom_highlight_yellow = []

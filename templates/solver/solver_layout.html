@@ -175,15 +175,18 @@
                         </button>
                     </div>
                     <div class="keyboard">
-                        <div>
-                            {% for x in max_sudoku_number|get_range %}
-                                <button class="sudoku-controls-button unselected keyboard-button" id="keyboard-{{ x|add:1 }}">
-                                    {{ x|add:1|transform_to_letter_if_needed }}
-                                </button>
-                                {% if x|add:1|break_for_keyboard:max_sudoku_number %} <br>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                            <div>
+                                {% for x in max_sudoku_number|get_range %}
+                                    <button class="sudoku-controls-button unselected keyboard-button" id="keyboard-{{ x|add:1 }}">
+                                        {{ x|add:1|transform_to_letter_if_needed }}
+                                    </button>
+                                    {% if x|add:1|break_for_keyboard:max_sudoku_number %} <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <button class="sudoku-controls-button unselected" id="keyboard-delete">
+                                <i class="fas fa-eraser"></i>
+                            </button>
                     </div>
                 </div>
             </div>

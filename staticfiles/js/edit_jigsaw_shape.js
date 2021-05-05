@@ -92,6 +92,7 @@ function color_sector_on_cell(cell) {
     }
     cell_sector[cell_id] = selected_sector;
     cell.css({'background-color': custom_sector_to_color_mapping[selected_sector]});
+    cell.html(selected_sector);
     let sector_count = $('#sector_color_status_' + selected_sector);
     sector_count.html(parseInt(sector_count.text()) + 1);
     if(sector_count.text() === '9') sector_count.css({'color': 'green'});
