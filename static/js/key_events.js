@@ -1,3 +1,7 @@
+// ====================================
+// Author: Iveta Strnadová (xstrna14)
+// ====================================
+
 function on_shift_key_down() {
     if(setting_shift_is_toggle) { //setting to use shift as toggle
         if(window.fill_in_solved) {

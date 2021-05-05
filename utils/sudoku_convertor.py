@@ -1,4 +1,5 @@
 from utils.sudoku_class import *
+# author: Iveta Strnadová (xstrna14)
 
 """ sudoku_convertor.py serves as middle layer between simple array from generator.py
     and complex class from sudoku_class.py

@@ -1,6 +1,7 @@
-// ==============================
+// ===================================
+// Author: Iveta Strnadová (xstrna14)
 // startup variables and settings
-// ==============================
+// ===================================
 
 // number of cell that is currently selected = highlighted
 window.selected_cell_id = -1;
@@ -172,7 +173,8 @@ $(document).ready(function()
     });
 
     // Code snippet from https://stackoverflow.com/questions/38425931/download-table-as-png-using-jquery/40644383,
-    // answered on Nov 16 2016 by Christos Lytra; with small changes to work with html2canvas v1.0.0 and
+    // answered on Nov 16 2016 by Christos Lytra (https://stackoverflow.com/users/1889685/christos-lytras);
+    // with small changes to work with html2canvas v1.0.0 and
     // to scale for higher resolution
     $('#export-sudoku').on('click', function() {
         remove_highlight_for_download();
@@ -292,7 +294,8 @@ $(document).ready(function()
     });
 });
 
-// function from user Michael Zaporozhets on StackOverflow, answered on 8.7.2012
+// function from user Michael Zaporozhets (https://stackoverflow.com/users/1061967/michael-zaporozhets)
+// on StackOverflow, answered on 8.7.2012
 // from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
 window.mobileCheck = function() {
   let check = false;

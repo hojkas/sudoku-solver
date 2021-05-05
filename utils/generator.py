@@ -1,6 +1,7 @@
 import random
 from utils.strategy_manager import *
 
+# author: Iveta Strnadová (xstrna14)
 
 def rnd_num_from(options):
     return options[random.randrange(0, len(options))]

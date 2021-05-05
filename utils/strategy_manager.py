@@ -2,6 +2,7 @@ from utils.sudoku_class import *
 from django.utils.translation import gettext as _
 import copy
 
+# author: Iveta Strnadová (xstrna14)
 
 def fill_with_candidates(sudoku):
     """ Function fills non-solved cells with all possible candidate numbers

@@ -1,3 +1,7 @@
+// ====================================
+// Author: Iveta Strnadová (xstrna14)
+// ====================================
+
 function change_number_among_notes(key) {
     const target_note = $('#note' + window.selected_cell_id + '-' + key);
     //if there was solved key, it is kept as a note
@@ -389,7 +393,8 @@ function create_chain_line(from_cell, from_note, to_cell, to_note) {
     }
 }
 
-// function from user Mottie on Stack Overflow posted on 30 Nov 2015
+// function from user Mottie (https://stackoverflow.com/users/145346/mottie)
+// on Stack Overflow posted on 30 Nov 2015
 // (https://stackoverflow.com/questions/33988943/trying-to-use-jquery-to-draw-lines-over-table-data)
 function create_line(x1, y1, x2, y2, color, fixed_x1)
 {

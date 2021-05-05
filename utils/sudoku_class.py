@@ -1,3 +1,5 @@
+# author: Iveta Strnadová (xstrna14)
+
 class SudokuBoard:
     def __init__(self, max_sudoku_number=9):
         self.max_sudoku_number = max_sudoku_number

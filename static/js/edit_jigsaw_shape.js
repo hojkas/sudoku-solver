@@ -1,3 +1,7 @@
+// ====================================
+// Author: Iveta Strnadová (xstrna14)
+// ====================================
+
 let selected_sector = 0;
 
 let custom_sector_to_color_mapping = {
