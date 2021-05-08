@@ -1,6 +1,5 @@
 # author: Iveta Strnadová (xstrna14)
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -175,7 +174,10 @@ def is_hyper_cell(x, y):
     return ""
 
 def index(request):
-    return render(request, 'index.html')
+    context = {'visits_stats': True,
+               'total_visits': 10,
+               'unique_visits': 7}
+    return render(request, 'index.html', context)
 
 
 # ====================================

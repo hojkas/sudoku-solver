@@ -31,6 +31,16 @@
                     <div style="text-align: center">{% trans "Vytvořeno s láskou pro sudoku." %}</div>
                 </p>
             </div>
+            {% if visits_stats %}
+            <div class="main-block">
+                <div>
+                    {% trans "Počet návštěv webu:" %} {{ total_visits }}
+                </div>
+                <div>
+                    {% trans "Počet unikátních návštevníků:" %} {{ unique_visits }}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
