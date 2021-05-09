@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Naked Triple+
@@ -10,9 +11,29 @@ Naked Triple+
         Popis strategie Naked Triple.
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_naked_triple_1.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+            TODO
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_naked_triple_2.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_naked_triple_3.png" %}">
+    </p>
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=8..76...4.71..3658.6..8..7....5.9.....36.47.5.56..841.2.78.6..1..9..72.....192..7">

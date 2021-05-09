@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Naked Pair
@@ -7,12 +8,25 @@ Naked Pair
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Naked Pair.
+        <p>
+        Naked Pairs hledá dvojici políček v rámci jednoho bloku, které obsahují pouze tytéž dva
+        kandidáty (pair). Je zřejmé, že ve výsledném sudoku bude buď první kandidát v prvním
+        políčku, čímž na druhé políčko zbyde jako jediná možnost druhý kandidát, nebo budou na
+        prohozených pozicích. Nevíme zatím, která z možností nastane, ale můžeme jednoznačně
+        určit, že oba kandidáty v rámci bloku budou zde a nemohou být na ostatních políčkách
+        v daném bloku.
+        </p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_naked_pair.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+            TODO
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=8126....994.158...5.6.29481.9.4.6..5.2..9..4.6542.3.9.2.5...9..4..97....1.9..28.4">
