@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
     {% blocktrans %}
@@ -9,12 +10,18 @@
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Remove Collisions.
+        <p>
+            Před aplikací první strategie je vhodné odstranit kandidáty z těch bloků, ve kterých je již
+            daná číslice vyplněná. Tento krok je vhodné provést pokaždé, kdy se díky některé strategii
+            vyplní další číslice.
+        </p>
     {% endblocktrans %}
-
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
-
-
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_remove_collisions.png" %}">
+    </p>
+    {% blocktrans %}
+    <p>
+        Doplněné číslo 4 odstraní možné umístění kandidátů 4 ze všech buněk v daném sloupci, řádku i sektoru.
+    </p>
+    {% endblocktrans %}
 {% endblock %}

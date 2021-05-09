@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Naked Single
@@ -7,12 +8,18 @@ Naked Single
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Naked Single.
+        <p>
+            Pokud se v některé buňce vyskytuje pouze jediný kandidát, lze ho vyplnit jako vyřešené číslo.
+        </p>
     {% endblocktrans %}
-
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_naked_single.png" %}">
+    </p>
+    {% blocktrans %}
+        <p>
+            V buňce r8c6 se nachází pouze jediný kandidát - 4. Můžeme ho vyplnit.
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=050703060007000800000816000000030000005000100730040086906000204840572093000409000">

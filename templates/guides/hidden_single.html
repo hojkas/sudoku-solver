@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
     Hidden Single
@@ -7,12 +8,18 @@
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Hidden Single.
+        <p>
+            Pokud se v rámci bloku nachází kandidát pouze na jedné pozici, lze ho vyplnit.
+        </p>
     {% endblocktrans %}
-
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_hidden_single.png" %}">
+    </p>
+    {% blocktrans %}
+        <p>
+            V 9. řádku sudoku se kandidát 4 nachází pouze v jediné buňce, a to r9c7. Můžeme ho tam doplnit.
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=.2.8.5.9..4..97.1.....64...3....8..4..8..65....29.18....14.32..763152948.....9...">
