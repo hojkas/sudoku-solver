@@ -9,6 +9,10 @@ X-Wing
 {% block guide_content %}
     {% blocktrans %}
         <p>
+            Pokud se ve dvou různých řádcích sudoku nachází kandidátní číslo pouze na dvou pozicích,
+            které leží ve stejných sloupcích jako totéž kandidátní číslo v druhém řádku, lze aplikovat
+            strategii X-Wing. V takovém případě existují pouze dvě možnosti, jak budou kandidáty v obou řádcích umístěny, a každá
+            z nich vyloučí umístění tohoto kandidátu v sloupci mimo tyto řádky.
         </p>
     {% endblocktrans %}
 
@@ -18,6 +22,19 @@ X-Wing
 
     {% blocktrans %}
         <p>
+            Na obrázku se v třetím a pátem řádku kandidátní číslo 1 nachází
+            pouze ve dvou buňkách, a tyto buňky leží ve dvou stejných sloupcích (žlutě). Číslo 1 proto
+            v těchto sloupcích musí být v jednom z vybraných řádků a můžeme ji ze zbylých pozic
+            odstranit (červeně).
+        </p>
+        <p>
+            Zde je ukázáno nalezení podmínek pro strategii X-Wing díky omezení
+            řádku a promítnutí strategie do sloupců. Strategie může fungovat také naopak, omezení
+            tvořící X-Wing může být nalezeno ve sloupci a promítnuto do řádku.
+        </p>
+        <p>
+            Název strategie vznikl z vizuální podoby nalezených dvojic kandidátů. Když se spojí dvě
+            možné umístění číslice, které mohou nastat, tedy protilehlé rohy čtverce, vytvoří písmeno X.
         </p>
     {% endblocktrans %}
 
