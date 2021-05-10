@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
     Intersection Removal
@@ -7,12 +8,83 @@
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Intersection Removal.
+        <p>
+        Tato strategie bývá označována také jako Locked Pairs/Triples. Zkoumá vztah kandidátů
+        na průsečíku čtvercového sektoru a sloupce či řádku. Průsečík tvoří u klasického sudoku 9x9 3 buňky.
+        </p>
+        <p>
+            U sudoku 16x16 může být průsečík tvořen až 4 buňkami. U sudoku s diagonálami lze zkoumat také průsečík
+            diagonály se sektorem. U sudoku se středy čtverců může průsečík být také mezi středy a řádkem/sloupcem.
+            U jigsaw může být průsečík více buněk v závislosti na tvaru sektorů. U hypersudoku se mohou navíc protínat
+            sektory navzájem.
+        </p>
+        <p>U klasického sudoku může bý strategie nalezena ve dvou variantách:</p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_intersection_removal_1.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+            Průsečík obsahuje všechny výskyty některého kandidátu v rámci sektoru, obrázek výše.
+        </p>
+        <p>
+            Aby byla splněna podmínka výskytu čísla v sektoru, je jisté, že se musí vyskytovat
+            na jedné ze tří (popř. dvou) pozic na průsečíku. Tím je vyloučeno, aby se kandidát
+            nacházel na jiné pozici v řádku/sloupci mimo tuto intersekci.
+        </p>
+        <p>
+            Na obrázku se v sektoru všechny výskyty čísla 1 nachází v 2. řádku (žlutě).
+            Můžeme proto v druhém řádku mimo tento sektor vymazat ostatní
+            výskyty kandidátu 1 (červeně).
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_intersection_removal_2.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+            Průsečík obsahuje všechny výskyty některého kandidátu v rámci řádku/sloupci, obrázek výše.
+        </p>
+        <p>
+            Je jisté, že se v průsečíku musí kandidát nacházet na jedné ze tří (popř. dvou) pozic,
+            aby byl zachován jeho výskyt v daném řádku/sloupci. Proto se nemůže nacházet jinde
+            v aktuálním sektoru kromě těchto pozic v průsečíku.
+        </p>
+        <p>
+            Na obrázku se v prvním řádku kandidát 2 vyskytuje pouze v rámci
+            jednoho sektoru (žlutá). Aby byl splněn jeho výskyt v řádku, nemůže se vyskytovat
+            v sektoru na jiných pozicích než v rámci zkoumaného řádku a můžeme kandidáty v druhém
+            a třetím řádku tohoto sektoru vymazat (červená).
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_intersection_removal_3.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+            U sudoku s diagonálami, se středy čtverců či u jigsaw můžeme zkoumat ještě speciální případ strategie
+            Intersection Removal. Jedná se o jednu buňku, která leží na průsečíku řádku a sloupců, které obsahují
+            jediné výskyty kandidátů v některých blocích (diagonále, středech čtverců a nepravidelných sektorů jigsaw).
+        </p>
+        <p>
+            Libovolná buňka rXcY ležící mimo zkoumaný nečtvercový sektor se může nacházet ve
+            stejném řádku či sloupci jako několik buněk zkoumaného sektoru. Pokud se v rámci daného
+            sektoru nachází určité kandidátní číslo pouze v takto sdílených buňkách, nemůže se toto
+            číslo nacházet ve vybrané buňce rXcY mimo sektor.
+        </p>
+        <p>
+            Na obrázku je ukázán tento speciální případ na diagonálním sudoku.
+            Na diagonále je možné umístit číslici 1 pouze na dvě pozice (žlutě). Protože obě
+            možné umístění vylučují umístění číslice 1 v r2c4 a r4c2, mohou odtud být kandidátní čísla
+            odstraněna (červeně).
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=38.2514.757.9..1....23.758.821.9..75...7158..7.5.2..412.8..67....3.72.18..7..925.">

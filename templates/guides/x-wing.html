@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 X-Wing
@@ -7,12 +8,18 @@ X-Wing
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie X-Wing.
+        <p>
+        </p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_x_wing.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=2...4...36..239..8....7....129486537854397216736152984.71825.699..763..1.6.914.7.">

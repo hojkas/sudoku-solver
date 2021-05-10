@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Y-Wing
@@ -7,12 +8,36 @@ Y-Wing
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Y-Wing.
+        <p>
+        </p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_y_wing_1.png" %}" style="max-width: 20%;">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_y_wing_2.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_y_wing_3.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=8..93546...628739..9346128.3..698152618752934..931467898.1735.6.6.5298.3.358467.9">

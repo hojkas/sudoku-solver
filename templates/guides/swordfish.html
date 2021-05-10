@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Swordfish
@@ -7,12 +8,18 @@ Swordfish
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Swordfish.
+        <p>
+        </p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_swordfish.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=815...9..426.9.31.739...5.2148623795693.5..2.25791..3.9.1....73374.6925.5.2.....9">
