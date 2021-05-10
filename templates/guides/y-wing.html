@@ -9,6 +9,8 @@ Y-Wing
 {% block guide_content %}
     {% blocktrans %}
         <p>
+            Strategie Y-Wing je krátkou verzí <a href="/guides/xy-chain">XY-Chain</a>,
+            která spojuje pouze 3 buňky s dvojicí kandidátů.
         </p>
     {% endblocktrans %}
 
@@ -18,15 +20,12 @@ Y-Wing
 
     {% blocktrans %}
         <p>
-        </p>
-    {% endblocktrans %}
-
-    <p class="guide-image-div">
-        <img src="{% static "img/strategy_y_wing_2.png" %}">
-    </p>
-
-    {% blocktrans %}
-        <p>
+        Strategie je symbolicky s pomocí písmen místo číslic znázorněna na obrázku.
+        Písmena A, B a C zastupují libovolné číslo daného druhu sudoku. Buňka s AB je ve stejném
+        bloku (sloupci) jako buňka s AC a ve stejném bloku (řádku) jako buňka s BC. Ať by bylo
+        do buňky AB doplněno a nebo B, v jedné z buněk, které ovlivňuje, by zůstalo jako jediná
+        možnost C. Proto není možné, aby bylo v levé dolní buňce C umístěno a tento kandidát
+        strategie odstraní.
         </p>
     {% endblocktrans %}
 
@@ -36,6 +35,21 @@ Y-Wing
 
     {% blocktrans %}
         <p>
+        Y-Wing vychází z buňky r3c1. Tato buňka ovlivňuje další dvě buňky o dvou
+        kandidátech (zelené linky), se kterými se nachází v jednom bloku. Ať bude v r3c1 vyplněna
+        5 nebo 7, v jedné z navázaných buněk kvůli tomu zůstane pouze kandidát 2. Můžeme proto
+        odstranit 2 ze všech buněk (červeně), které jsou v témže bloku s r1c2 i r1c6.
+        </p>
+    {% endblocktrans %}
+
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_y_wing_2.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        Na obrázku je umístění Y-Wing, podle kterého strategie získala jméno. Umístění zeleně
+        označených čísel s trochou fantazie po vzájemném propojení písmeno Y.
         </p>
     {% endblocktrans %}
 
