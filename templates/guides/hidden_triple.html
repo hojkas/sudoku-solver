@@ -1,5 +1,6 @@
 {% extends "guides/guide_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block guide_title %}
 Hidden Triple+
@@ -7,12 +8,28 @@ Hidden Triple+
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Hidden Triple.
+        <p>
+        Tato strategie se zakládá na stejném principu jako Hidden Pair, avšak místo dvojic hledá trojice (triple) či
+        čtveřice (quad). V sudoku 16x16 lze hledat až osmice.
+        </p>
+        <p>
+            Hidden Triple spočívá v nalezení třech buněk v tomtéž bloku, které obsahují <em>jediné</em> výskyty množiny
+            tří kandidátů v rámci bloku. Jinak řečeno, pokud se tři čísla vyskytují pouze ve třech stejných buňkách,
+            lze aplikovat strategii Hidden Triple. Naked Quad hledá čtveřice.
+        </p>
     {% endblocktrans %}
 
-    <i class="fas fa-exclamation-triangle"></i>
-    UNDER CONSTRUCTION
-    <i class="fas fa-spin fa-wrench"></i> <!-- TODO construction -->
+    <p class="guide-image-div">
+        <img src="{% static "img/strategy_hidden_triple.png" %}">
+    </p>
+
+    {% blocktrans %}
+        <p>
+        V 4. řádku se kandidáty 2, 5, 7 a 9 nachází pouze v buňkách r4c4, r4c5, r4c6 a r4c9. Čtyři možnosti ve čtyřech
+        buňkách v jednom bloku znamenají, že ať bude jejich umístění jakékoliv, zaberou vždy tyto políčka. Proto
+        v nich nemůže být žádný jiný kandidát a můžeme ostatní čísla odstranit (červeně).
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=.531.8..4.6...5..8..82....3..........258...977.9..1.6.832.1...9..478...6.......81">

@@ -8,7 +8,14 @@ Naked Triple+
 
 {% block guide_content %}
     {% blocktrans %}
-        Popis strategie Naked Triple.
+        <p>
+        Tato strategie se zakládá na stejném principu jako Naked Pair, avšak místo dvojic hledá trojice (triple)
+        či čtveřice (quad).
+        </p>
+        <p>
+        Naked Triple spočívá v nalezení třech buněk v tomtéž bloku, které obsahují pouze tři stejné kandidáty (popř.
+        všechny jejich kandidáty tvoří podmnožinu těchto tří kandidátů). Naked Quad hledá čtveřice.
+        </p>
     {% endblocktrans %}
 
     <p class="guide-image-div">
@@ -17,7 +24,9 @@ Naked Triple+
 
     {% blocktrans %}
         <p>
-            TODO
+            V 1. sloupci je žlutě označen nalezený Naked Quad. Všechny čtyři buňky obsahují podmnožinu množiny
+            4 kandidátních čísel {1,4,7,9}, proto je možné aplikovat strategii a vymazat tyto kandidáty z ostatních
+            buňěk sloupce.
         </p>
     {% endblocktrans %}
 
@@ -27,13 +36,26 @@ Naked Triple+
 
     {% blocktrans %}
         <p>
-
+            Strategie Hidden N a Naked M se doplňují. Pokud se v několika buňkách bloku nachází Naked N, ve zbylých
+            nedoplněných buňkách bloku lze najít výchozí podmínky strategie Hidden M. Na obrázku je v 1. sloupci žlutě
+            označená nalezená Hidden Quad. Ve zbylých buňkách lze najít Hidden Triple, který je vyznačen zeleně. Obě
+            strategie mají stejný efekt - odstranění nezvýrazněných kandidátů z 1. sloupce.
+        </p>
+        <p>
+            Díky této vlastnosti není třeba v klasickém sudoku hledat pětice až osmice. Pokud by se tam nacházela
+            Naked 5, která by měla efekt a něco změnila, zároveň by se tam nacházela nejvýše Hidden Quad.
         </p>
     {% endblocktrans %}
 
     <p class="guide-image-div">
         <img src="{% static "img/strategy_naked_triple_3.png" %}">
     </p>
+
+    {% blocktrans %}
+        <p>
+        U sudoku 16x16 je třeba hledat Naked N až do osmic. Na obrázku je nalezena Naked 6.
+        </p>
+    {% endblocktrans %}
 
     <p style="text-align: center">
         <a href="/solver/sudoku9x9?load_from=string&cells=8..76...4.71..3658.6..8..7....5.9.....36.47.5.56..841.2.78.6..1..9..72.....192..7">
