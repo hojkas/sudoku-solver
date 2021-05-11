@@ -14,7 +14,7 @@ from utils.sudoku_convertor import convert_js_json_to_sudoku_board, convert_sudo
 from utils.generator import Generator
 
 # Variable that allows showing of extra controls such as custom highlights for
-developers_tools = True
+developers_tools = False
 
 # === STRATEGY SUPPORTING VARIABLES ===
 easy_strategies = {
@@ -174,10 +174,7 @@ def is_hyper_cell(x, y):
     return ""
 
 def index(request):
-    context = {'visits_stats': True,
-               'total_visits': 10,
-               'unique_visits': 7}
-    return render(request, 'index.html', context)
+    return render(request, 'index.html')
 
 
 # ====================================

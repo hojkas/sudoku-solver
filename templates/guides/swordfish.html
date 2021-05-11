@@ -9,6 +9,18 @@ Swordfish
 {% block guide_content %}
     {% blocktrans %}
         <p>
+            Strategie Swordfish je založená na stejném principu jako <a href="/guides/x-wing">X-Wing</a>,
+            avšak pracuje s výskytem 3 kandidátů.
+        </p>
+        <p>
+            Pokud se jeden kandidát nachází v třech řádcích pouze na třech pozicích a všechny tyto
+            pozice leží pouze ve třech sloupcích, lze aplikovat tuto strategii.
+            Kandidátní čísla jsou omezena řádky natolik, že při libovolném umístění bude v každém sloupci
+            vyplněno jedno v rámci těchto řádků – kandidát se tedy nemůže nacházet na ostatních
+            pozicích sloupce.
+        </p>
+        <p>
+            Tato strategie může také vyjít z omezených sloupců, které se promítnou do řádků.
         </p>
     {% endblocktrans %}
 
@@ -18,6 +30,10 @@ Swordfish
 
     {% blocktrans %}
         <p>
+        V řádku 2, 4 a 7 se kandidátní číslo 1
+        nachází pouze ve třech buňkách (žlutě), a tyto buňky leží ve třech stejných sloupcích 3, 5
+        a 7. Číslo 1 proto v těchto sloupcích musí být v jednom z vybraných řádků a můžeme je ze
+        zbylých pozic odstranit (červeně).
         </p>
     {% endblocktrans %}
 

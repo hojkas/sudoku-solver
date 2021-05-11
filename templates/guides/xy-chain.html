@@ -9,6 +9,19 @@ XY-Chain
 {% block guide_content %}
     {% blocktrans %}
         <p>
+        Strategie XY-Chain se zakládá na stejném principu jako <a href="/guides/y-wing">Y-Wing</a>,
+        avšak není omezena pouze
+        na dvě navzájem spojené dvojice. Své jméno získala díky tomu, že se v ní řetězí buňky.
+        </p>
+        <p>
+        Nalezený XY-Chain se skládá z libovolného počtu buněk, které obsahují pouze dvě
+        kandidátní čísla. Platí, že dvě spojené buňky se nachází v jednom bloku a mají jedno
+        z těchto kandidátních čísel stejné (toto číslo je spojuje). Zároveň musí platit, že pokud
+        buňka není na kraji řetězce, musí být s každým ze svých dvou spojených buněk propojena
+        rozdílným kandidátním číslem.
+        </p>
+        <p>
+            Uvažujme následující řetězec:
         </p>
     {% endblocktrans %}
 
@@ -18,6 +31,21 @@ XY-Chain
 
     {% blocktrans %}
         <p>
+        Buňky nemusí ležet všechny ve stejném bloku, pouze dvě spojené musí sdílet blok (AB
+        a BC musí ležet v jednom bloku, BC zároveň ve stejném jako CD, apod.).
+        </p>
+        <p>
+        Pokud se na koncích takového řetězce nachazí stejné nespojené číslo, v tomto případě
+        A, je jisté, že na jedné z těcho pozic se a musí nacházet. Pokud existuje ve zbytku sudoku
+        buňka s kandidátem A, která „vidí“ (nachází se ve stejném bloku jako ony) tyto konce
+        řetězce s A, můžeme z ní a odstranit.
+        </p>
+        <p>
+        Pro mentální kontrolu je dobré představit si, jak by byly buňky doplněny, kdyby na
+        jednom z konců řetězce bylo vyplněno číslo, kterým začíná první spojení. Pokud do první
+        buňky bude doplněno B, v druhé musí být C atd. A pro poslední buňku zbyde jediná
+        možnost – A. Při kontrole z druhé strany by měl vyjít stejný výsledek, kterým se můžeme
+        ujistit, že je řetězec skutečně XY-Chain .
         </p>
     {% endblocktrans %}
 
@@ -27,6 +55,10 @@ XY-Chain
 
     {% blocktrans %}
         <p>
+        Na obrázku jsou zeleně označeny kandidáty tvořící řetězec, na jehož koncích je pokaždé 1
+        (žlutě). Protože se jedná o XY-Chain, bude se kandidát 1 nacházet právě na jedné ze žlutě
+        označených pozic. Červeně označená kandidátní čísla se nachází ve stejném bloku s oběma
+        konci XY-Chain, a je tedy možné je odstranit.
         </p>
     {% endblocktrans %}
 

@@ -30,17 +30,13 @@
                         <img src="{% static "img/sudoku_heart.png" %}" style="width: 30%;"></a>
                     <div style="text-align: center">{% trans "Vytvořeno s láskou pro sudoku." %}</div>
                 </p>
+                <p style="text-align: center">
+                    <!-- code for counting page visits from: http://www.freevisitorcounters.com/ -->
+                    <a href='https://www.counters-free.net/'>Counters-Free</a> <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=b9f9e8e19d861feeee6e5a06c315e4cc51a21996'></script>
+                    <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/825578/t/0"></script>
+                    <!-- end of code for counting page -->
+                </p>
             </div>
-            {% if visits_stats %}
-            <div class="main-block">
-                <div>
-                    {% trans "Počet návštěv webu:" %} {{ total_visits }}
-                </div>
-                <div>
-                    {% trans "Počet unikátních návštevníků:" %} {{ unique_visits }}
-                </div>
-            </div>
-            {% endif %}
         </div>
     </div>
 {% endblock %}
